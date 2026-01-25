@@ -7,7 +7,7 @@ import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.navigation.ItemPresentation;
 import consulo.util.collection.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import java.util.List;
 public final class JsonStructureViewElement implements StructureViewTreeElement {
   private final JsonElement myElement;
 
-  public JsonStructureViewElement(@NotNull JsonElement element) {
+  public JsonStructureViewElement(@Nonnull JsonElement element) {
     assert PsiTreeUtil.instanceOf(element, JsonFile.class, JsonProperty.class, JsonObject.class, JsonArray.class);
     myElement = element;
   }
@@ -43,14 +43,14 @@ public final class JsonStructureViewElement implements StructureViewTreeElement 
   }
 
   @Override
-  public @NotNull ItemPresentation getPresentation() {
+  public @Nonnull ItemPresentation getPresentation() {
     final ItemPresentation presentation = myElement.getPresentation();
     assert presentation != null;
     return presentation;
   }
 
   @Override
-  public TreeElement @NotNull [] getChildren() {
+  public TreeElement @Nonnull [] getChildren() {
     JsonElement value = null;
     if (myElement instanceof JsonFile) {
       value = ((JsonFile)myElement).getTopLevelValue();

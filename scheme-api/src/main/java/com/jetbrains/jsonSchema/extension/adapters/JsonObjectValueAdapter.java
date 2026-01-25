@@ -15,12 +15,13 @@
  */
 package com.jetbrains.jsonSchema.extension.adapters;
 
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 public interface JsonObjectValueAdapter extends JsonValueAdapter {
-  @NotNull List<JsonPropertyAdapter> getPropertyList();
+  @Nonnull
+  List<JsonPropertyAdapter> getPropertyList();
 
   @Override
   default boolean isNull() {

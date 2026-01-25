@@ -20,16 +20,15 @@ import consulo.language.psi.PsiWhiteSpace;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 @ExtensionImpl
 public final class JsonEnterHandler implements EnterHandlerDelegate {
     @Override
-    public Result preprocessEnter(@NotNull PsiFile file,
-                                  @NotNull Editor editor,
-                                  @NotNull SimpleReference<Integer> caretOffsetRef,
-                                  @NotNull SimpleReference<Integer> caretAdvanceRef,
-                                  @NotNull DataContext dataContext,
+    public Result preprocessEnter(@Nonnull PsiFile file,
+                                  @Nonnull Editor editor,
+                                  @Nonnull SimpleReference<Integer> caretOffsetRef,
+                                  @Nonnull SimpleReference<Integer> caretAdvanceRef,
+                                  @Nonnull DataContext dataContext,
                                   EditorActionHandler originalHandler) {
         if (!JsonEditorOptions.getInstance().COMMA_ON_ENTER) {
             return Result.Continue;
@@ -64,7 +63,7 @@ public final class JsonEnterHandler implements EnterHandlerDelegate {
         return Result.Continue;
     }
 
-    private static boolean handleComma(@NotNull SimpleReference<Integer> caretOffsetRef, @NotNull PsiElement psiAtOffset, @NotNull Editor editor) {
+    private static boolean handleComma(@Nonnull SimpleReference<Integer> caretOffsetRef, @Nonnull PsiElement psiAtOffset, @Nonnull Editor editor) {
         PsiElement nextSibling = psiAtOffset;
         boolean hasNewlineBefore = false;
         while (nextSibling instanceof PsiWhiteSpace) {
@@ -114,7 +113,7 @@ public final class JsonEnterHandler implements EnterHandlerDelegate {
     }
 
     @RequiredReadAction
-    private static void handleJsonValue(@NotNull JsonValue literal, @NotNull Editor editor, @NotNull SimpleReference<Integer> caretOffsetRef) {
+    private static void handleJsonValue(@Nonnull JsonValue literal, @Nonnull Editor editor, @Nonnull SimpleReference<Integer> caretOffsetRef) {
         PsiElement parent = literal.getParent();
         if (!(parent instanceof JsonProperty) || ((JsonProperty) parent).getValue() != literal) {
             return;

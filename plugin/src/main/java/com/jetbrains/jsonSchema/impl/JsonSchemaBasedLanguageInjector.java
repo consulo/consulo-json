@@ -14,21 +14,21 @@ import com.jetbrains.jsonSchema.JsonSchemaObject;
 import com.jetbrains.jsonSchema.extension.JsonLikePsiWalker;
 import com.jetbrains.jsonSchema.JsonSchemaService;
 import com.jetbrains.jsonSchema.impl.light.nodes.RootJsonSchemaObjectBackedByJackson;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 
 public final class JsonSchemaBasedLanguageInjector extends JsonSchemaInjectorBase {
   @Override
-  public void getLanguagesToInject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
+  public void getLanguagesToInject(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement context) {
     if (!(context instanceof JsonStringLiteral)) return;
     InjectedLanguageData language = getLanguageToInject(context, false);
     if (language == null) return;
     injectForHost(registrar, (JsonStringLiteral)context, language);
   }
 
-  public static @Nullable InjectedLanguageData getLanguageToInject(@NotNull PsiElement context, boolean relaxPositionCheck) {
+  public static @Nullable InjectedLanguageData getLanguageToInject(@Nonnull PsiElement context, boolean relaxPositionCheck) {
     Project project = context.getProject();
     PsiFile containingFile = context.getContainingFile();
     JsonSchemaObject schemaObject = JsonSchemaService.Impl.get(project).getSchemaObject(containingFile);

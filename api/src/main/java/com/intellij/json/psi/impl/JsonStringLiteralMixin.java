@@ -5,7 +5,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.impl.ast.LeafElement;
 import consulo.language.psi.LiteralTextEscaper;
 import consulo.language.psi.PsiLanguageInjectionHost;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin.Ulitin
@@ -21,7 +21,7 @@ public abstract class JsonStringLiteralMixin extends JsonLiteralImpl implements 
   }
 
   @Override
-  public PsiLanguageInjectionHost updateText(@NotNull String text) {
+  public PsiLanguageInjectionHost updateText(@Nonnull String text) {
     ASTNode valueNode = getNode().getFirstChildNode();
     assert valueNode instanceof LeafElement;
     ((LeafElement)valueNode).replaceWithText(text);
@@ -29,7 +29,7 @@ public abstract class JsonStringLiteralMixin extends JsonLiteralImpl implements 
   }
 
   @Override
-  public @NotNull LiteralTextEscaper<? extends PsiLanguageInjectionHost> createLiteralTextEscaper() {
+  public @Nonnull LiteralTextEscaper<? extends PsiLanguageInjectionHost> createLiteralTextEscaper() {
     return new JSStringLiteralEscaper<PsiLanguageInjectionHost>(this) {
       @Override
       protected boolean isRegExpLiteral() {

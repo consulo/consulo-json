@@ -11,7 +11,7 @@ import com.intellij.patterns.PatternCondition;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ProcessingContext;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
 
@@ -21,11 +21,11 @@ public final class JsonInPropertyKeysContextType extends TemplateContextType {
   }
 
   @Override
-  public boolean isInContext(@NotNull PsiFile file, int offset) {
+  public boolean isInContext(@Nonnull PsiFile file, int offset) {
     return file instanceof JsonFile && psiElement().inside(psiElement(JsonValue.class)
                                                              .with(new PatternCondition<PsiElement>("insidePropertyKey") {
                                                                @Override
-                                                               public boolean accepts(@NotNull PsiElement element,
+                                                               public boolean accepts(@Nonnull PsiElement element,
                                                                                       ProcessingContext context) {
                                                                  return JsonPsiUtil.isPropertyKey(element);
                                                                }

@@ -13,19 +13,19 @@ import com.jetbrains.jsonSchema.JsonComplianceCheckerOptions;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
 import com.jetbrains.jsonSchema.JsonSchemaType;
 import com.jetbrains.jsonSchema.impl.MatchResult;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 
 public final class NotValidation implements JsonSchemaValidation {
   public static final NotValidation INSTANCE = new NotValidation();
   @Override
-  public boolean validate(@NotNull JsonValueAdapter propValue,
-                          @NotNull JsonSchemaObject schema,
+  public boolean validate(@Nonnull JsonValueAdapter propValue,
+                          @Nonnull JsonSchemaObject schema,
                           @Nullable JsonSchemaType schemaType,
-                          @NotNull JsonValidationHost consumer,
-                          @NotNull JsonComplianceCheckerOptions options) {
+                          @Nonnull JsonValidationHost consumer,
+                          @Nonnull JsonComplianceCheckerOptions options) {
     JsonSchemaHighlightingSessionStatisticsCollector.getInstance().reportSchemaUsageFeature(JsonSchemaFusCountedFeature.NotValidation);
     final MatchResult result = consumer.resolve(schema.getNot(), propValue);
     if (result.mySchemas.isEmpty() && result.myExcludingSchemas.isEmpty()) return true;

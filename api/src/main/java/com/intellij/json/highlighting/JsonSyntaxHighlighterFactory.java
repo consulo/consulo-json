@@ -20,8 +20,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,7 +55,7 @@ public class JsonSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
 
 
     @Override
-    public @NotNull SyntaxHighlighter getSyntaxHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile) {
+    public @Nonnull SyntaxHighlighter getSyntaxHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile) {
         return new MyHighlighter(virtualFile);
     }
 
@@ -96,7 +95,7 @@ public class JsonSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
         }
 
         @Override
-        public @NotNull Lexer getHighlightingLexer() {
+        public @Nonnull Lexer getHighlightingLexer() {
             return new JsonHighlightingLexer(isPermissiveDialect(), isCanEscapeEol(), getLexer());
         }
 
@@ -111,12 +110,12 @@ public class JsonSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
         }
 
         @Override
-        public TextAttributesKey @NotNull [] getTokenHighlights(IElementType type) {
+        public TextAttributesKey @Nonnull [] getTokenHighlights(IElementType type) {
             return pack(ourAttributes.get(type));
         }
     }
 
-    protected @NotNull Lexer getLexer() {
+    protected @Nonnull Lexer getLexer() {
         return new JsonLexer();
     }
 

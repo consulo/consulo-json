@@ -5,7 +5,7 @@ import com.jetbrains.jsonSchema.JsonSchemaObject;
 import com.jetbrains.jsonSchema.JsonSchemaService;
 import com.jetbrains.jsonSchema.impl.light.JsonSchemaRefResolver;
 import com.jetbrains.jsonSchema.impl.light.nodes.JsonSchemaObjectBackedByJacksonBase;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 public class RecursiveRefResolver implements JsonSchemaRefResolver {
   public static final RecursiveRefResolver INSTANCE = new RecursiveRefResolver();

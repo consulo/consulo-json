@@ -10,7 +10,7 @@ import consulo.json.localize.JsonLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.Pair;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.regex.Pattern;
 

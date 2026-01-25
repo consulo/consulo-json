@@ -14,9 +14,9 @@ import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.net.URL;
 import java.util.List;
@@ -32,7 +32,8 @@ public interface JsonSchemaProviderFactory extends PossiblyDumbAware {
   /**
    * Called in smart mode by default. Implement {@link consulo.application.dumb.DumbAware} to be called in dumb mode.
    */
-  @NotNull List<JsonSchemaFileProvider> getProviders(@NotNull Project project);
+  @Nonnull
+  List<JsonSchemaFileProvider> getProviders(@Nonnull Project project);
 
   /**
    * Finds a {@link VirtualFile} instance corresponding to a specified resource path (relative or absolute).
@@ -41,7 +42,7 @@ public interface JsonSchemaProviderFactory extends PossiblyDumbAware {
    *                      See {@link Class#getResource(String)} for more details
    * @return VirtualFile instance, or null if not found
    */
-  static @Nullable VirtualFile getResourceFile(@NotNull Class<?> baseClass, @NonNls @NotNull String resourcePath) {
+  static @Nullable VirtualFile getResourceFile(@Nonnull Class<?> baseClass, @NonNls @Nonnull String resourcePath) {
     URL url = baseClass.getResource(resourcePath);
     if (url == null) {
       LOG.error("Cannot find resource " + resourcePath);

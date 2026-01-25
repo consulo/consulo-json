@@ -10,8 +10,8 @@ import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiElement;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -38,7 +38,7 @@ public final class JsonPsiUtil {
    * @param element PSI element to check
    * @return whether this PSI element is array element
    */
-  public static boolean isArrayElement(@NotNull PsiElement element) {
+  public static boolean isArrayElement(@Nonnull PsiElement element) {
     return element instanceof JsonValue && element.getParent() instanceof JsonArray;
   }
 
@@ -48,7 +48,7 @@ public final class JsonPsiUtil {
    * @param element PSI element to check
    * @return whether this PSI element is property key
    */
-  public static boolean isPropertyKey(@NotNull PsiElement element) {
+  public static boolean isPropertyKey(@Nonnull PsiElement element) {
     final PsiElement parent = element.getParent();
     return parent instanceof JsonProperty && element == ((JsonProperty)parent).getNameElement();
   }
@@ -59,7 +59,7 @@ public final class JsonPsiUtil {
    * @param element PSI element to check
    * @return whether this PSI element is property value
    */
-  public static boolean isPropertyValue(@NotNull PsiElement element) {
+  public static boolean isPropertyValue(@Nonnull PsiElement element) {
     final PsiElement parent = element.getParent();
     return parent instanceof JsonProperty && element == ((JsonProperty)parent).getValue();
   }
@@ -74,7 +74,7 @@ public final class JsonPsiUtil {
    * @param after  whether to scan through sibling elements forward or backward
    * @return described element or anchor if search stops immediately
    */
-  public static @NotNull PsiElement findFurthestSiblingOfSameType(@NotNull PsiElement anchor, boolean after) {
+  public static @Nonnull PsiElement findFurthestSiblingOfSameType(@Nonnull PsiElement anchor, boolean after) {
     ASTNode node = anchor.getNode();
     // Compare by node type to distinguish between different types of comments
     final IElementType expectedType = node.getElementType();
@@ -103,28 +103,28 @@ public final class JsonPsiUtil {
    * It slightly less verbose than {@code set.contains(node.getElementType())} and overloaded methods with the same name
    * allow check ASTNode/PsiElement against both concrete element types and token sets in uniform way.
    */
-  public static boolean hasElementType(@NotNull ASTNode node, @NotNull TokenSet set) {
+  public static boolean hasElementType(@Nonnull ASTNode node, @Nonnull TokenSet set) {
     return set.contains(node.getElementType());
   }
 
   /**
    * @see #hasElementType(ASTNode, TokenSet)
    */
-  public static boolean hasElementType(@NotNull ASTNode node, IElementType... types) {
+  public static boolean hasElementType(@Nonnull ASTNode node, IElementType... types) {
     return hasElementType(node, TokenSet.create(types));
   }
 
   /**
    * @see #hasElementType(ASTNode, TokenSet)
    */
-  public static boolean hasElementType(@NotNull PsiElement element, @NotNull TokenSet set) {
+  public static boolean hasElementType(@Nonnull PsiElement element, @Nonnull TokenSet set) {
     return element.getNode() != null && hasElementType(element.getNode(), set);
   }
 
   /**
    * @see #hasElementType(ASTNode, IElementType...)
    */
-  public static boolean hasElementType(@NotNull PsiElement element, IElementType... types) {
+  public static boolean hasElementType(@Nonnull PsiElement element, IElementType... types) {
     return element.getNode() != null && hasElementType(element.getNode(), types);
   }
 
@@ -135,7 +135,7 @@ public final class JsonPsiUtil {
    * @param element PSI element which text is needed
    * @return text of the element with any host escaping removed
    */
-  public static @NotNull String getElementTextWithoutHostEscaping(@NotNull PsiElement element) {
+  public static @Nonnull String getElementTextWithoutHostEscaping(@Nonnull PsiElement element) {
     final InjectedLanguageManager manager = InjectedLanguageManager.getInstance(element.getProject());
     if (manager.isInjectedFragment(element.getContainingFile())) {
       return manager.getUnescapedText(element);
@@ -156,7 +156,7 @@ public final class JsonPsiUtil {
    *
    * @param text presumably result of {@link JsonStringLiteral#getText()}
    */
-  public static @NotNull String stripQuotes(@NotNull String text) {
+  public static @Nonnull String stripQuotes(@Nonnull String text) {
     if (!text.isEmpty()) {
       final char firstChar = text.charAt(0);
       final char lastChar = text.charAt(text.length() - 1);
@@ -177,7 +177,7 @@ public final class JsonPsiUtil {
    * @param position position of the character
    * @return whether character at given position is escaped, i.e. preceded by odd number of backslashes
    */
-  public static boolean isEscapedChar(@NotNull String text, int position) {
+  public static boolean isEscapedChar(@Nonnull String text, int position) {
     int count = 0;
     for (int i = position - 1; i >= 0 && text.charAt(i) == '\\'; i--) {
       count++;
@@ -193,7 +193,7 @@ public final class JsonPsiUtil {
    * @param first    if true make new property first in the object, otherwise append in the end of property list
    * @return property as returned by {@link PsiElement#addAfter(PsiElement, PsiElement)}
    */
-  public static @NotNull PsiElement addProperty(@NotNull JsonObject object, @NotNull JsonProperty property, boolean first) {
+  public static @Nonnull PsiElement addProperty(@Nonnull JsonObject object, @Nonnull JsonProperty property, boolean first) {
     final List<JsonProperty> propertyList = object.getPropertyList();
     if (!first) {
       final JsonProperty lastProperty = ContainerUtil.getLastItem(propertyList);
@@ -212,7 +212,7 @@ public final class JsonPsiUtil {
     return addedProperty;
   }
 
-  public static @NotNull Set<String> getOtherSiblingPropertyNames(@Nullable JsonProperty property) {
+  public static @Nonnull Set<String> getOtherSiblingPropertyNames(@Nullable JsonProperty property) {
     if (property == null) return Collections.emptySet();
     JsonObject object = ObjectUtil.tryCast(property.getParent(), JsonObject.class);
     if (object == null) return Collections.emptySet();

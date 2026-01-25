@@ -4,7 +4,7 @@ package com.intellij.json.impl.codeinsight;
 import com.intellij.json.psi.JsonElement;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiComment;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Allows to configure a compliance level for JSON.
@@ -14,19 +14,19 @@ public abstract class JsonStandardComplianceProvider {
   public static final ExtensionPointName<JsonStandardComplianceProvider> EP_NAME =
     ExtensionPointName.create("com.intellij.json.jsonStandardComplianceProvider");
 
-  public static boolean shouldWarnAboutComment(@NotNull PsiComment comment) {
+  public static boolean shouldWarnAboutComment(@Nonnull PsiComment comment) {
     return EP_NAME.findFirstSafe(provider -> provider.isCommentAllowed(comment)) == null;
   }
 
-  public static boolean shouldWarnAboutTrailingComma(@NotNull JsonElement el) {
+  public static boolean shouldWarnAboutTrailingComma(@Nonnull JsonElement el) {
     return EP_NAME.findFirstSafe(provider -> provider.isTrailingCommaAllowed(el)) == null;
   }
   
-  public boolean isCommentAllowed(@NotNull PsiComment comment) {
+  public boolean isCommentAllowed(@Nonnull PsiComment comment) {
     return false;
   }
   
-  public boolean isTrailingCommaAllowed(@NotNull JsonElement el) {
+  public boolean isTrailingCommaAllowed(@Nonnull JsonElement el) {
     return false;
   }
 }

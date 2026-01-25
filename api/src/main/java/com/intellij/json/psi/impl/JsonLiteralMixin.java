@@ -7,15 +7,15 @@ import com.intellij.json.psi.JsonLiteral;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.ReferenceProvidersRegistry;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 abstract class JsonLiteralMixin extends JsonElementImpl implements JsonLiteral {
-  protected JsonLiteralMixin(@NotNull ASTNode node) {
+  protected JsonLiteralMixin(@Nonnull ASTNode node) {
     super(node);
   }
 
   @Override
-  public PsiReference @NotNull [] getReferences() {
+  public PsiReference @Nonnull [] getReferences() {
     return ReferenceProvidersRegistry.getReferencesFromProviders(this);
   }
 }

@@ -17,8 +17,8 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,8 +30,8 @@ import static com.intellij.json.JsonTokenSets.STRING_LITERALS;
 public final class JsonPsiImplUtils {
     static final Key<List<JsonStringLiteralTextFragment>> STRING_FRAGMENTS = new Key<>("JSON string fragments");
 
-    @NotNull
-    public static String getName(@NotNull JsonProperty property) {
+    @Nonnull
+    public static String getName(@Nonnull JsonProperty property) {
         PsiElement name = property.getNameElement();
         // Below is a highly optimized version of:
         // String text = InjectedLanguageManager.getInstance(property.getProject()).getUnescapedText(property.getNameElement());
@@ -51,21 +51,21 @@ public final class JsonPsiImplUtils {
      *
      * @see JsonStandardComplianceInspection
      */
-    public static @NotNull JsonValue getNameElement(@NotNull JsonProperty property) {
+    public static @Nonnull JsonValue getNameElement(@Nonnull JsonProperty property) {
         final PsiElement firstChild = property.getFirstChild();
         assert firstChild instanceof JsonLiteral || firstChild instanceof JsonReferenceExpression;
         return (JsonValue) firstChild;
     }
 
-    public static @Nullable JsonValue getValue(@NotNull JsonProperty property) {
+    public static @Nullable JsonValue getValue(@Nonnull JsonProperty property) {
         return PsiTreeUtil.getNextSiblingOfType(getNameElement(property), JsonValue.class);
     }
 
-    public static boolean isQuotedString(@NotNull JsonLiteral literal) {
+    public static boolean isQuotedString(@Nonnull JsonLiteral literal) {
         return literal.getNode().findChildByType(STRING_LITERALS) != null;
     }
 
-    public static @Nullable ItemPresentation getPresentation(final @NotNull JsonProperty property) {
+    public static @Nullable ItemPresentation getPresentation(final @Nonnull JsonProperty property) {
         return new ItemPresentation() {
             @Override
             public @Nullable String getPresentableText() {
@@ -91,7 +91,7 @@ public final class JsonPsiImplUtils {
         };
     }
 
-    public static @Nullable ItemPresentation getPresentation(final @NotNull JsonArray array) {
+    public static @Nullable ItemPresentation getPresentation(final @Nonnull JsonArray array) {
         return new ItemPresentation() {
             @Override
             public @Nullable String getPresentableText() {
@@ -111,7 +111,7 @@ public final class JsonPsiImplUtils {
         };
     }
 
-    public static @Nullable ItemPresentation getPresentation(final @NotNull JsonObject object) {
+    public static @Nullable ItemPresentation getPresentation(final @Nonnull JsonObject object) {
         return new ItemPresentation() {
             @Override
             public @Nullable String getPresentableText() {
@@ -133,7 +133,7 @@ public final class JsonPsiImplUtils {
 
     private static final String ourEscapesTable = "\"\"\\\\//b\bf\fn\nr\rt\t";
 
-    public static @NotNull List<JsonStringLiteralTextFragment> getTextFragments(@NotNull JsonStringLiteral literal) {
+    public static @Nonnull List<JsonStringLiteralTextFragment> getTextFragments(@Nonnull JsonStringLiteral literal) {
         List<JsonStringLiteralTextFragment> result = literal.getUserData(STRING_FRAGMENTS);
         if (result == null) {
             result = new ArrayList<>();
@@ -206,25 +206,25 @@ public final class JsonPsiImplUtils {
         return result;
     }
 
-    public static void delete(@NotNull JsonProperty property) {
+    public static void delete(@Nonnull JsonProperty property) {
         final ASTNode myNode = property.getNode();
         JsonPsiChangeUtils.removeCommaSeparatedFromList(myNode, myNode.getTreeParent());
     }
 
-    public static @NotNull String getValue(@NotNull JsonStringLiteral literal) {
+    public static @Nonnull String getValue(@Nonnull JsonStringLiteral literal) {
         return JsonTextLiteralService.getInstance().unquoteAndUnescape(literal.getText());
     }
 
-    public static boolean isPropertyName(@NotNull JsonStringLiteral literal) {
+    public static boolean isPropertyName(@Nonnull JsonStringLiteral literal) {
         final PsiElement parent = literal.getParent();
         return parent instanceof JsonProperty && ((JsonProperty) parent).getNameElement() == literal;
     }
 
-    public static boolean getValue(@NotNull JsonBooleanLiteral literal) {
+    public static boolean getValue(@Nonnull JsonBooleanLiteral literal) {
         return literal.textMatches("true");
     }
 
-    public static double getValue(@NotNull JsonNumberLiteral literal) {
+    public static double getValue(@Nonnull JsonNumberLiteral literal) {
         return Double.parseDouble(literal.getText());
     }
 }

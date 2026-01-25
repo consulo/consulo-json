@@ -6,13 +6,13 @@ import com.jetbrains.jsonSchema.extension.JsonSchemaEnabler;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public final class JsonSchemaInJsonFilesEnabler implements JsonSchemaEnabler {
   @Override
-  public boolean isEnabledForFile(@NotNull VirtualFile file, @Nullable Project project) {
+  public boolean isEnabledForFile(@Nonnull VirtualFile file, @Nullable Project project) {
     return JsonUtil.isJsonFile(file, project);
   }
 

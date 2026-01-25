@@ -12,7 +12,7 @@ import consulo.language.editor.colorScheme.setting.RainbowColorSettingsPage;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.localize.LocalizeValue;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -43,12 +43,12 @@ public final class JsonColorsPage implements RainbowColorSettingsPage {
   };
 
   @Override
-  public @NotNull SyntaxHighlighter getHighlighter() {
+  public @Nonnull SyntaxHighlighter getHighlighter() {
     return SyntaxHighlighterFactory.getSyntaxHighlighter(JsonLanguage.INSTANCE, null, null);
   }
 
   @Override
-  public @NotNull String getDemoText() {
+  public @Nonnull String getDemoText() {
     return """
       {
         // Line comments are not included in standard but nonetheless allowed.
@@ -68,22 +68,22 @@ public final class JsonColorsPage implements RainbowColorSettingsPage {
   }
 
   @Override
-  public @NotNull Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
+  public @Nonnull Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
     return ourAdditionalHighlighting;
   }
 
   @Override
-  public AttributesDescriptor @NotNull [] getAttributeDescriptors() {
+  public AttributesDescriptor @Nonnull [] getAttributeDescriptors() {
     return ourAttributeDescriptors;
   }
 
   @Override
-  public ColorDescriptor @NotNull [] getColorDescriptors() {
+  public ColorDescriptor @Nonnull [] getColorDescriptors() {
     return ColorDescriptor.EMPTY_ARRAY;
   }
 
   @Override
-  public @NotNull LocalizeValue getDisplayName() {
+  public @Nonnull LocalizeValue getDisplayName() {
     return JsonLocalize.settingsDisplayNameJson();
   }
 
@@ -98,7 +98,7 @@ public final class JsonColorsPage implements RainbowColorSettingsPage {
   }
 
   @Override
-  public @NotNull Language getLanguage() {
+  public @Nonnull Language getLanguage() {
     return JsonLanguage.INSTANCE;
   }
 }

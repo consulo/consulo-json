@@ -6,7 +6,7 @@ import com.intellij.json.JsonBundle;
 import com.intellij.json.psi.JsonFile;
 import com.intellij.json.psi.JsonStringLiteral;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
 
@@ -16,7 +16,7 @@ public final class JsonInLiteralsContextType extends TemplateContextType {
   }
 
   @Override
-  public boolean isInContext(@NotNull PsiFile file, int offset) {
+  public boolean isInContext(@Nonnull PsiFile file, int offset) {
     return file instanceof JsonFile && psiElement().inside(JsonStringLiteral.class).accepts(file.findElementAt(offset));
   }
 }

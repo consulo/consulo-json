@@ -18,8 +18,8 @@ import com.jetbrains.jsonSchema.extension.adapters.JsonValueAdapter;
 import com.jetbrains.jsonSchema.fus.JsonSchemaFusCountedFeature;
 import com.jetbrains.jsonSchema.fus.JsonSchemaHighlightingSessionStatisticsCollector;
 import com.jetbrains.jsonSchema.impl.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -30,11 +30,11 @@ import static com.jetbrains.jsonSchema.impl.light.SchemaKeywordsKt.X_INTELLIJ_CA
 public final class EnumValidation implements JsonSchemaValidation {
   public static final EnumValidation INSTANCE = new EnumValidation();
   @Override
-  public boolean validate(@NotNull JsonValueAdapter propValue,
-                          @NotNull JsonSchemaObject schema,
+  public boolean validate(@Nonnull JsonValueAdapter propValue,
+                          @Nonnull JsonSchemaObject schema,
                           @Nullable JsonSchemaType schemaType,
-                          @NotNull JsonValidationHost consumer,
-                          @NotNull JsonComplianceCheckerOptions options) {
+                          @Nonnull JsonValidationHost consumer,
+                          @Nonnull JsonComplianceCheckerOptions options) {
     JsonSchemaHighlightingSessionStatisticsCollector.getInstance().reportSchemaUsageFeature(JsonSchemaFusCountedFeature.EnumValidation);
     List<Object> enumItems = schema.getEnum();
     if (enumItems == null) return true;
@@ -53,11 +53,11 @@ public final class EnumValidation implements JsonSchemaValidation {
     return false;
   }
 
-  private static boolean checkEnumValue(@NotNull Object object,
-                                        @NotNull JsonLikePsiWalker walker,
+  private static boolean checkEnumValue(@Nonnull Object object,
+                                        @Nonnull JsonLikePsiWalker walker,
                                         @Nullable JsonValueAdapter adapter,
-                                        @NotNull String text,
-                                        @NotNull BiFunction<String, String, Boolean> stringEq) {
+                                        @Nonnull String text,
+                                        @Nonnull BiFunction<String, String, Boolean> stringEq) {
     if (adapter != null && !adapter.shouldCheckAsValue()) return true;
     if (object instanceof EnumArrayValueWrapper) {
       if (adapter instanceof JsonArrayValueAdapter) {
@@ -99,8 +99,8 @@ public final class EnumValidation implements JsonSchemaValidation {
     return false;
   }
 
-  private static boolean equalsIgnoreQuotes(final @NotNull String s1,
-                                            final @NotNull String s2,
+  private static boolean equalsIgnoreQuotes(final @Nonnull String s1,
+                                            final @Nonnull String s2,
                                             boolean requireQuotedValues,
                                             BiFunction<String, String, Boolean> eq) {
     final boolean quoted1 = StringUtil.isQuotedString(s1);

@@ -1,13 +1,12 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.jetbrains.jsonSchema;
 
-import com.intellij.json.JsonBundle;
 import com.jetbrains.jsonSchema.extension.JsonErrorPriority;
 import com.jetbrains.jsonSchema.extension.JsonLikeSyntaxAdapter;
 import consulo.json.localize.JsonLocalize;
 import consulo.language.editor.inspection.LocalQuickFix;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -153,7 +152,7 @@ public final class JsonValidationError {
     return myFixableIssueKind;
   }
 
-  public LocalQuickFix @NotNull [] createFixes(@Nullable JsonLikeSyntaxAdapter quickFixAdapter) {
+  public LocalQuickFix @Nonnull [] createFixes(@Nullable JsonLikeSyntaxAdapter quickFixAdapter) {
     if (quickFixAdapter == null) return LocalQuickFix.EMPTY_ARRAY;
     return switch (myFixableIssueKind) {
       case MissingProperty ->
@@ -170,7 +169,7 @@ public final class JsonValidationError {
     };
   }
 
-  private LocalQuickFix @NotNull [] getProhibitedPropertyFixes(@NotNull JsonLikeSyntaxAdapter quickFixAdapter) {
+  private LocalQuickFix @Nonnull [] getProhibitedPropertyFixes(@Nonnull JsonLikeSyntaxAdapter quickFixAdapter) {
     ProhibitedPropertyIssueData data = (ProhibitedPropertyIssueData)myIssueData;
     if (data.typoCandidates.isEmpty()) {
       return new RemoveProhibitedPropertyFix[]{new RemoveProhibitedPropertyFix(data, quickFixAdapter)};

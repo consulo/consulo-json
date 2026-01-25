@@ -15,18 +15,18 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ObjectUtils;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 public final class JsonStringPropertyInsertHandler implements InsertHandler<LookupElement> {
 
   private final String myNewValue;
 
-  public JsonStringPropertyInsertHandler(@NotNull String newValue) {
+  public JsonStringPropertyInsertHandler(@Nonnull String newValue) {
     myNewValue = newValue;
   }
 
   @Override
-  public void handleInsert(@NotNull InsertionContext context, @NotNull LookupElement item) {
+  public void handleInsert(@Nonnull InsertionContext context, @Nonnull LookupElement item) {
     PsiElement element = context.getFile().findElementAt(context.getStartOffset());
     JsonStringLiteral literal = PsiTreeUtil.getParentOfType(element, JsonStringLiteral.class, false);
     if (literal == null) return;
@@ -62,7 +62,7 @@ public final class JsonStringPropertyInsertHandler implements InsertHandler<Look
     }
   }
 
-  private static boolean needCommaAfter(@NotNull JsonProperty property) {
+  private static boolean needCommaAfter(@Nonnull JsonProperty property) {
     PsiElement element = property.getNextSibling();
     while (element != null) {
       if (element instanceof JsonProperty) {
@@ -76,7 +76,7 @@ public final class JsonStringPropertyInsertHandler implements InsertHandler<Look
     return false;
   }
 
-  private static void reformat(@NotNull InsertionContext context, int startOffset, int endOffset) {
+  private static void reformat(@Nonnull InsertionContext context, int startOffset, int endOffset) {
     PsiDocumentManager.getInstance(context.getProject()).commitDocument(context.getDocument());
     CodeStyleManager codeStyleManager = CodeStyleManager.getInstance(context.getProject());
     codeStyleManager.reformatText(context.getFile(), startOffset, endOffset);

@@ -13,19 +13,19 @@ import com.jetbrains.jsonSchema.fus.JsonSchemaHighlightingSessionStatisticsColle
 import com.jetbrains.jsonSchema.JsonComplianceCheckerOptions;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
 import com.jetbrains.jsonSchema.JsonSchemaType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import static com.jetbrains.jsonSchema.impl.JsonSchemaAnnotatorChecker.getValue;
 
 public final class StringValidation implements JsonSchemaValidation {
   public static final StringValidation INSTANCE = new StringValidation();
   @Override
-  public boolean validate(@NotNull JsonValueAdapter propValue,
-                          @NotNull JsonSchemaObject schema,
+  public boolean validate(@Nonnull JsonValueAdapter propValue,
+                          @Nonnull JsonSchemaObject schema,
                           @Nullable JsonSchemaType schemaType,
-                          @NotNull JsonValidationHost consumer,
-                          @NotNull JsonComplianceCheckerOptions options) {
+                          @Nonnull JsonValidationHost consumer,
+                          @Nonnull JsonComplianceCheckerOptions options) {
     JsonSchemaHighlightingSessionStatisticsCollector.getInstance().reportSchemaUsageFeature(JsonSchemaFusCountedFeature.StringValidation);
     return checkString(propValue.getDelegate(), schema, consumer, options);
   }
@@ -33,7 +33,7 @@ public final class StringValidation implements JsonSchemaValidation {
   private static boolean checkString(PsiElement propValue,
                                   JsonSchemaObject schema,
                                   JsonValidationHost consumer,
-                                  @NotNull JsonComplianceCheckerOptions options) {
+                                  @Nonnull JsonComplianceCheckerOptions options) {
     String v = getValue(propValue, schema);
     if (v == null) return true;
     final String value = StringUtil.unquoteString(v);

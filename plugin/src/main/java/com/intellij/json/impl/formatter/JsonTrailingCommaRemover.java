@@ -16,13 +16,13 @@ import consulo.language.codeStyle.PreFormatProcessor;
 import consulo.language.psi.*;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public final class JsonTrailingCommaRemover implements PreFormatProcessor {
     @Override
-    public @NotNull TextRange process(@NotNull ASTNode element, @NotNull TextRange range) {
+    public @Nonnull TextRange process(@Nonnull ASTNode element, @Nonnull TextRange range) {
         PsiElement rootPsi = element.getPsi();
         if (rootPsi.getLanguage() != JsonLanguage.INSTANCE) {
             return range;
@@ -54,7 +54,7 @@ public final class JsonTrailingCommaRemover implements PreFormatProcessor {
         }
 
         @Override
-        public void visitArray(@NotNull JsonArray o) {
+        public void visitArray(@Nonnull JsonArray o) {
             super.visitArray(o);
             PsiElement lastChild = o.getLastChild();
             if (lastChild == null || lastChild.getNode().getElementType() != JsonElementTypes.R_BRACKET) {
@@ -64,7 +64,7 @@ public final class JsonTrailingCommaRemover implements PreFormatProcessor {
         }
 
         @Override
-        public void visitObject(@NotNull JsonObject o) {
+        public void visitObject(@Nonnull JsonObject o) {
             super.visitObject(o);
             PsiElement lastChild = o.getLastChild();
             if (lastChild == null || lastChild.getNode().getElementType() != JsonElementTypes.R_CURLY) {
@@ -88,7 +88,7 @@ public final class JsonTrailingCommaRemover implements PreFormatProcessor {
             }
         }
 
-        private void deleteNode(@NotNull ASTNode node) {
+        private void deleteNode(@Nonnull ASTNode node) {
             int length = node.getTextLength();
             myDocument.deleteString(node.getStartOffset() + myOffsetDelta, node.getStartOffset() + length + myOffsetDelta);
             myOffsetDelta -= length;

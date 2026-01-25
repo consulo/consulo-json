@@ -23,8 +23,8 @@ import com.jetbrains.jsonSchema.extension.JsonLikePsiWalker;
 import com.jetbrains.jsonSchema.extension.JsonSchemaValidation;
 import com.jetbrains.jsonSchema.extension.JsonValidationHost;
 import com.jetbrains.jsonSchema.extension.adapters.JsonValueAdapter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,24 +36,24 @@ public final class JsonSchemaAnnotatorChecker implements JsonValidationHost {
   private static final Set<JsonSchemaType> PRIMITIVE_TYPES =
     Set.of(JsonSchemaType._integer, JsonSchemaType._number, JsonSchemaType._boolean, JsonSchemaType._string, JsonSchemaType._null);
   private final Map<PsiElement, JsonValidationError> myErrors;
-  private final @NotNull Project myProject;
-  private final @NotNull JsonComplianceCheckerOptions myOptions;
+  private final @Nonnull Project myProject;
+  private final @Nonnull JsonComplianceCheckerOptions myOptions;
   private boolean myHadTypeError;
 
-  public JsonSchemaAnnotatorChecker(@NotNull Project project, @NotNull JsonComplianceCheckerOptions options) {
+  public JsonSchemaAnnotatorChecker(@Nonnull Project project, @Nonnull JsonComplianceCheckerOptions options) {
     myProject = project;
     myOptions = options;
     myErrors = new HashMap<>();
   }
 
-  public JsonSchemaAnnotatorChecker(@NotNull JsonSchemaAnnotatorChecker oldChecker, Map<PsiElement, JsonValidationError> errors) {
+  public JsonSchemaAnnotatorChecker(@Nonnull JsonSchemaAnnotatorChecker oldChecker, Map<PsiElement, JsonValidationError> errors) {
     myProject = oldChecker.myProject;
     myOptions = oldChecker.myOptions;
     myErrors = errors;
   }
 
   @Override
-  public @NotNull Map<PsiElement, JsonValidationError> getErrors() {
+  public @Nonnull Map<PsiElement, JsonValidationError> getErrors() {
     return myErrors;
   }
 
@@ -61,10 +61,10 @@ public final class JsonSchemaAnnotatorChecker implements JsonValidationHost {
     return myHadTypeError;
   }
 
-  public static JsonSchemaAnnotatorChecker checkByMatchResult(@NotNull Project project,
-                                                              @NotNull JsonValueAdapter elementToCheck,
-                                                              final @NotNull MatchResult result,
-                                                              @NotNull JsonComplianceCheckerOptions options) {
+  public static JsonSchemaAnnotatorChecker checkByMatchResult(@Nonnull Project project,
+                                                              @Nonnull JsonValueAdapter elementToCheck,
+                                                              final @Nonnull MatchResult result,
+                                                              @Nonnull JsonComplianceCheckerOptions options) {
     final List<JsonSchemaAnnotatorChecker> checkers = new ArrayList<>();
     if (result.myExcludingSchemas.isEmpty() && result.mySchemas.size() == 1) {
       final JsonSchemaAnnotatorChecker checker = new JsonSchemaAnnotatorChecker(project, options);
@@ -95,10 +95,10 @@ public final class JsonSchemaAnnotatorChecker implements JsonValidationHost {
       .orElse(checkers.get(0));
   }
 
-  private static JsonSchemaAnnotatorChecker mergeErrors(@NotNull Project project,
-                                                        @NotNull List<JsonSchemaAnnotatorChecker> list,
-                                                        @NotNull JsonComplianceCheckerOptions options,
-                                                        @NotNull List<Collection<? extends JsonSchemaObject>> excludingSchemas) {
+  private static JsonSchemaAnnotatorChecker mergeErrors(@Nonnull Project project,
+                                                        @Nonnull List<JsonSchemaAnnotatorChecker> list,
+                                                        @Nonnull JsonComplianceCheckerOptions options,
+                                                        @Nonnull List<Collection<? extends JsonSchemaObject>> excludingSchemas) {
     final JsonSchemaAnnotatorChecker checker = new JsonSchemaAnnotatorChecker(project, options);
 
     for (JsonSchemaAnnotatorChecker ch: list) {
@@ -142,7 +142,7 @@ public final class JsonSchemaAnnotatorChecker implements JsonValidationHost {
   }
 
   @Override
-  public void typeError(final @NotNull PsiElement value, @Nullable JsonSchemaType currentType, final JsonSchemaType @NotNull ... allowedTypes) {
+  public void typeError(final @Nonnull PsiElement value, @Nullable JsonSchemaType currentType, final JsonSchemaType @Nonnull ... allowedTypes) {
     if (allowedTypes.length == 0) return;
     String currentTypeDesc = currentType == null ? "" : (" " + JsonBundle.message("schema.validation.actual") + currentType.getName() + ".");
     String prefix = JsonBundle.message("schema.validation.incompatible.types") + "\n";
@@ -172,8 +172,8 @@ public final class JsonSchemaAnnotatorChecker implements JsonValidationHost {
 
   @Override
   public @Nullable JsonValidationHost checkByMatchResult(JsonValueAdapter adapter,
-                                                         MatchResult result,
-                                                         JsonComplianceCheckerOptions options) {
+                                                                            MatchResult result,
+                                                                            JsonComplianceCheckerOptions options) {
     return checkByMatchResult(myProject, adapter, result, options);
   }
 
@@ -182,7 +182,7 @@ public final class JsonSchemaAnnotatorChecker implements JsonValidationHost {
     return myErrors.isEmpty() && !myHadTypeError;
   }
 
-  public boolean checkByScheme(@NotNull JsonValueAdapter value, @NotNull JsonSchemaObject schema) {
+  public boolean checkByScheme(@Nonnull JsonValueAdapter value, @Nonnull JsonSchemaObject schema) {
     final JsonSchemaType instanceFieldType = JsonSchemaType.getType(value);
 
     var isValid = true;
@@ -194,11 +194,11 @@ public final class JsonSchemaAnnotatorChecker implements JsonValidationHost {
   }
 
   @Override
-  public void checkObjectBySchemaRecordErrors(@NotNull JsonSchemaObject schema, @NotNull JsonValueAdapter object) {
+  public void checkObjectBySchemaRecordErrors(@Nonnull JsonSchemaObject schema, @Nonnull JsonValueAdapter object) {
     checkObjectBySchemaRecordErrors(schema, object, new JsonPointerPosition());
   }
 
-  public void checkObjectBySchemaRecordErrors(@NotNull JsonSchemaObject schema, @NotNull JsonValueAdapter object, @NotNull JsonPointerPosition position) {
+  public void checkObjectBySchemaRecordErrors(@Nonnull JsonSchemaObject schema, @Nonnull JsonValueAdapter object, @Nonnull JsonPointerPosition position) {
     final JsonSchemaAnnotatorChecker checker = checkByMatchResult(myProject,
                                                                   object,
                                                                   new JsonSchemaResolver(myProject, schema, position, object).detailedResolve(),
@@ -215,13 +215,13 @@ public final class JsonSchemaAnnotatorChecker implements JsonValidationHost {
   }
 
   @Override
-  public boolean hasRecordedErrorsFor(@NotNull JsonValueAdapter inspectedValueAdapter) {
+  public boolean hasRecordedErrorsFor(@Nonnull JsonValueAdapter inspectedValueAdapter) {
     return myErrors.containsKey(inspectedValueAdapter.getDelegate());
   }
 
-  private static @NotNull Pair<JsonSchemaObject, JsonSchemaAnnotatorChecker> processSchemasVariants(
-    @NotNull Project project, final @NotNull Collection<? extends JsonSchemaObject> collection,
-    final @NotNull JsonValueAdapter value, boolean isOneOf, JsonComplianceCheckerOptions options) {
+  private static @Nonnull Pair<JsonSchemaObject, JsonSchemaAnnotatorChecker> processSchemasVariants(
+      @Nonnull Project project, final @Nonnull Collection<? extends JsonSchemaObject> collection,
+      final @Nonnull JsonValueAdapter value, boolean isOneOf, JsonComplianceCheckerOptions options) {
 
     final JsonSchemaAnnotatorChecker checker = new JsonSchemaAnnotatorChecker(project, options);
     final JsonSchemaType type = JsonSchemaType.getType(value);
@@ -273,7 +273,7 @@ public final class JsonSchemaAnnotatorChecker implements JsonValidationHost {
     return list.isEmpty() ? NO_TYPES : list.toArray(NO_TYPES);
   }
 
-  public static boolean areSchemaTypesCompatible(final @NotNull JsonSchemaObject schema, final @NotNull JsonSchemaType type) {
+  public static boolean areSchemaTypesCompatible(final @Nonnull JsonSchemaObject schema, final @Nonnull JsonSchemaType type) {
     final JsonSchemaType matchingSchemaType = getMatchingSchemaType(schema, type);
     if (matchingSchemaType != null) return matchingSchemaType.equals(type);
     if (schema.getEnum() != null) {
@@ -282,7 +282,7 @@ public final class JsonSchemaAnnotatorChecker implements JsonValidationHost {
     return true;
   }
 
-  public static @Nullable JsonSchemaType getMatchingSchemaType(@NotNull JsonSchemaObject schema, @Nullable JsonSchemaType input) {
+  public static @Nullable JsonSchemaType getMatchingSchemaType(@Nonnull JsonSchemaObject schema, @Nullable JsonSchemaType input) {
     final JsonSchemaType matchType = schema.getType();
     if (matchType != null) {
       if (JsonSchemaType._integer.equals(input) && JsonSchemaType._number.equals(matchType)) {
@@ -325,7 +325,7 @@ public final class JsonSchemaAnnotatorChecker implements JsonValidationHost {
   }
 
   // returns the schema, selected for annotation
-  private JsonSchemaObject processOneOf(@NotNull JsonValueAdapter value, List<JsonSchemaObject> oneOf) {
+  private JsonSchemaObject processOneOf(@Nonnull JsonValueAdapter value, List<JsonSchemaObject> oneOf) {
     final List<JsonSchemaAnnotatorChecker> candidateErroneousCheckers = new ArrayList<>();
     final List<JsonSchemaObject> candidateErroneousSchemas = new ArrayList<>();
     final List<JsonSchemaObject> correct = new SmartList<>();
@@ -363,7 +363,7 @@ public final class JsonSchemaAnnotatorChecker implements JsonValidationHost {
     return showErrorsAndGetLeastErroneous(candidateErroneousCheckers, candidateErroneousSchemas, true);
   }
 
-  private static boolean schemesDifferWithNotCheckedProperties(final @NotNull List<JsonSchemaObject> list) {
+  private static boolean schemesDifferWithNotCheckedProperties(final @Nonnull List<JsonSchemaObject> list) {
     return list.stream().anyMatch(s -> !StringUtil.isEmptyOrSpaces(s.getFormat()));
   }
 
@@ -375,7 +375,7 @@ public final class JsonSchemaAnnotatorChecker implements JsonValidationHost {
     NotSchema
   }
 
-  private static @NotNull AverageFailureAmount getAverageFailureAmount(@NotNull JsonSchemaAnnotatorChecker checker) {
+  private static @Nonnull AverageFailureAmount getAverageFailureAmount(@Nonnull JsonSchemaAnnotatorChecker checker) {
     int lowPriorityCount = 0;
     boolean hasMedium = false;
     boolean hasMissing = false;
@@ -410,7 +410,7 @@ public final class JsonSchemaAnnotatorChecker implements JsonValidationHost {
   }
 
   // returns the schema, selected for annotation
-  private JsonSchemaObject processAnyOf(@NotNull JsonValueAdapter value, List<JsonSchemaObject> anyOf) {
+  private JsonSchemaObject processAnyOf(@Nonnull JsonValueAdapter value, List<JsonSchemaObject> anyOf) {
     final List<JsonSchemaAnnotatorChecker> candidateErroneousCheckers = new ArrayList<>();
     final List<JsonSchemaObject> candidateErroneousSchemas = new ArrayList<>();
 
@@ -435,9 +435,9 @@ public final class JsonSchemaAnnotatorChecker implements JsonValidationHost {
    * In this case we need to show the most "suitable" error messages
    *   - by detecting the most "likely" schema corresponding to the current entity
    */
-  private @Nullable JsonSchemaObject showErrorsAndGetLeastErroneous(@NotNull List<JsonSchemaAnnotatorChecker> candidateErroneousCheckers,
-                                                          @NotNull List<JsonSchemaObject> candidateErroneousSchemas,
-                                                          boolean isOneOf) {
+  private @Nullable JsonSchemaObject showErrorsAndGetLeastErroneous(@Nonnull List<JsonSchemaAnnotatorChecker> candidateErroneousCheckers,
+                                                                                       @Nonnull List<JsonSchemaObject> candidateErroneousSchemas,
+                                                                                       boolean isOneOf) {
     JsonSchemaObject current = null;
     JsonSchemaObject currentWithMinAverage = null;
     Optional<AverageFailureAmount> minAverage = candidateErroneousCheckers.stream()
@@ -497,7 +497,7 @@ public final class JsonSchemaAnnotatorChecker implements JsonValidationHost {
     return current;
   }
 
-  private static @Nullable JsonValidationError tryMergeErrors(@NotNull Collection<JsonValidationError> errors, boolean isOneOf) {
+  private static @Nullable JsonValidationError tryMergeErrors(@Nonnull Collection<JsonValidationError> errors, boolean isOneOf) {
     JsonValidationError.FixableIssueKind commonIssueKind = null;
     for (JsonValidationError error : errors) {
       JsonValidationError.FixableIssueKind currentIssueKind = error.getFixableIssueKind();

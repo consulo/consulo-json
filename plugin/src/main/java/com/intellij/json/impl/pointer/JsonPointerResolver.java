@@ -5,8 +5,8 @@ import com.intellij.json.psi.JsonArray;
 import com.intellij.json.psi.JsonObject;
 import com.intellij.json.psi.JsonProperty;
 import com.intellij.json.psi.JsonValue;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public final class JsonPointerResolver {
   private final JsonValue myRoot;
   private final String myPointer;
 
-  public JsonPointerResolver(@NotNull JsonValue root, @NotNull String pointer) {
+  public JsonPointerResolver(@Nonnull JsonValue root, @Nonnull String pointer) {
     myRoot = root;
     myPointer = pointer;
   }

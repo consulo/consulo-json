@@ -25,7 +25,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import java.lang.ref.WeakReference;
 
@@ -45,7 +45,7 @@ final class ShowAsJsonAction extends DumbAwareAction {
     private int line = -1;
     private int lineStart = -1;
 
-    private JsonLineExtractor(@NotNull Editor editor) {
+    private JsonLineExtractor(@Nonnull Editor editor) {
       doCompute(editor);
     }
 
@@ -53,7 +53,7 @@ final class ShowAsJsonAction extends DumbAwareAction {
       return line;
     }
 
-    private void doCompute(@NotNull Editor editor) {
+    private void doCompute(@Nonnull Editor editor) {
       SelectionModel model = editor.getSelectionModel();
       document = editor.getDocument();
       if (!model.hasSelection()) {
@@ -122,19 +122,19 @@ final class ShowAsJsonAction extends DumbAwareAction {
   }
 
   @Override
-  public @NotNull ActionUpdateThread getActionUpdateThread() {
+  public @Nonnull ActionUpdateThread getActionUpdateThread() {
     return ActionUpdateThread.BGT;
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Editor editor = e.getData(CommonDataKeys.EDITOR);
     boolean enabled = editor != null && e.getData(LangDataKeys.CONSOLE_VIEW) != null && new JsonLineExtractor(editor).has();
     e.getPresentation().setEnabledAndVisible(enabled);
   }
 
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Editor editor = e.getData(CommonDataKeys.EDITOR);
     final Project project = e.getProject();
     JsonLineExtractor jsonLineExtractor = project == null || editor == null ? null : new JsonLineExtractor(editor);

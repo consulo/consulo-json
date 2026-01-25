@@ -18,8 +18,8 @@ import com.intellij.util.indexing.hints.FileTypeInputFilterPredicate;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.EnumeratorStringDescriptor;
 import com.intellij.util.io.KeyDescriptor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,30 +33,30 @@ public final class JsonSchemaFileValuesIndex extends FileBasedIndexExtension<Str
   public static final String SCHEMA_PROPERTY_NAME = "$schema";
 
   @Override
-  public @NotNull ID<String, String> getName() {
+  public @Nonnull ID<String, String> getName() {
     return INDEX_ID;
   }
 
   private final DataIndexer<String, String, FileContent> myIndexer =
     new DataIndexer<>() {
       @Override
-      public @NotNull Map<String, String> map(@NotNull FileContent inputData) {
+      public @Nonnull Map<String, String> map(@Nonnull FileContent inputData) {
         return readTopLevelProps(inputData.getFileType(), inputData.getContentAsText());
       }
     };
 
   @Override
-  public @NotNull DataIndexer<String, String, FileContent> getIndexer() {
+  public @Nonnull DataIndexer<String, String, FileContent> getIndexer() {
     return myIndexer;
   }
 
   @Override
-  public @NotNull KeyDescriptor<String> getKeyDescriptor() {
+  public @Nonnull KeyDescriptor<String> getKeyDescriptor() {
     return EnumeratorStringDescriptor.INSTANCE;
   }
 
   @Override
-  public @NotNull DataExternalizer<String> getValueExternalizer() {
+  public @Nonnull DataExternalizer<String> getValueExternalizer() {
     return EnumeratorStringDescriptor.INSTANCE;
   }
 
@@ -66,7 +66,7 @@ public final class JsonSchemaFileValuesIndex extends FileBasedIndexExtension<Str
   }
 
   @Override
-  public @NotNull FileBasedIndex.InputFilter getInputFilter() {
+  public @Nonnull FileBasedIndex.InputFilter getInputFilter() {
     return new FileTypeInputFilterPredicate(BEFORE_SUBSTITUTION, fileType -> fileType instanceof JsonFileType);
   }
 
@@ -80,7 +80,7 @@ public final class JsonSchemaFileValuesIndex extends FileBasedIndexExtension<Str
     return FileBasedIndex.getInstance().getFileData(INDEX_ID, file, project).get(requestedKey);
   }
 
-  static @NotNull Map<String, String> readTopLevelProps(@NotNull FileType fileType, @NotNull CharSequence content) {
+  static @Nonnull Map<String, String> readTopLevelProps(@Nonnull FileType fileType, @Nonnull CharSequence content) {
     if (!(fileType instanceof JsonFileType)) return new HashMap<>();
 
     Lexer lexer = fileType == Json5FileType.INSTANCE ?
@@ -122,7 +122,7 @@ public final class JsonSchemaFileValuesIndex extends FileBasedIndexExtension<Str
     return map;
   }
 
-  private static boolean captureValueIfString(@NotNull Lexer lexer, @NotNull HashMap<String, String> destMap, @NotNull String key) {
+  private static boolean captureValueIfString(@Nonnull Lexer lexer, @Nonnull HashMap<String, String> destMap, @Nonnull String key) {
     SyntaxElementType token;
     lexer.advance();
     token = skipWhitespacesAndGetTokenType(lexer);
@@ -138,7 +138,7 @@ public final class JsonSchemaFileValuesIndex extends FileBasedIndexExtension<Str
     return false;
   }
 
-  private static @Nullable SyntaxElementType skipWhitespacesAndGetTokenType(@NotNull Lexer lexer) {
+  private static @Nullable SyntaxElementType skipWhitespacesAndGetTokenType(@Nonnull Lexer lexer) {
     while ( lexer.getTokenType() == SyntaxTokenTypes.getWHITE_SPACE() ||
            lexer.getTokenType() == JsonSyntaxElementTypes.LINE_COMMENT ||
            lexer.getTokenType() == JsonSyntaxElementTypes.BLOCK_COMMENT) {

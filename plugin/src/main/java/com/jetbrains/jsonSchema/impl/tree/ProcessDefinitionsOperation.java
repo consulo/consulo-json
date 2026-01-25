@@ -8,8 +8,8 @@ import com.jetbrains.jsonSchema.fus.JsonSchemaHighlightingSessionStatisticsColle
 import com.jetbrains.jsonSchema.JsonSchemaService;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
 import com.jetbrains.jsonSchema.impl.SchemaResolveState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Set;
 
@@ -18,15 +18,15 @@ import static com.jetbrains.jsonSchema.impl.light.legacy.JsonSchemaObjectMergerK
 public final class ProcessDefinitionsOperation extends Operation {
   private final JsonSchemaService myService;
 
-  public ProcessDefinitionsOperation(@NotNull JsonSchemaObject sourceNode,
-                                     @NotNull JsonSchemaService service,
+  public ProcessDefinitionsOperation(@Nonnull JsonSchemaObject sourceNode,
+                                     @Nonnull JsonSchemaService service,
                                      @Nullable JsonSchemaNodeExpansionRequest expansionRequest) {
     super(sourceNode, expansionRequest);
     myService = service;
   }
 
   @Override
-  public void map(final @NotNull Set<JsonSchemaObject> visited) {
+  public void map(final @Nonnull Set<JsonSchemaObject> visited) {
     JsonSchemaHighlightingSessionStatisticsCollector.getInstance().reportSchemaUsageFeature(JsonSchemaFusCountedFeature.DefinitionsExpanded);
     var current = mySourceNode;
     while (!StringUtil.isEmptyOrSpaces(current.getRef())) {

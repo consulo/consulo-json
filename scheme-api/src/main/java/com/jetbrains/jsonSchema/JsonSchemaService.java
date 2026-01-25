@@ -9,8 +9,8 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -18,33 +18,34 @@ import java.util.List;
 @ServiceAPI(ComponentScope.PROJECT)
 public interface JsonSchemaService {
   final class Impl {
-    public static JsonSchemaService get(@NotNull Project project) {
+    public static JsonSchemaService get(@Nonnull Project project) {
       return project.getService(JsonSchemaService.class);
     }
   }
 
-  static boolean isSchemaFile(@NotNull PsiFile psiFile) {
+  static boolean isSchemaFile(@Nonnull PsiFile psiFile) {
     if (JsonLikePsiWalker.getWalker(psiFile, JsonSchemaObjectReadingUtils.NULL_OBJ) == null) return false;
     final VirtualFile file = psiFile.getViewProvider().getVirtualFile();
     JsonSchemaService service = Impl.get(psiFile.getProject());
     return service.isSchemaFile(file) && service.isApplicableToFile(file);
   }
 
-  boolean isSchemaFile(@NotNull VirtualFile file);
-  boolean isSchemaFile(@NotNull JsonSchemaObject schemaObject);
+  boolean isSchemaFile(@Nonnull VirtualFile file);
+  boolean isSchemaFile(@Nonnull JsonSchemaObject schemaObject);
 
-  @NotNull Project getProject();
-
-  @Nullable
-  JsonSchemaVersion getSchemaVersion(@NotNull VirtualFile file);
-
-  @NotNull
-  Collection<VirtualFile> getSchemaFilesForFile(@NotNull VirtualFile file);
+  @Nonnull
+  Project getProject();
 
   @Nullable
-  VirtualFile getDynamicSchemaForFile(@NotNull PsiFile psiFile);
-  void registerRemoteUpdateCallback(@NotNull Runnable callback);
-  void unregisterRemoteUpdateCallback(@NotNull Runnable callback);
+  JsonSchemaVersion getSchemaVersion(@Nonnull VirtualFile file);
+
+  @Nonnull
+  Collection<VirtualFile> getSchemaFilesForFile(@Nonnull VirtualFile file);
+
+  @Nullable
+  VirtualFile getDynamicSchemaForFile(@Nonnull PsiFile psiFile);
+  void registerRemoteUpdateCallback(@Nonnull Runnable callback);
+  void unregisterRemoteUpdateCallback(@Nonnull Runnable callback);
   void registerResetAction(Runnable action);
   void unregisterResetAction(Runnable action);
 
@@ -54,25 +55,25 @@ public interface JsonSchemaService {
   void triggerUpdateRemote();
 
   @Nullable
-  JsonSchemaObject getSchemaObject(@NotNull VirtualFile file);
+  JsonSchemaObject getSchemaObject(@Nonnull VirtualFile file);
 
   @Nullable
-  JsonSchemaObject getSchemaObject(@NotNull PsiFile file);
+  JsonSchemaObject getSchemaObject(@Nonnull PsiFile file);
 
   @Nullable
-  JsonSchemaObject getSchemaObjectForSchemaFile(@NotNull VirtualFile schemaFile);
+  JsonSchemaObject getSchemaObjectForSchemaFile(@Nonnull VirtualFile schemaFile);
 
   @Nullable
-  VirtualFile findSchemaFileByReference(@NotNull String reference, @Nullable VirtualFile referent);
+  VirtualFile findSchemaFileByReference(@Nonnull String reference, @Nullable VirtualFile referent);
 
   @Nullable
-  JsonSchemaFileProvider getSchemaProvider(final @NotNull VirtualFile schemaFile);
+  JsonSchemaFileProvider getSchemaProvider(final @Nonnull VirtualFile schemaFile);
 
   @Nullable
-  JsonSchemaFileProvider getSchemaProvider(final @NotNull JsonSchemaObject schemaObject);
+  JsonSchemaFileProvider getSchemaProvider(final @Nonnull JsonSchemaObject schemaObject);
 
   @Nullable
-  VirtualFile resolveSchemaFile(final @NotNull JsonSchemaObject schemaObject);
+  VirtualFile resolveSchemaFile(final @Nonnull JsonSchemaObject schemaObject);
 
   void reset();
 
@@ -80,5 +81,6 @@ public interface JsonSchemaService {
 
   boolean isApplicableToFile(@Nullable VirtualFile file);
 
-  @NotNull JsonSchemaCatalogManager getCatalogManager();
+  @Nonnull
+  JsonSchemaCatalogManager getCatalogManager();
 }

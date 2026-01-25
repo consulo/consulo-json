@@ -8,8 +8,8 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.impl.psi.PsiFileBase;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public final class JsonFileImpl extends PsiFileBase implements JsonFile {
   }
 
   @Override
-  public @NotNull FileType getFileType() {
+  public @Nonnull FileType getFileType() {
     return getViewProvider().getFileType();
   }
 
@@ -30,7 +30,7 @@ public final class JsonFileImpl extends PsiFileBase implements JsonFile {
   }
 
   @Override
-  public @NotNull List<JsonValue> getAllTopLevelValues() {
+  public @Nonnull List<JsonValue> getAllTopLevelValues() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, JsonValue.class);
   }
 

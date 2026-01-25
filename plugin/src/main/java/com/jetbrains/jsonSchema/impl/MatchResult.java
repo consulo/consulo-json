@@ -5,7 +5,7 @@ import com.intellij.util.Processor;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -13,12 +13,12 @@ public final class MatchResult {
   public final List<JsonSchemaObject> mySchemas;
   public final List<Collection<? extends JsonSchemaObject>> myExcludingSchemas;
 
-  private MatchResult(final @NotNull List<JsonSchemaObject> schemas, final @NotNull List<Collection<? extends JsonSchemaObject>> excludingSchemas) {
+  private MatchResult(final @Nonnull List<JsonSchemaObject> schemas, final @Nonnull List<Collection<? extends JsonSchemaObject>> excludingSchemas) {
     mySchemas = Collections.unmodifiableList(schemas);
     myExcludingSchemas = Collections.unmodifiableList(excludingSchemas);
   }
 
-  public static MatchResult create(@NotNull JsonSchemaTreeNode root) {
+  public static MatchResult create(@Nonnull JsonSchemaTreeNode root) {
     List<JsonSchemaObject> schemas = new ArrayList<>();
     Int2ObjectMap<List<JsonSchemaObject>> oneOfGroups = new Int2ObjectOpenHashMap<>();
     iterateTree(root, node -> {
@@ -42,8 +42,8 @@ public final class MatchResult {
     return new MatchResult(schemas, result);
   }
 
-  public static void iterateTree(@NotNull JsonSchemaTreeNode root,
-                                 final @NotNull Processor<? super JsonSchemaTreeNode> processor) {
+  public static void iterateTree(@Nonnull JsonSchemaTreeNode root,
+                                 final @Nonnull Processor<? super JsonSchemaTreeNode> processor) {
     final ArrayDeque<JsonSchemaTreeNode> queue = new ArrayDeque<>(root.getChildren());
     while (!queue.isEmpty()) {
       final JsonSchemaTreeNode node = queue.removeFirst();

@@ -5,8 +5,8 @@ import com.jetbrains.jsonSchema.extension.adapters.JsonValueAdapter;
 import com.jetbrains.jsonSchema.impl.JsonComplianceCheckerOptions;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
 import com.jetbrains.jsonSchema.JsonSchemaType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface JsonSchemaValidation {
   /**
@@ -16,9 +16,9 @@ public interface JsonSchemaValidation {
    * The implementations might consider returning the value as soon as the first error is found, or continue processing all the possible errors.
    * This behaviour is controlled by the {@link JsonComplianceCheckerOptions#shouldStopValidationAfterAnyErrorFound()} method.
    */
-  boolean validate(@NotNull JsonValueAdapter propValue,
-                   @NotNull JsonSchemaObject schema,
+  boolean validate(@Nonnull JsonValueAdapter propValue,
+                   @Nonnull JsonSchemaObject schema,
                    @Nullable JsonSchemaType schemaType,
-                   @NotNull JsonValidationHost consumer,
-                   @NotNull JsonComplianceCheckerOptions options);
+                   @Nonnull JsonValidationHost consumer,
+                   @Nonnull JsonComplianceCheckerOptions options);
 }

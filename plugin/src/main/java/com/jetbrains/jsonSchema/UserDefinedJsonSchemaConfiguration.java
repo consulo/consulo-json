@@ -17,9 +17,9 @@ import consulo.util.xml.serializer.annotation.OptionTag;
 import consulo.util.xml.serializer.annotation.Tag;
 import consulo.util.xml.serializer.annotation.Transient;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.util.Comparator;
@@ -36,10 +36,11 @@ public final class UserDefinedJsonSchemaConfiguration {
   };
 
   private @Nls String name;
-  private @Nullable @Nls String generatedName;
+  private @Nullable
+  @Nls String generatedName;
   public String relativePathToSchema;
   @OptionTag(converter = JsonSchemaVersionConverter.class)
-  public @NotNull JsonSchemaVersion schemaVersion = JsonSchemaVersion.SCHEMA_4;
+  public @Nonnull JsonSchemaVersion schemaVersion = JsonSchemaVersion.SCHEMA_4;
   public boolean applicationDefined;
   public List<Item> patterns = new SmartList<>();
   public boolean isIgnoredFile = false;
@@ -50,9 +51,9 @@ public final class UserDefinedJsonSchemaConfiguration {
   public UserDefinedJsonSchemaConfiguration() {
   }
 
-  public UserDefinedJsonSchemaConfiguration(@NotNull String name,
+  public UserDefinedJsonSchemaConfiguration(@Nonnull String name,
                                             @Nullable JsonSchemaVersion schemaVersion,
-                                            @NotNull String relativePathToSchema,
+                                            @Nonnull String relativePathToSchema,
                                             boolean applicationDefined,
                                             @Nullable List<Item> patterns) {
     this.name = name;
@@ -62,7 +63,7 @@ public final class UserDefinedJsonSchemaConfiguration {
     setPatterns(patterns);
   }
 
-  public void setGeneratedName(@NotNull @Nls String generatedName) {
+  public void setGeneratedName(@Nonnull @Nls String generatedName) {
     this.generatedName = generatedName;
   }
 
@@ -74,7 +75,7 @@ public final class UserDefinedJsonSchemaConfiguration {
     return name;
   }
 
-  public void setName(@NotNull @Nls String name) {
+  public void setName(@Nonnull @Nls String name) {
     this.name = name;
   }
 
@@ -90,7 +91,7 @@ public final class UserDefinedJsonSchemaConfiguration {
     return Item.normalizePath(relativePathToSchema);
   }
 
-  public @NotNull JsonSchemaVersion getSchemaVersion() {
+  public @Nonnull JsonSchemaVersion getSchemaVersion() {
     return schemaVersion;
   }
 
@@ -125,7 +126,7 @@ public final class UserDefinedJsonSchemaConfiguration {
     myCalculatedPatterns.drop();
   }
 
-  public @NotNull List<PairProcessor<Project, VirtualFile>> getCalculatedPatterns() {
+  public @Nonnull List<PairProcessor<Project, VirtualFile>> getCalculatedPatterns() {
     return myCalculatedPatterns.getValue();
   }
 
@@ -157,7 +158,7 @@ public final class UserDefinedJsonSchemaConfiguration {
     return result;
   }
 
-  private static @Nullable VirtualFile getRelativeFile(final @NotNull Project project, final @NotNull Item pattern) {
+  private static @Nullable VirtualFile getRelativeFile(final @Nonnull Project project, final @Nonnull Item pattern) {
     if (project.getBasePath() == null) {
       return null;
     }
@@ -172,11 +173,11 @@ public final class UserDefinedJsonSchemaConfiguration {
     }
   }
 
-  private static @NotNull List<String> pathToPartsList(@NotNull String path) {
+  private static @Nonnull List<String> pathToPartsList(@Nonnull String path) {
     return ContainerUtil.filter(StringUtil.split(path, "/"), s -> !".".equals(s));
   }
 
-  private static String @NotNull [] pathToParts(@NotNull String path) {
+  private static String @Nonnull [] pathToParts(@Nonnull String path) {
     return ArrayUtilRt.toStringArray(pathToPartsList(path));
   }
 
@@ -223,12 +224,12 @@ public final class UserDefinedJsonSchemaConfiguration {
       this.mappingKind = isPattern ? JsonMappingKind.Pattern : isDirectory ? JsonMappingKind.Directory : JsonMappingKind.File;
     }
 
-    private static @NotNull String normalizePath(@NotNull String path) {
+    private static @Nonnull String normalizePath(@Nonnull String path) {
       if (preserveSlashes(path)) return path;
       return StringUtil.trimEnd(FileUtilRt.toSystemDependentName(path), File.separatorChar);
     }
 
-    private static boolean preserveSlashes(@NotNull String path) {
+    private static boolean preserveSlashes(@Nonnull String path) {
       // http/https URLs to schemas
       // mock URLs of fragments editor
       return StringUtil.startsWith(path, "http:")
@@ -236,7 +237,7 @@ public final class UserDefinedJsonSchemaConfiguration {
              || JsonFileResolver.isTempOrMockUrl(path);
     }
 
-    public static @NotNull String neutralizePath(@NotNull String path) {
+    public static @Nonnull String neutralizePath(@Nonnull String path) {
       if (preserveSlashes(path)) return path;
       return StringUtil.trimEnd(FileUtilRt.toSystemIndependentName(path), '/');
     }

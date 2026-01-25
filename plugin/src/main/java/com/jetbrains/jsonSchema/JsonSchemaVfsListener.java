@@ -21,8 +21,8 @@ import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.BulkVirtualFileListenerAdapter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -34,7 +34,7 @@ public final class JsonSchemaVfsListener extends BulkVirtualFileListenerAdapter 
   public static final Topic<Runnable> JSON_SCHEMA_CHANGED = Topic.create("JsonSchemaVfsListener.Json.Schema.Changed", Runnable.class);
   public static final Topic<Runnable> JSON_DEPS_CHANGED = Topic.create("JsonSchemaVfsListener.Json.Deps.Changed", Runnable.class);
 
-  public static @NotNull JsonSchemaUpdater startListening(@NotNull Project project, @NotNull JsonSchemaService service, @NotNull MessageBusConnection connection) {
+  public static @Nonnull JsonSchemaUpdater startListening(@Nonnull Project project, @Nonnull JsonSchemaService service, @Nonnull MessageBusConnection connection) {
     final JsonSchemaUpdater updater = new JsonSchemaUpdater(project, service);
     connection.subscribe(VirtualFileManager.VFS_CHANGES, new JsonSchemaVfsListener(updater));
     PsiManager.getInstance(project).addPsiTreeChangeListener(new PsiTreeAnyChangeAbstractAdapter() {
@@ -46,16 +46,16 @@ public final class JsonSchemaVfsListener extends BulkVirtualFileListenerAdapter 
     return updater;
   }
 
-  private JsonSchemaVfsListener(@NotNull JsonSchemaUpdater updater) {
+  private JsonSchemaVfsListener(@Nonnull JsonSchemaUpdater updater) {
     super(new VirtualFileContentsChangedAdapter() {
-      private final @NotNull JsonSchemaUpdater myUpdater = updater;
+      private final @Nonnull JsonSchemaUpdater myUpdater = updater;
       @Override
-      protected void onFileChange(final @NotNull VirtualFile schemaFile) {
+      protected void onFileChange(final @Nonnull VirtualFile schemaFile) {
         myUpdater.onFileChange(schemaFile);
       }
 
       @Override
-      protected void onBeforeFileChange(@NotNull VirtualFile schemaFile) {
+      protected void onBeforeFileChange(@Nonnull VirtualFile schemaFile) {
         myUpdater.onFileChange(schemaFile);
       }
     });
@@ -64,14 +64,14 @@ public final class JsonSchemaVfsListener extends BulkVirtualFileListenerAdapter 
   public static final class JsonSchemaUpdater {
     private static final int DELAY_MS = 200;
 
-    private final @NotNull Project myProject;
+    private final @Nonnull Project myProject;
     private final ZipperUpdater myUpdater;
-    private final @NotNull JsonSchemaService myService;
+    private final @Nonnull JsonSchemaService myService;
     private final Set<VirtualFile> myDirtySchemas = ConcurrentCollectionFactory.createConcurrentSet();
     private final Runnable myRunnable;
     private final ExecutorService myTaskExecutor = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("Json Vfs Updater Executor");
 
-    private JsonSchemaUpdater(@NotNull Project project, @NotNull JsonSchemaService service) {
+    private JsonSchemaUpdater(@Nonnull Project project, @Nonnull JsonSchemaService service) {
       Disposable disposable = (Disposable)service;
 
       myProject = project;
@@ -116,12 +116,12 @@ public final class JsonSchemaVfsListener extends BulkVirtualFileListenerAdapter 
       };
     }
 
-    private static void restartAnalyzer(@NotNull DaemonCodeAnalyzer analyzer, @NotNull PsiManager psiManager, @NotNull VirtualFile file) {
+    private static void restartAnalyzer(@Nonnull DaemonCodeAnalyzer analyzer, @Nonnull PsiManager psiManager, @Nonnull VirtualFile file) {
       PsiFile psiFile = !psiManager.isDisposed() && file.isValid() ? psiManager.findFile(file) : null;
       if (psiFile != null) analyzer.restart(psiFile, "JsonSchemaUpdater");
     }
 
-    private void onFileChange(final @NotNull VirtualFile schemaFile) {
+    private void onFileChange(final @Nonnull VirtualFile schemaFile) {
       if (JsonFileType.DEFAULT_EXTENSION.equals(schemaFile.getExtension())) {
         myDirtySchemas.add(schemaFile);
         Application app = ApplicationManager.getApplication();

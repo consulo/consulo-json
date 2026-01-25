@@ -8,8 +8,8 @@ import com.jetbrains.jsonSchema.fus.JsonSchemaHighlightingSessionStatisticsColle
 import com.jetbrains.jsonSchema.JsonSchemaService;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
 import com.jetbrains.jsonSchema.impl.SchemaResolveState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -19,13 +19,13 @@ import static com.jetbrains.jsonSchema.impl.JsonSchemaVariantsTreeBuilder.andGro
 class OneOfOperation extends Operation {
   private final JsonSchemaService myService;
 
-  protected OneOfOperation(@NotNull JsonSchemaObject sourceNode, JsonSchemaService service, @Nullable JsonSchemaNodeExpansionRequest expansionRequest) {
+  protected OneOfOperation(@Nonnull JsonSchemaObject sourceNode, JsonSchemaService service, @Nullable JsonSchemaNodeExpansionRequest expansionRequest) {
     super(sourceNode, expansionRequest);
     myService = service;
   }
 
   @Override
-  public void map(final @NotNull Set<JsonSchemaObject> visited) {
+  public void map(final @Nonnull Set<JsonSchemaObject> visited) {
     JsonSchemaHighlightingSessionStatisticsCollector.getInstance().reportSchemaUsageFeature(JsonSchemaFusCountedFeature.OneOfExpanded);
     var oneOf = mySourceNode.getOneOf();
     assert oneOf != null;

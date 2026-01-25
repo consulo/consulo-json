@@ -5,8 +5,8 @@ import consulo.application.progress.ProgressManager;
 import consulo.document.util.TextRange;
 import consulo.language.psi.LiteralTextEscaper;
 import consulo.language.psi.PsiLanguageInjectionHost;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
@@ -20,7 +20,7 @@ public abstract class JSStringLiteralEscaper<T extends PsiLanguageInjectionHost>
   }
 
   @Override
-  public boolean decode(final @NotNull TextRange rangeInsideHost, @NotNull StringBuilder outChars) {
+  public boolean decode(final @Nonnull TextRange rangeInsideHost, @Nonnull StringBuilder outChars) {
     String subText = rangeInsideHost.substring(myHost.getText());
 
     SourceOffsets sourceOffsets = new SourceOffsets();
@@ -32,7 +32,7 @@ public abstract class JSStringLiteralEscaper<T extends PsiLanguageInjectionHost>
   protected abstract boolean isRegExpLiteral();
 
   @Override
-  public int getOffsetInHost(int offsetInDecoded, final @NotNull TextRange rangeInsideHost) {
+  public int getOffsetInHost(int offsetInDecoded, final @Nonnull TextRange rangeInsideHost) {
     int result = mySourceOffsets.getOffsetInHost(offsetInDecoded);
     if (result == -1) return -1;
     return Math.min(result, rangeInsideHost.getLength()) + rangeInsideHost.getStartOffset();
@@ -43,8 +43,8 @@ public abstract class JSStringLiteralEscaper<T extends PsiLanguageInjectionHost>
     return true;
   }
 
-  public static boolean parseStringCharacters(@NotNull String chars,
-                                              @NotNull StringBuilder outChars,
+  public static boolean parseStringCharacters(@Nonnull String chars,
+                                              @Nonnull StringBuilder outChars,
                                               @Nullable SourceOffsets outSourceOffsets,
                                               boolean regExp,
                                               boolean escapeBacktick) {

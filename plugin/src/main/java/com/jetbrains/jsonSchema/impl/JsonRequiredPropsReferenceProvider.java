@@ -10,14 +10,14 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiReferenceProvider;
 import com.intellij.util.ProcessingContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Optional;
 
 public final class JsonRequiredPropsReferenceProvider extends PsiReferenceProvider {
   @Override
-  public PsiReference @NotNull [] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+  public PsiReference @Nonnull [] getReferencesByElement(@Nonnull PsiElement element, @Nonnull ProcessingContext context) {
     return new PsiReference[] {new JsonRequiredPropReference((JsonStringLiteral)element)};
   }
 

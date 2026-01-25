@@ -14,7 +14,6 @@ import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
 import consulo.language.codeStyle.ui.setting.TabbedLanguageCodeStylePanel;
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Mikhail Golubev
@@ -22,12 +21,12 @@ import org.jetbrains.annotations.NotNull;
 @ExtensionImpl
 public class JsonCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
     @Override
-    public @NotNull LocalizeValue getConfigurableDisplayName() {
+    public @Nonnull LocalizeValue getConfigurableDisplayName() {
         return JsonLanguage.INSTANCE.getDisplayName();
     }
 
     @Override
-    public @NotNull CustomCodeStyleSettings createCustomSettings(@NotNull CodeStyleSettings settings) {
+    public @Nonnull CustomCodeStyleSettings createCustomSettings(@Nonnull CodeStyleSettings settings) {
         return new JsonCodeStyleSettings(settings);
     }
 
@@ -36,7 +35,7 @@ public class JsonCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
     public Configurable createSettingsPage(CodeStyleSettings settings, CodeStyleSettings originalSettings) {
         return new CodeStyleAbstractConfigurable(settings, originalSettings, JsonLocalize.settingsDisplayNameJson()) {
             @Override
-            protected @NotNull CodeStyleAbstractPanel createPanel(@NotNull CodeStyleSettings settings) {
+            protected @Nonnull CodeStyleAbstractPanel createPanel(@Nonnull CodeStyleSettings settings) {
                 final Language language = JsonLanguage.INSTANCE;
                 final CodeStyleSettings currentSettings = getCurrentSettings();
                 return new TabbedLanguageCodeStylePanel(language, currentSettings, settings) {
@@ -51,14 +50,14 @@ public class JsonCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
             }
 
             @Override
-            public @NotNull String getHelpTopic() {
+            public @Nonnull String getHelpTopic() {
                 return "reference.settingsdialog.codestyle.json";
             }
         };
     }
 
     @Override
-    public @NotNull Language getLanguage() {
+    public @Nonnull Language getLanguage() {
         return JsonLanguage.INSTANCE;
     }
 }

@@ -2,9 +2,9 @@
 package com.jetbrains.jsonSchema.impl.nestedCompletions;
 
 import com.intellij.json.pointer.JsonPointerPosition;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,18 +18,18 @@ public interface NestedCompletionsNodeBuilder {
   /**
    * Constructs a tree node that will not forward nested completions from outside down into it's children
    */
-  void isolated(@NotNull String name, @NotNull Consumer<NestedCompletionsNodeBuilder> childBuilder);
+  void isolated(@Nonnull String name, @Nonnull Consumer<NestedCompletionsNodeBuilder> childBuilder);
 
   /**
    * Similar to isolated, but it matches based on a regex
    * By default, all completions are isolated(".*".toRegex()) {}
    */
-  void isolated(@NotNull Pattern regex, @NotNull Consumer<NestedCompletionsNodeBuilder> childBuilder);
+  void isolated(@Nonnull Pattern regex, @Nonnull Consumer<NestedCompletionsNodeBuilder> childBuilder);
 
   /** Constructs a node that allows completions from outside to nest into this node */
-  void open(@NotNull String name, @NotNull Consumer<NestedCompletionsNodeBuilder> childBuilder);
+  void open(@Nonnull String name, @Nonnull Consumer<NestedCompletionsNodeBuilder> childBuilder);
 
-  default void open(@NotNull String name) {
+  default void open(@Nonnull String name) {
     open(name, builder -> {});
   }
 }
@@ -47,32 +47,32 @@ public interface NestedCompletionsNodeBuilder {
 class NestedCompletionsNode {
   private final List<ChildNode> children;
 
-  public NestedCompletionsNode(@NotNull List<ChildNode> children) {
+  public NestedCompletionsNode(@Nonnull List<ChildNode> children) {
     this.children = children;
   }
 
-  @NotNull
+  @Nonnull
   public List<ChildNode> getChildren() {
     return children;
   }
 
-  @NotNull
-  public static NestedCompletionsNode buildNestedCompletionsTree(@NotNull Consumer<NestedCompletionsNodeBuilder> block) {
+  @Nonnull
+  public static NestedCompletionsNode buildNestedCompletionsTree(@Nonnull Consumer<NestedCompletionsNodeBuilder> block) {
     List<ChildNode> children = new ArrayList<>();
 
     NestedCompletionsNodeBuilder builder = new NestedCompletionsNodeBuilder() {
       @Override
-      public void isolated(@NotNull String name, @NotNull Consumer<NestedCompletionsNodeBuilder> childBuilder) {
+      public void isolated(@Nonnull String name, @Nonnull Consumer<NestedCompletionsNodeBuilder> childBuilder) {
         children.add(new ChildNode.Isolated.NamedNode(name, buildNestedCompletionsTree(childBuilder)));
       }
 
       @Override
-      public void isolated(@NotNull Pattern regex, @NotNull Consumer<NestedCompletionsNodeBuilder> childBuilder) {
+      public void isolated(@Nonnull Pattern regex, @Nonnull Consumer<NestedCompletionsNodeBuilder> childBuilder) {
         children.add(new ChildNode.Isolated.RegexNode(regex, buildNestedCompletionsTree(childBuilder)));
       }
 
       @Override
-      public void open(@NotNull String name, @NotNull Consumer<NestedCompletionsNodeBuilder> childBuilder) {
+      public void open(@Nonnull String name, @Nonnull Consumer<NestedCompletionsNodeBuilder> childBuilder) {
         children.add(new ChildNode.OpenNode(name, buildNestedCompletionsTree(childBuilder)));
       }
     };
@@ -81,21 +81,21 @@ class NestedCompletionsNode {
     return new NestedCompletionsNode(children);
   }
 
-  @NotNull
-  public NestedCompletionsNode merge(@NotNull NestedCompletionsNode other) {
+  @Nonnull
+  public NestedCompletionsNode merge(@Nonnull NestedCompletionsNode other) {
     List<ChildNode> merged = new ArrayList<>(this.children);
     merged.addAll(other.children);
     return new NestedCompletionsNode(merged);
   }
 
   @Nullable
-  public static NestedCompletionsNode navigate(@Nullable NestedCompletionsNode node, @NotNull JsonPointerPosition jsonPointer) {
+  public static NestedCompletionsNode navigate(@Nullable NestedCompletionsNode node, @Nonnull JsonPointerPosition jsonPointer) {
     if (node == null) return null;
     return node.navigate(0, toPathItems(jsonPointer));
   }
 
-  @NotNull
-  private static List<String> toPathItems(@NotNull JsonPointerPosition position) {
+  @Nonnull
+  private static List<String> toPathItems(@Nonnull JsonPointerPosition position) {
     String pointer = position.toJsonPointer();
     if (pointer == null || pointer.equals("/")) {
       return Collections.emptyList();
@@ -105,7 +105,7 @@ class NestedCompletionsNode {
   }
 
   @Nullable
-  private NestedCompletionsNode navigate(int index, @NotNull List<String> steps) {
+  private NestedCompletionsNode navigate(int index, @Nonnull List<String> steps) {
     if (index >= steps.size()) return this;
 
     List<ChildNode> matchingNodes = new ArrayList<>();
@@ -124,7 +124,7 @@ class NestedCompletionsNode {
   // some schemas provide both named and regex nodes for the same name
   // we need to prioritize named options over regex options
   @Nullable
-  private static ChildNode getPreferredChild(@NotNull Collection<ChildNode> nodes) {
+  private static ChildNode getPreferredChild(@Nonnull Collection<ChildNode> nodes) {
     for (ChildNode node : nodes) {
       if (node instanceof ChildNode.NamedChildNode) {
         return node;
@@ -133,7 +133,7 @@ class NestedCompletionsNode {
     return nodes.isEmpty() ? null : nodes.iterator().next();
   }
 
-  private static boolean matches(@NotNull ChildNode node, @NotNull String name) {
+  private static boolean matches(@Nonnull ChildNode node, @Nonnull String name) {
     if (node instanceof ChildNode.Isolated.RegexNode) {
       return ((ChildNode.Isolated.RegexNode) node).getRegex().matcher(name).matches();
     } else if (node instanceof ChildNode.NamedChildNode) {
@@ -144,11 +144,11 @@ class NestedCompletionsNode {
 }
 
 interface ChildNode {
-  @NotNull
+  @Nonnull
   NestedCompletionsNode getNode();
 
   interface NamedChildNode extends ChildNode {
-    @NotNull
+    @Nonnull
     String getName();
   }
 
@@ -157,18 +157,18 @@ interface ChildNode {
       private final Pattern regex;
       private final NestedCompletionsNode node;
 
-      public RegexNode(@NotNull Pattern regex, @NotNull NestedCompletionsNode node) {
+      public RegexNode(@Nonnull Pattern regex, @Nonnull NestedCompletionsNode node) {
         this.regex = regex;
         this.node = node;
       }
 
-      @NotNull
+      @Nonnull
       public Pattern getRegex() {
         return regex;
       }
 
       @Override
-      @NotNull
+      @Nonnull
       public NestedCompletionsNode getNode() {
         return node;
       }
@@ -193,19 +193,19 @@ interface ChildNode {
       private final String name;
       private final NestedCompletionsNode node;
 
-      public NamedNode(@NotNull String name, @NotNull NestedCompletionsNode node) {
+      public NamedNode(@Nonnull String name, @Nonnull NestedCompletionsNode node) {
         this.name = name;
         this.node = node;
       }
 
       @Override
-      @NotNull
+      @Nonnull
       public String getName() {
         return name;
       }
 
       @Override
-      @NotNull
+      @Nonnull
       public NestedCompletionsNode getNode() {
         return node;
       }
@@ -231,19 +231,19 @@ interface ChildNode {
     private final String name;
     private final NestedCompletionsNode node;
 
-    public OpenNode(@NotNull String name, @NotNull NestedCompletionsNode node) {
+    public OpenNode(@Nonnull String name, @Nonnull NestedCompletionsNode node) {
       this.name = name;
       this.node = node;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getName() {
       return name;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public NestedCompletionsNode getNode() {
       return node;
     }

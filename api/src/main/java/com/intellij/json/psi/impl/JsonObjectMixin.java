@@ -6,8 +6,8 @@ import com.intellij.json.psi.JsonProperty;
 import consulo.application.util.CachedValueProvider;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.util.LanguageCachedValueUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,12 +30,12 @@ public abstract class JsonObjectMixin extends JsonContainerImpl implements JsonO
       return CachedValueProvider.Result.createSingleDependency(cache, this);
     };
 
-  public JsonObjectMixin(@NotNull ASTNode node) {
+  public JsonObjectMixin(@Nonnull ASTNode node) {
     super(node);
   }
 
   @Override
-  public @Nullable JsonProperty findProperty(@NotNull String name) {
+  public @Nullable JsonProperty findProperty(@Nonnull String name) {
     return LanguageCachedValueUtil.getCachedValue(this, myPropertyCache).get(name);
   }
 }

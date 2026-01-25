@@ -6,13 +6,13 @@ import com.intellij.psi.PsiElement;
 import com.jetbrains.jsonSchema.extension.adapters.JsonArrayValueAdapter;
 import com.jetbrains.jsonSchema.extension.adapters.JsonObjectValueAdapter;
 import com.jetbrains.jsonSchema.extension.adapters.JsonValueAdapter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public final class JsonJsonGenericValueAdapter implements JsonValueAdapter {
-  private final @NotNull JsonValue myValue;
+  private final @Nonnull JsonValue myValue;
 
-  public JsonJsonGenericValueAdapter(@NotNull JsonValue value) {myValue = value;}
+  public JsonJsonGenericValueAdapter(@Nonnull JsonValue value) {myValue = value;}
 
   @Override
   public boolean isObject() {
@@ -45,7 +45,7 @@ public final class JsonJsonGenericValueAdapter implements JsonValueAdapter {
   }
 
   @Override
-  public @NotNull PsiElement getDelegate() {
+  public @Nonnull PsiElement getDelegate() {
     return myValue;
   }
 

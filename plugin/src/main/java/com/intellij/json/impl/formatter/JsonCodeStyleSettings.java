@@ -6,8 +6,8 @@ import com.intellij.json.JsonLanguage;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.CustomCodeStyleSettings;
+import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
@@ -64,12 +64,12 @@ public final class JsonCodeStyleSettings extends CustomCodeStyleSettings {
     private final @PropertyKey(resourceBundle = JsonBundle.BUNDLE) String myKey;
     private final int myId;
 
-    PropertyAlignment(int id, @NotNull @PropertyKey(resourceBundle = JsonBundle.BUNDLE) String key) {
+    PropertyAlignment(int id, @Nonnull @PropertyKey(resourceBundle = JsonBundle.BUNDLE) String key) {
       myKey = key;
       myId = id;
     }
 
-    public @NotNull String getDescription() {
+    public @Nonnull String getDescription() {
       return JsonBundle.message(myKey);
     }
 

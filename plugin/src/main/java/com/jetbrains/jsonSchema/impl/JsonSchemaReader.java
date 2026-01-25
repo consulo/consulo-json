@@ -28,8 +28,8 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.PairConsumer;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.*;
@@ -58,14 +58,14 @@ public final class JsonSchemaReader {
     fillMap();
   }
 
-  private final @NotNull VirtualFile myFile;
+  private final @Nonnull VirtualFile myFile;
 
-  public JsonSchemaReader(@NotNull VirtualFile file) {
+  public JsonSchemaReader(@Nonnull VirtualFile file) {
     myFile = file;
     myQueue = new ArrayDeque<>();
   }
 
-  public static @NotNull JsonSchemaObject readFromFile(@NotNull Project project, @NotNull VirtualFile file) throws Exception {
+  public static @Nonnull JsonSchemaObject readFromFile(@Nonnull Project project, @Nonnull VirtualFile file) throws Exception {
     if (!file.isValid()) {
       throw new Exception(JsonLocalize.schemaReaderCantLoadFile(file.getName()).get());
     }
@@ -78,7 +78,7 @@ public final class JsonSchemaReader {
     return object;
   }
 
-  public static @Nullable @DialogMessage String checkIfValidJsonSchema(@NotNull Project project, @NotNull VirtualFile file) {
+  public static @Nullable @DialogMessage String checkIfValidJsonSchema(@Nonnull Project project, @Nonnull VirtualFile file) {
     final long length = file.getLength();
     final String fileName = file.getName();
     if (length > MAX_SCHEMA_LENGTH) {
@@ -98,18 +98,18 @@ public final class JsonSchemaReader {
     return null;
   }
 
-  private static JsonSchemaObjectImpl enqueue(@NotNull Collection<Pair<JsonSchemaObjectImpl, JsonValueAdapter>> queue,
-                                              @NotNull JsonSchemaObjectImpl schemaObject,
-                                              @NotNull JsonValueAdapter container) {
+  private static JsonSchemaObjectImpl enqueue(@Nonnull Collection<Pair<JsonSchemaObjectImpl, JsonValueAdapter>> queue,
+                                              @Nonnull JsonSchemaObjectImpl schemaObject,
+                                              @Nonnull JsonValueAdapter container) {
     queue.add(Pair.create(schemaObject, container));
     return schemaObject;
   }
 
-  public static @Nullable JsonSchemaObject getOrComputeSchemaObjectForSchemaFile(@NotNull VirtualFile schemaFile, @NotNull Project project) {
+  public static @Nullable JsonSchemaObject getOrComputeSchemaObjectForSchemaFile(@Nonnull VirtualFile schemaFile, @Nonnull Project project) {
     return JsonSchemaObjectStorage.getInstance(project).getOrComputeSchemaRootObject(schemaFile);
   }
 
-  public @Nullable JsonSchemaObject read(@NotNull PsiFile file) {
+  public @Nullable JsonSchemaObject read(@Nonnull PsiFile file) {
     if (Registry.is("json.schema.object.v2")) {
       return getOrComputeSchemaObjectForSchemaFile(file.getOriginalFile().getVirtualFile(), file.getProject());
     }
@@ -122,7 +122,7 @@ public final class JsonSchemaReader {
     return rootAdapter == null ? null : read(rootAdapter);
   }
 
-  private @NotNull JsonSchemaObjectImpl read(@NotNull JsonValueAdapter rootAdapter) {
+  private @Nonnull JsonSchemaObjectImpl read(@Nonnull JsonValueAdapter rootAdapter) {
     final JsonSchemaObjectImpl root = new JsonSchemaObjectImpl(myFile, "/");
     enqueue(myQueue, root, rootAdapter);
     while (!myQueue.isEmpty()) {
@@ -166,9 +166,9 @@ public final class JsonSchemaReader {
     return myIds;
   }
 
-  private void readSingleDefinition(@NotNull String name,
-                                    @NotNull JsonValueAdapter value,
-                                    @NotNull JsonSchemaObjectImpl schema,
+  private void readSingleDefinition(@Nonnull String name,
+                                    @Nonnull JsonValueAdapter value,
+                                    @Nonnull JsonSchemaObjectImpl schema,
                                     String pointer) {
     String nextPointer = getNewPointer(name, pointer);
     var defined = enqueue(myQueue, new JsonSchemaObjectImpl(myFile, nextPointer), value);
@@ -177,7 +177,7 @@ public final class JsonSchemaReader {
     definitions.put(name, defined);
   }
 
-  public static @NotNull String getNewPointer(@NotNull String name, String oldPointer) {
+  public static @Nonnull String getNewPointer(@Nonnull String name, String oldPointer) {
     return oldPointer.equals("/") ? oldPointer + name : oldPointer + "/" + name;
   }
 
@@ -374,8 +374,8 @@ public final class JsonSchemaReader {
     };
   }
 
-  private static MyReader createContainer(@NotNull String containerName,
-                                          final @NotNull PairConsumer<JsonSchemaObjectImpl, List<JsonSchemaObjectImpl>> delegate) {
+  private static MyReader createContainer(@Nonnull String containerName,
+                                          final @Nonnull PairConsumer<JsonSchemaObjectImpl, List<JsonSchemaObjectImpl>> delegate) {
     return (element, object, queue, virtualFile) -> {
       if (element instanceof JsonArrayValueAdapter) {
         final List<JsonValueAdapter> list = ((JsonArrayValueAdapter)element).getElements();
@@ -406,7 +406,7 @@ public final class JsonSchemaReader {
     };
   }
 
-  public static @Nullable JsonSchemaType parseType(final @NotNull String typeString) {
+  public static @Nullable JsonSchemaType parseType(final @Nonnull String typeString) {
     try {
       return JsonSchemaType.valueOf("_" + typeString);
     }
@@ -457,15 +457,15 @@ public final class JsonSchemaReader {
     };
   }
 
-  private static String getString(@NotNull JsonValueAdapter value) {
+  private static String getString(@Nonnull JsonValueAdapter value) {
     return StringUtil.unquoteString(value.getDelegate().getText());
   }
 
-  private static boolean getBoolean(@NotNull JsonValueAdapter value) {
+  private static boolean getBoolean(@Nonnull JsonValueAdapter value) {
     return Boolean.parseBoolean(value.getDelegate().getText());
   }
 
-  private static @NotNull Number getNumber(@NotNull JsonValueAdapter value) {
+  private static @Nonnull Number getNumber(@Nonnull JsonValueAdapter value) {
     Number numberValue;
     try {
       numberValue = Integer.parseInt(value.getDelegate().getText());
@@ -512,7 +512,7 @@ public final class JsonSchemaReader {
     };
   }
 
-  private static @NotNull Predicate<JsonValueAdapter> notEmptyString() {
+  private static @Nonnull Predicate<JsonValueAdapter> notEmptyString() {
     return el -> el.isStringLiteral() && !StringUtil.isEmptyOrSpaces(el.getDelegate().getText());
   }
 
@@ -614,8 +614,8 @@ public final class JsonSchemaReader {
     };
   }
 
-  private static @NotNull Map<String, JsonSchemaObjectImpl> readInnerObject(String parentPointer, @NotNull JsonValueAdapter element,
-                                                                            @NotNull Collection<Pair<JsonSchemaObjectImpl, JsonValueAdapter>> queue,
+  private static @Nonnull Map<String, JsonSchemaObjectImpl> readInnerObject(String parentPointer, @Nonnull JsonValueAdapter element,
+                                                                            @Nonnull Collection<Pair<JsonSchemaObjectImpl, JsonValueAdapter>> queue,
                                                                             VirtualFile virtualFile) {
     final Map<String, JsonSchemaObjectImpl> map = new HashMap<>();
     if (!(element instanceof JsonObjectValueAdapter)) return map;
@@ -638,7 +638,7 @@ public final class JsonSchemaReader {
     return map;
   }
 
-  private static @NotNull Map<String, Object> readExample(@NotNull JsonValueAdapter element) {
+  private static @Nonnull Map<String, Object> readExample(@Nonnull JsonValueAdapter element) {
     final Map<String, Object> example = new HashMap<>();
     if (!(element instanceof JsonObjectValueAdapter objectAdapter)) return example;
     for (JsonPropertyAdapter property : objectAdapter.getPropertyList()) {
@@ -689,9 +689,9 @@ public final class JsonSchemaReader {
   }
 
   private interface MyReader {
-    void read(@NotNull JsonValueAdapter source,
-              @NotNull JsonSchemaObjectImpl target,
-              @NotNull Collection<Pair<JsonSchemaObjectImpl, JsonValueAdapter>> processingQueue,
-              @NotNull VirtualFile file);
+    void read(@Nonnull JsonValueAdapter source,
+              @Nonnull JsonSchemaObjectImpl target,
+              @Nonnull Collection<Pair<JsonSchemaObjectImpl, JsonValueAdapter>> processingQueue,
+              @Nonnull VirtualFile file);
   }
 }

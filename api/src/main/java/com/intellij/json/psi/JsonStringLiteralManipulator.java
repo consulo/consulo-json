@@ -7,12 +7,11 @@ import consulo.language.psi.AbstractElementManipulator;
 import consulo.language.util.IncorrectOperationException;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 @ExtensionImpl
 public final class JsonStringLiteralManipulator extends AbstractElementManipulator<JsonStringLiteral> {
     @Override
-    public JsonStringLiteral handleContentChange(@NotNull JsonStringLiteral element, @NotNull TextRange range, String newContent)
+    public JsonStringLiteral handleContentChange(@Nonnull JsonStringLiteral element, @Nonnull TextRange range, String newContent)
         throws IncorrectOperationException {
         assert new TextRange(0, element.getTextLength()).contains(range);
 
@@ -27,7 +26,7 @@ public final class JsonStringLiteralManipulator extends AbstractElementManipulat
     }
 
     @Override
-    public @NotNull TextRange getRangeInElement(@NotNull JsonStringLiteral element) {
+    public @Nonnull TextRange getRangeInElement(@Nonnull JsonStringLiteral element) {
         final String content = element.getText();
         final int startOffset = content.startsWith("'") || content.startsWith("\"") ? 1 : 0;
         final int endOffset = content.length() > 1 && (content.endsWith("'") || content.endsWith("\"")) ? -1 : 0;

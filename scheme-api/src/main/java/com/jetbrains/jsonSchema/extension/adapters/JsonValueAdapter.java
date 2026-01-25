@@ -17,8 +17,8 @@ package com.jetbrains.jsonSchema.extension.adapters;
 
 import com.jetbrains.jsonSchema.impl.JsonSchemaType;
 import consulo.language.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface JsonValueAdapter {
   default boolean isShouldBeIgnored() {return false;}
@@ -38,11 +38,13 @@ public interface JsonValueAdapter {
    */
   default boolean isEmptyAdapter() { return false; }
 
-  @NotNull
+  @Nonnull
   PsiElement getDelegate();
 
-  @Nullable JsonObjectValueAdapter getAsObject();
-  @Nullable JsonArrayValueAdapter getAsArray();
+  @Nullable
+  JsonObjectValueAdapter getAsObject();
+  @Nullable
+  JsonArrayValueAdapter getAsArray();
 
   default boolean shouldCheckIntegralRequirements() { return true; }
   default boolean shouldCheckAsValue() { return true; }

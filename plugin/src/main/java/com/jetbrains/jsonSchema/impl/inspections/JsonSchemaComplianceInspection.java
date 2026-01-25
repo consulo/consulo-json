@@ -14,8 +14,8 @@ import com.jetbrains.jsonSchema.JsonSchemaService;
 import com.jetbrains.jsonSchema.JsonComplianceCheckerOptions;
 import com.jetbrains.jsonSchema.impl.JsonSchemaComplianceChecker;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import static com.intellij.codeInspection.options.OptPane.checkbox;
 import static com.intellij.codeInspection.options.OptPane.pane;
@@ -24,15 +24,15 @@ public final class JsonSchemaComplianceInspection extends JsonSchemaBasedInspect
   public boolean myCaseInsensitiveEnum = false;
 
   @Override
-  protected PsiElementVisitor doBuildVisitor(@NotNull JsonValue root, @Nullable JsonSchemaObject schema, @NotNull JsonSchemaService service,
-                                             @NotNull ProblemsHolder holder,
-                                             @NotNull LocalInspectionToolSession session) {
+  protected PsiElementVisitor doBuildVisitor(@Nonnull JsonValue root, @Nullable JsonSchemaObject schema, @Nonnull JsonSchemaService service,
+                                             @Nonnull ProblemsHolder holder,
+                                             @Nonnull LocalInspectionToolSession session) {
     if (schema == null) return PsiElementVisitor.EMPTY_VISITOR;
     JsonComplianceCheckerOptions options = new JsonComplianceCheckerOptions(myCaseInsensitiveEnum);
 
     return new JsonElementVisitor() {
       @Override
-      public void visitElement(@NotNull PsiElement element) {
+      public void visitElement(@Nonnull PsiElement element) {
         if (element == root) {
           // perform this only for the root element, because the checker traverses the hierarchy itself
           annotate(element, schema, holder, session, options);
@@ -43,15 +43,15 @@ public final class JsonSchemaComplianceInspection extends JsonSchemaBasedInspect
   }
 
   @Override
-  public @NotNull OptPane getOptionsPane() {
+  public @Nonnull OptPane getOptionsPane() {
     return pane(
       checkbox("myCaseInsensitiveEnum", JsonBundle.message("json.schema.inspection.case.insensitive.enum")));
   }
 
-  private static void annotate(@NotNull PsiElement element,
-                               @NotNull JsonSchemaObject rootSchema,
-                               @NotNull ProblemsHolder holder,
-                               @NotNull LocalInspectionToolSession session,
+  private static void annotate(@Nonnull PsiElement element,
+                               @Nonnull JsonSchemaObject rootSchema,
+                               @Nonnull ProblemsHolder holder,
+                               @Nonnull LocalInspectionToolSession session,
                                JsonComplianceCheckerOptions options) {
     final JsonLikePsiWalker walker = JsonLikePsiWalker.getWalker(element, rootSchema);
     if (walker == null) return;

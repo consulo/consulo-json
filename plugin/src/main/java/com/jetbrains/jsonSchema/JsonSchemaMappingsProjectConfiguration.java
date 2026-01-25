@@ -12,16 +12,16 @@ import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.annotation.Tag;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.util.*;
 
 @State(name = "JsonSchemaMappingsProjectConfiguration", storages = @Storage("jsonSchemas.xml"))
 public class JsonSchemaMappingsProjectConfiguration implements PersistentStateComponent<JsonSchemaMappingsProjectConfiguration.MyState> {
-  private final @NotNull Project myProject;
+  private final @Nonnull Project myProject;
   public volatile MyState myState = new MyState();
 
   public @Nullable UserDefinedJsonSchemaConfiguration findMappingBySchemaInfo(JsonSchemaInfo value) {
@@ -58,11 +58,11 @@ public class JsonSchemaMappingsProjectConfiguration implements PersistentStateCo
     return null;
   }
 
-  public static JsonSchemaMappingsProjectConfiguration getInstance(final @NotNull Project project) {
+  public static JsonSchemaMappingsProjectConfiguration getInstance(final @Nonnull Project project) {
     return project.getService(JsonSchemaMappingsProjectConfiguration.class);
   }
 
-  public JsonSchemaMappingsProjectConfiguration(@NotNull Project project) {
+  public JsonSchemaMappingsProjectConfiguration(@Nonnull Project project) {
     myProject = project;
   }
 
@@ -71,9 +71,9 @@ public class JsonSchemaMappingsProjectConfiguration implements PersistentStateCo
     return myState;
   }
 
-  public void schemaFileMoved(final @NotNull Project project,
-                              final @NotNull String oldRelativePath,
-                              final @NotNull String newRelativePath) {
+  public void schemaFileMoved(final @Nonnull Project project,
+                              final @Nonnull String oldRelativePath,
+                              final @Nonnull String newRelativePath) {
       final Optional<UserDefinedJsonSchemaConfiguration> old = myState.myState.values().stream()
         .filter(schema -> FileUtil.pathsEqual(schema.getRelativePathToSchema(), oldRelativePath))
         .findFirst();
@@ -105,12 +105,12 @@ public class JsonSchemaMappingsProjectConfiguration implements PersistentStateCo
   }
 
   @Override
-  public void loadState(@NotNull MyState state) {
+  public void loadState(@Nonnull MyState state) {
     myState = state;
     JsonSchemaService.Impl.get(myProject).reset();
   }
 
-  public void setState(@NotNull Map<String, UserDefinedJsonSchemaConfiguration> state) {
+  public void setState(@Nonnull Map<String, UserDefinedJsonSchemaConfiguration> state) {
     myState = new MyState(state);
   }
 

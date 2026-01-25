@@ -11,41 +11,41 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLanguageInjectionHost;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
 
 public abstract class JsonSchemaInjectorBase implements MultiHostInjector {
   public static final class InjectedLanguageData implements Injection {
-    InjectedLanguageData(@NotNull Language language, @Nullable String prefix, @Nullable String postfix) {
+    InjectedLanguageData(@Nonnull Language language, @Nullable String prefix, @Nullable String postfix) {
       this.language = language;
       this.prefix = prefix;
       this.postfix = postfix;
     }
 
-    public @NotNull Language language;
+    public @Nonnull Language language;
     public @Nullable String prefix;
     public @Nullable String postfix;
 
     @Override
-    public @NotNull String getInjectedLanguageId() {
+    public @Nonnull String getInjectedLanguageId() {
       return language.getID();
     }
 
     @Override
-    public @NotNull Language getInjectedLanguage() {
+    public @Nonnull Language getInjectedLanguage() {
       return language;
     }
 
     @Override
-    public @NotNull String getPrefix() {
+    public @Nonnull String getPrefix() {
       return StringUtil.notNullize(prefix) ;
     }
 
     @Override
-    public @NotNull String getSuffix() {
+    public @Nonnull String getSuffix() {
       return StringUtil.notNullize(postfix) ;
     }
 
@@ -55,11 +55,11 @@ public abstract class JsonSchemaInjectorBase implements MultiHostInjector {
     }
   }
 
-  protected static void injectForHost(@NotNull MultiHostRegistrar registrar, @NotNull JsonStringLiteral host, @SuppressWarnings("SameParameterValue") @NotNull Language language) {
+  protected static void injectForHost(@Nonnull MultiHostRegistrar registrar, @Nonnull JsonStringLiteral host, @SuppressWarnings("SameParameterValue") @Nonnull Language language) {
     injectForHost(registrar, host, new InjectedLanguageData(language, null, null));
   }
 
-  protected static void injectForHost(@NotNull MultiHostRegistrar registrar, @NotNull JsonStringLiteral host, @NotNull InjectedLanguageData language) {
+  protected static void injectForHost(@Nonnull MultiHostRegistrar registrar, @Nonnull JsonStringLiteral host, @Nonnull InjectedLanguageData language) {
     List<Pair<TextRange, String>> fragments = host.getTextFragments();
     if (fragments.isEmpty()) return;
     registrar.startInjecting(language.language);
@@ -70,7 +70,7 @@ public abstract class JsonSchemaInjectorBase implements MultiHostInjector {
   }
 
   @Override
-  public @NotNull List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
+  public @Nonnull List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
     return Collections.singletonList(JsonStringLiteral.class);
   }
 }

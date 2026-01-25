@@ -6,8 +6,8 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * This API provides a mechanism to enable JSON schemas in particular files
@@ -26,7 +26,7 @@ public interface JsonSchemaEnabler {
    * @param project Current project
    * @return true if available, false otherwise
    */
-  boolean isEnabledForFile(@NotNull VirtualFile file, @Nullable Project project);
+  boolean isEnabledForFile(@Nonnull VirtualFile file, @Nullable Project project);
 
   /**
    * This method enables/disables JSON schema selection widget

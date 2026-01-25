@@ -5,9 +5,9 @@ import com.intellij.json.impl.pointer.JsonPointerPosition;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
 import com.jetbrains.jsonSchema.impl.tree.Operation;
 import consulo.application.progress.ProgressManager;
+import jakarta.annotation.Nonnull;
 import one.util.streamex.StreamEx;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,13 +16,13 @@ public final class JsonSchemaTreeNode {
   private boolean myAny;
   private boolean myNothing;
   private int myExcludingGroupNumber = -1;
-  private @NotNull SchemaResolveState myResolveState = SchemaResolveState.normal;
+  private @Nonnull SchemaResolveState myResolveState = SchemaResolveState.normal;
 
   private final @Nullable JsonSchemaObject mySchema;
-  private final @NotNull JsonPointerPosition myPosition;
+  private final @Nonnull JsonPointerPosition myPosition;
 
   private final @Nullable JsonSchemaTreeNode myParent;
-  private final @NotNull Collection<JsonSchemaTreeNode> myChildren = new LinkedHashSet<>();
+  private final @Nonnull Collection<JsonSchemaTreeNode> myChildren = new LinkedHashSet<>();
 
   public JsonSchemaTreeNode(@Nullable JsonSchemaTreeNode parent,
                             @Nullable JsonSchemaObject schema) {
@@ -45,7 +45,7 @@ public final class JsonSchemaTreeNode {
     myChildren.add(node);
   }
 
-  public void createChildrenFromOperation(@NotNull Operation operation) {
+  public void createChildrenFromOperation(@Nonnull Operation operation) {
     ProgressManager.checkCanceled();
     if (!SchemaResolveState.normal.equals(operation.myState)) {
       final JsonSchemaTreeNode node = new JsonSchemaTreeNode(this, null);
@@ -76,7 +76,7 @@ public final class JsonSchemaTreeNode {
     return nodes;
   }
 
-  public @NotNull SchemaResolveState getResolveState() {
+  public @Nonnull SchemaResolveState getResolveState() {
     return myResolveState;
   }
 
@@ -89,7 +89,7 @@ public final class JsonSchemaTreeNode {
   }
 
 
-  public void setChild(final @NotNull JsonSchemaObject schema) {
+  public void setChild(final @Nonnull JsonSchemaObject schema) {
     myChildren.add(new JsonSchemaTreeNode(this, schema));
   }
 
@@ -97,7 +97,7 @@ public final class JsonSchemaTreeNode {
     return mySchema;
   }
 
-  public @NotNull JsonPointerPosition getPosition() {
+  public @Nonnull JsonPointerPosition getPosition() {
     return myPosition;
   }
 
@@ -105,7 +105,7 @@ public final class JsonSchemaTreeNode {
     return myParent;
   }
 
-  public @NotNull Collection<JsonSchemaTreeNode> getChildren() {
+  public @Nonnull Collection<JsonSchemaTreeNode> getChildren() {
     return myChildren;
   }
 
@@ -113,7 +113,7 @@ public final class JsonSchemaTreeNode {
     return myExcludingGroupNumber;
   }
 
-  public void setPosition(@NotNull JsonPointerPosition steps) {
+  public void setPosition(@Nonnull JsonPointerPosition steps) {
     myPosition.updateFrom(steps);
   }
 

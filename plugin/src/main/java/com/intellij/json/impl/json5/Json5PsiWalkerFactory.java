@@ -8,8 +8,8 @@ import com.jetbrains.jsonSchema.impl.JsonOriginalPsiWalker;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public final class Json5PsiWalkerFactory implements JsonLikePsiWalkerFactory {
@@ -26,13 +26,13 @@ public final class Json5PsiWalkerFactory implements JsonLikePsiWalkerFactory {
   };
 
   @Override
-  public boolean handles(@NotNull PsiElement element) {
+  public boolean handles(@Nonnull PsiElement element) {
     PsiElement parent = element.getParent();
     return parent != null && JsonDialectUtil.getLanguageOrDefaultJson(parent) == Json5Language.INSTANCE;
   }
 
   @Override
-  public @NotNull JsonLikePsiWalker create(@Nullable JsonSchemaObject schemaObject) {
+  public @Nonnull JsonLikePsiWalker create(@Nullable JsonSchemaObject schemaObject) {
     return WALKER_INSTANCE;
   }
 }

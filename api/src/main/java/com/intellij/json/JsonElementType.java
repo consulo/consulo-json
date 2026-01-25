@@ -3,10 +3,10 @@ package com.intellij.json;
 
 import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 public final class JsonElementType extends IElementType {
-  public JsonElementType(@NotNull @NonNls String debugName) {
+  public JsonElementType(@Nonnull @NonNls String debugName) {
     super(debugName, JsonLanguage.INSTANCE);
   }
 }

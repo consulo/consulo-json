@@ -16,15 +16,15 @@ import com.jetbrains.jsonSchema.extension.JsonLikePsiWalker;
 import com.jetbrains.jsonSchema.JsonSchemaService;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
 import com.jetbrains.jsonSchema.impl.JsonSchemaResolver;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 
 import static com.jetbrains.jsonSchema.impl.light.SchemaKeywordsKt.X_INTELLIJ_LANGUAGE_INJECTION;
 
 public abstract class JsonSchemaSpellcheckerClient {
-  protected abstract @NotNull PsiElement getElement();
+  protected abstract @Nonnull PsiElement getElement();
 
   protected abstract @Nullable String getValue();
 
@@ -61,7 +61,7 @@ public abstract class JsonSchemaSpellcheckerClient {
     });
   }
 
-  protected boolean isXIntellijInjection(@NotNull JsonSchemaService service, @NotNull JsonSchemaObject rootSchema) {
+  protected boolean isXIntellijInjection(@Nonnull JsonSchemaService service, @Nonnull JsonSchemaObject rootSchema) {
     if (service.isSchemaFile(rootSchema)) {
       JsonProperty property = ObjectUtils.tryCast(getElement().getParent(), JsonProperty.class);
       if (property != null) {

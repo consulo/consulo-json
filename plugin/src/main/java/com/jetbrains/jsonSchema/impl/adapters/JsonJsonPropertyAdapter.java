@@ -10,16 +10,16 @@ import com.intellij.util.containers.ContainerUtil;
 import com.jetbrains.jsonSchema.extension.adapters.JsonObjectValueAdapter;
 import com.jetbrains.jsonSchema.extension.adapters.JsonPropertyAdapter;
 import com.jetbrains.jsonSchema.extension.adapters.JsonValueAdapter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
 
 public final class JsonJsonPropertyAdapter implements JsonPropertyAdapter {
-  private final @NotNull JsonProperty myProperty;
+  private final @Nonnull JsonProperty myProperty;
 
-  public JsonJsonPropertyAdapter(@NotNull JsonProperty property) {
+  public JsonJsonPropertyAdapter(@Nonnull JsonProperty property) {
     myProperty = property;
   }
 
@@ -29,7 +29,7 @@ public final class JsonJsonPropertyAdapter implements JsonPropertyAdapter {
   }
 
   @Override
-  public @NotNull Collection<JsonValueAdapter> getValues() {
+  public @Nonnull Collection<JsonValueAdapter> getValues() {
     return myProperty.getValue() == null ? ContainerUtil.emptyList() : Collections.singletonList(createAdapterByType(myProperty.getValue()));
   }
 
@@ -39,7 +39,7 @@ public final class JsonJsonPropertyAdapter implements JsonPropertyAdapter {
   }
 
   @Override
-  public @NotNull PsiElement getDelegate() {
+  public @Nonnull PsiElement getDelegate() {
     return myProperty;
   }
 
@@ -48,7 +48,7 @@ public final class JsonJsonPropertyAdapter implements JsonPropertyAdapter {
     return myProperty.getParent() instanceof JsonObject ? new JsonJsonObjectAdapter((JsonObject)myProperty.getParent()) : null;
   }
 
-  public static @NotNull JsonValueAdapter createAdapterByType(@NotNull JsonValue value) {
+  public static @Nonnull JsonValueAdapter createAdapterByType(@Nonnull JsonValue value) {
     if (value instanceof JsonObject) return new JsonJsonObjectAdapter((JsonObject)value);
     if (value instanceof JsonArray) return new JsonJsonArrayAdapter((JsonArray)value);
     return new JsonJsonGenericValueAdapter(value);

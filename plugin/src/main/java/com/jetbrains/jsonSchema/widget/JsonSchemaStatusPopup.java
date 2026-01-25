@@ -13,8 +13,8 @@ import com.jetbrains.jsonSchema.JsonSchemaMappingsProjectConfiguration;
 import com.jetbrains.jsonSchema.UserDefinedJsonSchemaConfiguration;
 import com.jetbrains.jsonSchema.extension.JsonSchemaInfo;
 import com.jetbrains.jsonSchema.JsonSchemaService;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 public final class JsonSchemaStatusPopup {
   static final JsonSchemaInfo ADD_MAPPING = new JsonSchemaInfo("") {
     @Override
-    public @NotNull String getDescription() {
+    public @Nonnull String getDescription() {
       return JsonBundle.message("schema.widget.add.mapping");
     }
   };
@@ -32,7 +32,7 @@ public final class JsonSchemaStatusPopup {
   static final JsonSchemaInfo IGNORE_FILE = new JsonSchemaInfo("") {
 
     @Override
-    public @Nls @NotNull String getDescription() {
+    public @Nls @Nonnull String getDescription() {
       return JsonBundle.message("schema.widget.no.mapping");
     }
   };
@@ -40,36 +40,36 @@ public final class JsonSchemaStatusPopup {
   static final JsonSchemaInfo STOP_IGNORE_FILE = new JsonSchemaInfo("") {
 
     @Override
-    public @Nls @NotNull String getDescription() {
+    public @Nls @Nonnull String getDescription() {
       return JsonBundle.message("schema.widget.stop.ignore.file");
     }
   };
 
   static final JsonSchemaInfo EDIT_MAPPINGS = new JsonSchemaInfo("") {
     @Override
-    public @NotNull String getDescription() {
+    public @Nonnull String getDescription() {
       return JsonBundle.message("schema.widget.edit.mappings");
     }
   };
 
   public static final JsonSchemaInfo LOAD_REMOTE = new JsonSchemaInfo("") {
     @Override
-    public @NotNull String getDescription() {
+    public @Nonnull String getDescription() {
       return JsonBundle.message("schema.widget.load.mappings");
     }
   };
 
-  static ListPopup createPopup(@NotNull JsonSchemaService service,
-                               @NotNull Project project,
-                               @NotNull VirtualFile virtualFile,
+  static ListPopup createPopup(@Nonnull JsonSchemaService service,
+                               @Nonnull Project project,
+                               @Nonnull VirtualFile virtualFile,
                                boolean showOnlyEdit) {
     JsonSchemaInfoPopupStep step = createPopupStep(service, project, virtualFile, showOnlyEdit);
     return JBPopupFactory.getInstance().createListPopup(step);
   }
 
-  static @NotNull JsonSchemaInfoPopupStep createPopupStep(@NotNull JsonSchemaService service,
-                                                          @NotNull Project project,
-                                                          @NotNull VirtualFile virtualFile,
+  static @Nonnull JsonSchemaInfoPopupStep createPopupStep(@Nonnull JsonSchemaService service,
+                                                          @Nonnull Project project,
+                                                          @Nonnull VirtualFile virtualFile,
                                                           boolean showOnlyEdit) {
     List<JsonSchemaInfo> allSchemas;
     JsonSchemaMappingsProjectConfiguration configuration = JsonSchemaMappingsProjectConfiguration.getInstance(project);

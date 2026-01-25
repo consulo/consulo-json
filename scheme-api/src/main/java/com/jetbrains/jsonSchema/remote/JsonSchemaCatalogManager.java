@@ -20,8 +20,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.virtualFileSystem.http.RemoteFileInfo;
 import consulo.virtualFileSystem.http.RemoteFileManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.nio.file.*;
@@ -44,17 +44,17 @@ public final class JsonSchemaCatalogManager {
     "https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/"
   );
 
-  private final @NotNull Project myProject;
-  private final @NotNull JsonSchemaRemoteContentProvider myRemoteContentProvider;
+  private final @Nonnull Project myProject;
+  private final @Nonnull JsonSchemaRemoteContentProvider myRemoteContentProvider;
   private @Nullable VirtualFile myCatalog = null;
-  private final @NotNull ConcurrentMap<VirtualFile, String> myResolvedMappings = ContainerUtil.createConcurrentSoftMap();
+  private final @Nonnull ConcurrentMap<VirtualFile, String> myResolvedMappings = ContainerUtil.createConcurrentSoftMap();
   private static final String NO_CACHE = "$_$_WS_NO_CACHE_$_$";
   private static final String EMPTY = "$_$_WS_EMPTY_$_$";
   private VirtualFile myTestSchemaStoreFile;
 
   private final Map<Runnable, FileDownloadingAdapter> myDownloadingAdapters = CollectionFactory.createConcurrentWeakMap();
 
-  public JsonSchemaCatalogManager(@NotNull Project project) {
+  public JsonSchemaCatalogManager(@Nonnull Project project) {
     myProject = project;
     myRemoteContentProvider = new JsonSchemaRemoteContentProvider();
   }
@@ -80,7 +80,7 @@ public final class JsonSchemaCatalogManager {
   }
 
   @TestOnly
-  public void registerTestSchemaStoreFile(@NotNull VirtualFile testSchemaStoreFile, @NotNull Disposable testDisposable) {
+  public void registerTestSchemaStoreFile(@Nonnull VirtualFile testSchemaStoreFile, @Nonnull Disposable testDisposable) {
     myTestSchemaStoreFile = testSchemaStoreFile;
     Disposer.register(testDisposable, () -> {
       myTestSchemaStoreFile = null;
@@ -89,7 +89,7 @@ public final class JsonSchemaCatalogManager {
     update();
   }
 
-  public @Nullable VirtualFile getSchemaFileForFile(@NotNull VirtualFile file) {
+  public @Nullable VirtualFile getSchemaFileForFile(@Nonnull VirtualFile file) {
     if (!JsonSchemaCatalogProjectConfiguration.getInstance(myProject).isCatalogEnabled()) {
       return null;
     }
@@ -114,7 +114,7 @@ public final class JsonSchemaCatalogManager {
     return JsonFileResolver.resolveSchemaByReference(file, schemaUrl);
   }
 
-  private static boolean isIgnoredAsHavingTooManyVariants(@NotNull String schemaUrl) {
+  private static boolean isIgnoredAsHavingTooManyVariants(@Nonnull String schemaUrl) {
     return ContainerUtil.exists(SCHEMA_URL_PREFIXES_WITH_TOO_MANY_VARIANTS, prefix -> schemaUrl.startsWith(prefix));
   }
 
@@ -126,13 +126,13 @@ public final class JsonSchemaCatalogManager {
     return ContainerUtil.emptyList();
   }
 
-  public void registerCatalogUpdateCallback(@NotNull Runnable callback) {
+  public void registerCatalogUpdateCallback(@Nonnull Runnable callback) {
     if (myCatalog instanceof HttpVirtualFile) {
       RemoteFileInfo info = ((HttpVirtualFile)myCatalog).getFileInfo();
       if (info != null) {
         FileDownloadingAdapter adapter = new FileDownloadingAdapter() {
           @Override
-          public void fileDownloaded(@NotNull VirtualFile localFile) {
+          public void fileDownloaded(@Nonnull VirtualFile localFile) {
             callback.run();
           }
         };
@@ -142,7 +142,7 @@ public final class JsonSchemaCatalogManager {
     }
   }
 
-  public void unregisterCatalogUpdateCallback(@NotNull Runnable callback) {
+  public void unregisterCatalogUpdateCallback(@Nonnull Runnable callback) {
     if (!myDownloadingAdapters.containsKey(callback)) return;
 
     if (myCatalog instanceof HttpVirtualFile) {
@@ -157,7 +157,7 @@ public final class JsonSchemaCatalogManager {
     JsonFileResolver.startFetchingHttpFileIfNeeded(myCatalog, project);
   }
 
-  private static @Nullable String resolveSchemaFile(@NotNull VirtualFile file, @NotNull VirtualFile catalogFile, @NotNull Project project) {
+  private static @Nullable String resolveSchemaFile(@Nonnull VirtualFile file, @Nonnull VirtualFile catalogFile, @Nonnull Project project) {
     JsonFileResolver.startFetchingHttpFileIfNeeded(catalogFile, project);
 
     List<JsonSchemaCatalogEntry> schemaCatalog = JsonCachedValues.getSchemaCatalog(catalogFile, project);
@@ -176,7 +176,7 @@ public final class JsonSchemaCatalogManager {
     return url;
   }
 
-  private static @Nullable String findMatchedUrl(@NotNull List<FileMatcher> matchers, @Nullable String filePath) {
+  private static @Nullable String findMatchedUrl(@Nonnull List<FileMatcher> matchers, @Nullable String filePath) {
     if (filePath == null) return null;
     Path path;
     try {
@@ -201,7 +201,7 @@ public final class JsonSchemaCatalogManager {
     return null;
   }
 
-  private static @Nullable String getRelativePath(@NotNull VirtualFile file, @NotNull Project project) {
+  private static @Nullable String getRelativePath(@Nonnull VirtualFile file, @Nonnull Project project) {
     String basePath = project.getBasePath();
     if (basePath != null) {
       basePath = StringUtil.trimEnd(basePath, VfsUtilCore.VFS_SEPARATOR_CHAR) + VfsUtilCore.VFS_SEPARATOR_CHAR;
@@ -221,18 +221,18 @@ public final class JsonSchemaCatalogManager {
     private final JsonSchemaCatalogEntry myEntry;
     private PathMatcher myMatcher;
 
-    private FileMatcher(@NotNull JsonSchemaCatalogEntry entry) {
+    private FileMatcher(@Nonnull JsonSchemaCatalogEntry entry) {
       myEntry = entry;
     }
 
-    private boolean matches(@NotNull Path filePath) {
+    private boolean matches(@Nonnull Path filePath) {
       if (myMatcher == null) {
         myMatcher = buildPathMatcher(myEntry.getFileMasks());
       }
       return myMatcher.matches(filePath);
     }
 
-    private static @NotNull PathMatcher buildPathMatcher(@NotNull Collection<String> fileMasks) {
+    private static @Nonnull PathMatcher buildPathMatcher(@Nonnull Collection<String> fileMasks) {
       List<String> refinedFileMasks = ContainerUtil.map(fileMasks, fileMask -> StringUtil.trimStart(fileMask, "**/"));
       if (refinedFileMasks.size() == 1) {
         return FileSystems.getDefault().getPathMatcher("glob:" + ContainerUtil.getFirstItem(refinedFileMasks));

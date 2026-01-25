@@ -17,8 +17,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.virtualFileSystem.http.RemoteFileInfo;
 import consulo.virtualFileSystem.http.RemoteFileState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -28,9 +28,9 @@ import java.util.stream.Stream;
 
 public final class JsonSchemaObjectReadingUtils {
   private static final Logger LOG = Logger.getInstance(JsonSchemaObjectReadingUtils.class);
-  public static final @NotNull JsonSchemaObject NULL_OBJ = new JsonSchemaObjectImpl("$_NULL_$");
+  public static final @Nonnull JsonSchemaObject NULL_OBJ = new JsonSchemaObjectImpl("$_NULL_$");
 
-  public static boolean hasProperties(@NotNull JsonSchemaObject schemaObject) {
+  public static boolean hasProperties(@Nonnull JsonSchemaObject schemaObject) {
     return schemaObject.getPropertyNames().hasNext();
   }
 
@@ -39,7 +39,7 @@ public final class JsonSchemaObjectReadingUtils {
    * @deprecated Use {@link  com.jetbrains.jsonSchema.impl.light.JsonSchemaRefResolverKt#resolveRefSchema}
    */
   @Deprecated()
-  public static @Nullable JsonSchemaObject resolveRefSchema(@NotNull JsonSchemaObject schemaNode, @NotNull JsonSchemaService service) {
+  public static @Nullable JsonSchemaObject resolveRefSchema(@Nonnull JsonSchemaObject schemaNode, @Nonnull JsonSchemaService service) {
     final String ref = schemaNode.getRef();
     assert !StringUtil.isEmptyOrSpaces(ref);
 
@@ -73,9 +73,9 @@ public final class JsonSchemaObjectReadingUtils {
   private static final Map<String, JsonSchemaVariantsTreeBuilder.SchemaUrlSplitter> complexReferenceCache
     = FactoryMap.create((key) -> new JsonSchemaVariantsTreeBuilder.SchemaUrlSplitter(key));
 
-  public static @Nullable JsonSchemaObject fetchSchemaFromRefDefinition(@NotNull String ref,
-                                                                        final @NotNull JsonSchemaObject schema,
-                                                                        @NotNull JsonSchemaService service,
+  public static @Nullable JsonSchemaObject fetchSchemaFromRefDefinition(@Nonnull String ref,
+                                                                        final @Nonnull JsonSchemaObject schema,
+                                                                        @Nonnull JsonSchemaService service,
                                                                         boolean recursive) {
 
     final VirtualFile schemaFile = service.resolveSchemaFile(schema);
@@ -116,9 +116,9 @@ public final class JsonSchemaObjectReadingUtils {
     return findRelativeDefinition(rootSchema, splitter, service);
   }
 
-  private static @Nullable JsonSchemaObject resolveSchemaByReference(@NotNull JsonSchemaService service,
-                                                                     @NotNull VirtualFile schemaFile,
-                                                                     @NotNull String schemaId) {
+  private static @Nullable JsonSchemaObject resolveSchemaByReference(@Nonnull JsonSchemaService service,
+                                                                     @Nonnull VirtualFile schemaFile,
+                                                                     @Nonnull String schemaId) {
     final VirtualFile refFile = service.findSchemaFileByReference(schemaId, schemaFile);
     if (refFile == null) {
       LOG.debug(String.format("Schema file not found by reference: '%s' from %s", schemaId, schemaFile.getPath()));
@@ -131,7 +131,7 @@ public final class JsonSchemaObjectReadingUtils {
     return refSchema;
   }
 
-  public static @Nullable JsonSchemaObject downloadAndParseRemoteSchema(@NotNull JsonSchemaService service, @NotNull VirtualFile refFile) {
+  public static @Nullable JsonSchemaObject downloadAndParseRemoteSchema(@Nonnull JsonSchemaService service, @Nonnull VirtualFile refFile) {
     if (refFile instanceof HttpVirtualFile) {
       RemoteFileInfo info = ((HttpVirtualFile)refFile).getFileInfo();
       if (info != null) {
@@ -149,9 +149,9 @@ public final class JsonSchemaObjectReadingUtils {
     return service.getSchemaObjectForSchemaFile(refFile);
   }
 
-  public static JsonSchemaObject findRelativeDefinition(final @NotNull JsonSchemaObject schema,
-                                                        final @NotNull JsonSchemaVariantsTreeBuilder.SchemaUrlSplitter splitter,
-                                                        @NotNull JsonSchemaService service) {
+  public static JsonSchemaObject findRelativeDefinition(final @Nonnull JsonSchemaObject schema,
+                                                        final @Nonnull JsonSchemaVariantsTreeBuilder.SchemaUrlSplitter splitter,
+                                                        @Nonnull JsonSchemaService service) {
     final String path = splitter.getRelativePath();
     if (StringUtil.isEmptyOrSpaces(path)) {
       final String id = splitter.getSchemaId();
@@ -180,7 +180,7 @@ public final class JsonSchemaObjectReadingUtils {
     return definition;
   }
 
-  public static boolean hasArrayChecks(@NotNull JsonSchemaObject schemaObject) {
+  public static boolean hasArrayChecks(@Nonnull JsonSchemaObject schemaObject) {
     return schemaObject.isUniqueItems()
            || schemaObject.getContainsSchema() != null
            || schemaObject.getItemsSchema() != null
@@ -189,7 +189,7 @@ public final class JsonSchemaObjectReadingUtils {
            || schemaObject.getMaxItems() != null;
   }
 
-  public static boolean hasObjectChecks(@NotNull JsonSchemaObject schemaObject) {
+  public static boolean hasObjectChecks(@Nonnull JsonSchemaObject schemaObject) {
     return hasProperties(schemaObject)
            || schemaObject.getPropertyNamesSchema() != null
            || schemaObject.getPropertyDependencies() != null
@@ -199,7 +199,7 @@ public final class JsonSchemaObjectReadingUtils {
            || schemaObject.getMaxProperties() != null;
   }
 
-  public static boolean hasNumericChecks(@NotNull JsonSchemaObject schemaObject) {
+  public static boolean hasNumericChecks(@Nonnull JsonSchemaObject schemaObject) {
     return schemaObject.getMultipleOf() != null
            || schemaObject.getExclusiveMinimumNumber() != null
            || schemaObject.getExclusiveMaximumNumber() != null
@@ -207,11 +207,11 @@ public final class JsonSchemaObjectReadingUtils {
            || schemaObject.getMinimum() != null;
   }
 
-  public static boolean hasStringChecks(@NotNull JsonSchemaObject schemaObject) {
+  public static boolean hasStringChecks(@Nonnull JsonSchemaObject schemaObject) {
     return schemaObject.getPattern() != null || schemaObject.getFormat() != null;
   }
 
-  public static @Nullable JsonSchemaType guessType(@NotNull JsonSchemaObject schemaObject) {
+  public static @Nullable JsonSchemaType guessType(@Nonnull JsonSchemaObject schemaObject) {
     // if we have an explicit type, here we are
     JsonSchemaType type = schemaObject.getType();
     if (type != null) return type;
@@ -263,7 +263,7 @@ public final class JsonSchemaObjectReadingUtils {
     return typeDescriptions.collect(Collectors.joining(" | ", "", isShort ? "| ..." : ""));
   }
 
-  public static @Nullable String getTypeDescription(@NotNull JsonSchemaObject schemaObject, boolean shortDesc) {
+  public static @Nullable String getTypeDescription(@Nonnull JsonSchemaObject schemaObject, boolean shortDesc) {
     JsonSchemaType type = schemaObject.getType();
     if (type != null) return type.getDescription();
 
@@ -285,7 +285,7 @@ public final class JsonSchemaObjectReadingUtils {
     return null;
   }
 
-  public static @Nullable JsonSchemaObject findRelativeDefinition(@NotNull JsonSchemaObject schemaObject, @NotNull String ref) {
+  public static @Nullable JsonSchemaObject findRelativeDefinition(@Nonnull JsonSchemaObject schemaObject, @Nonnull String ref) {
     if (JsonPointerUtil.isSelfReference(ref)) {
       return schemaObject;
     }
@@ -349,7 +349,7 @@ public final class JsonSchemaObjectReadingUtils {
     }
   }
 
-  public static boolean matchPattern(final @NotNull Pattern pattern, final @NotNull String s) {
+  public static boolean matchPattern(final @Nonnull Pattern pattern, final @Nonnull String s) {
     try {
       return pattern.matcher(StringUtil.newBombedCharSequence(s, 300)).matches();
     }
@@ -366,7 +366,7 @@ public final class JsonSchemaObjectReadingUtils {
     }
   }
 
-  public static Pair<Pattern, String> compilePattern(final @NotNull String pattern) {
+  public static Pair<Pattern, String> compilePattern(final @Nonnull String pattern) {
     try {
       return Pair.create(Pattern.compile(adaptSchemaPattern(pattern)), null);
     }
@@ -375,7 +375,7 @@ public final class JsonSchemaObjectReadingUtils {
     }
   }
 
-  private static @NotNull String adaptSchemaPattern(String pattern) {
+  private static @Nonnull String adaptSchemaPattern(String pattern) {
     pattern = pattern.startsWith("^") || pattern.startsWith("*") || pattern.startsWith(".") ? pattern : (".*" + pattern);
     pattern = pattern.endsWith("+") || pattern.endsWith("*") || pattern.endsWith("$") ? pattern : (pattern + ".*");
     pattern = pattern.replace("\\\\", "\\");

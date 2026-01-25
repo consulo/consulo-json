@@ -15,9 +15,9 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.virtualFileSystem.http.RemoteFileState;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
 import java.util.Map;
@@ -32,7 +32,7 @@ public class JsonSchemaObjectStorage {
   private static final Logger LOG = Logger.getInstance(JsonSchemaObjectStorage.class);
   private static final Set<String> SUPPORTED_FILE_TYPE_NAMES = Set.of("JSON", "JSON5", "YAML");
 
-  public static JsonSchemaObjectStorage getInstance(@NotNull Project project) {
+  public static JsonSchemaObjectStorage getInstance(@Nonnull Project project) {
     return project.getInstance(JsonSchemaObjectStorage.class);
   }
 
@@ -40,7 +40,7 @@ public class JsonSchemaObjectStorage {
     private final VirtualFile schemaFile;
     private final long modificationStamp;
 
-    SchemaId(@NotNull VirtualFile schemaFile, long modificationStamp) {
+    SchemaId(@Nonnull VirtualFile schemaFile, long modificationStamp) {
       this.schemaFile = schemaFile;
       this.modificationStamp = modificationStamp;
     }
@@ -63,7 +63,7 @@ public class JsonSchemaObjectStorage {
     ConcurrentFactoryMap.createMap(id -> createRootSchemaObject(id.schemaFile));
 
   @Nullable
-  public JsonSchemaObject getOrComputeSchemaRootObject(@NotNull VirtualFile schemaFile) {
+  public JsonSchemaObject getOrComputeSchemaRootObject(@Nonnull VirtualFile schemaFile) {
     if (!isSupportedSchemaFile(schemaFile)) return null;
 
     JsonSchemaObject result = parsedSchemaById.get(asSchemaId(schemaFile));
@@ -71,7 +71,7 @@ public class JsonSchemaObjectStorage {
   }
 
   @Nullable
-  public JsonSchemaObject getComputedSchemaRootOrNull(@NotNull VirtualFile maybeSchemaFile) {
+  public JsonSchemaObject getComputedSchemaRootOrNull(@Nonnull VirtualFile maybeSchemaFile) {
     SchemaId schemaId = asSchemaId(maybeSchemaFile);
     if (!parsedSchemaById.containsKey(schemaId)) return null;
 
@@ -79,21 +79,21 @@ public class JsonSchemaObjectStorage {
     return result instanceof MissingJsonSchemaObject ? null : result;
   }
 
-  private boolean isSupportedSchemaFile(@NotNull VirtualFile maybeSchemaFile) {
+  private boolean isSupportedSchemaFile(@Nonnull VirtualFile maybeSchemaFile) {
     return isSupportedSchemaFileType(maybeSchemaFile.getFileType())
            && (!(maybeSchemaFile instanceof HttpVirtualFile) || isLoadedHttpFile((HttpVirtualFile) maybeSchemaFile));
   }
 
-  private boolean isSupportedSchemaFileType(@NotNull FileType fileType) {
+  private boolean isSupportedSchemaFileType(@Nonnull FileType fileType) {
     return SUPPORTED_FILE_TYPE_NAMES.contains(fileType.getName());
   }
 
-  private boolean isLoadedHttpFile(@NotNull HttpVirtualFile maybeHttpFile) {
+  private boolean isLoadedHttpFile(@Nonnull HttpVirtualFile maybeHttpFile) {
     return maybeHttpFile.getFileInfo() != null && maybeHttpFile.getFileInfo().getState() == RemoteFileState.DOWNLOADED;
   }
 
-  @NotNull
-  private SchemaId asSchemaId(@NotNull VirtualFile file) {
+  @Nonnull
+  private SchemaId asSchemaId(@Nonnull VirtualFile file) {
     if (file instanceof LightVirtualFile) {
       return new SchemaId(file, -1);
     } else {
@@ -101,8 +101,8 @@ public class JsonSchemaObjectStorage {
     }
   }
 
-  @NotNull
-  private JsonSchemaObject createRootSchemaObject(@NotNull VirtualFile schemaFile) {
+  @Nonnull
+  private JsonSchemaObject createRootSchemaObject(@Nonnull VirtualFile schemaFile) {
     JsonNode parsedSchemaRoot = parseSchemaFileSafe(schemaFile);
     return parsedSchemaRoot == null
            ? MissingJsonSchemaObject.INSTANCE
@@ -110,7 +110,7 @@ public class JsonSchemaObjectStorage {
   }
 
   @Nullable
-  private JsonNode parseSchemaFileSafe(@NotNull VirtualFile schemaFile) {
+  private JsonNode parseSchemaFileSafe(@Nonnull VirtualFile schemaFile) {
     String providedFileTypeId = schemaFile.getFileType().getName();
     ObjectMapper suitableReader;
 

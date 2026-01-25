@@ -22,27 +22,27 @@ import com.intellij.util.Urls;
 import com.jetbrains.jsonSchema.UserDefinedJsonSchemaConfiguration;
 import com.jetbrains.jsonSchema.impl.JsonSchemaReader;
 import com.jetbrains.jsonSchema.remote.JsonFileResolver;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
 
 public final class JsonSchemaConfigurable extends NamedConfigurable<UserDefinedJsonSchemaConfiguration> {
   private final Project myProject;
-  private final @NotNull String mySchemaFilePath;
-  private final @NotNull UserDefinedJsonSchemaConfiguration mySchema;
+  private final @Nonnull String mySchemaFilePath;
+  private final @Nonnull UserDefinedJsonSchemaConfiguration mySchema;
   private final @Nullable TreeUpdater myTreeUpdater;
-  private final @NotNull Function<? super String, String> myNameCreator;
+  private final @Nonnull Function<? super String, String> myNameCreator;
   private JsonSchemaMappingsView myView;
   private @ConfigurableName String myDisplayName;
   private @Nls String myError;
 
   public JsonSchemaConfigurable(Project project,
-                                @NotNull String schemaFilePath, @NotNull UserDefinedJsonSchemaConfiguration schema,
+                                @Nonnull String schemaFilePath, @Nonnull UserDefinedJsonSchemaConfiguration schema,
                                 @Nullable TreeUpdater updateTree,
-                                @NotNull Function<? super String, String> nameCreator) {
+                                @Nonnull Function<? super String, String> nameCreator) {
     super(true, () -> {
       if (updateTree != null) {
         updateTree.updateTree(true);
@@ -56,7 +56,7 @@ public final class JsonSchemaConfigurable extends NamedConfigurable<UserDefinedJ
     myDisplayName = mySchema.getName();
   }
 
-  public @NotNull UserDefinedJsonSchemaConfiguration getSchema() {
+  public @Nonnull UserDefinedJsonSchemaConfiguration getSchema() {
     return mySchema;
   }
 
@@ -107,7 +107,7 @@ public final class JsonSchemaConfigurable extends NamedConfigurable<UserDefinedJ
   }
 
   @Override
-  public @NotNull String getHelpTopic() {
+  public @Nonnull String getHelpTopic() {
     return JsonSchemaMappingsConfigurable.SETTINGS_JSON_SCHEMA;
   }
 
@@ -129,7 +129,7 @@ public final class JsonSchemaConfigurable extends NamedConfigurable<UserDefinedJ
     mySchema.setRelativePathToSchema(myView.getSchemaSubPath());
   }
 
-  public static boolean isValidURL(final @NotNull String url) {
+  public static boolean isValidURL(final @Nonnull String url) {
     return JsonFileResolver.isHttpPath(url) && Urls.parse(url, false) != null;
   }
 
@@ -179,7 +179,7 @@ public final class JsonSchemaConfigurable extends NamedConfigurable<UserDefinedJ
     }
   }
 
-  private void logErrorForUser(@NotNull @NotificationContent String error) {
+  private void logErrorForUser(@Nonnull @NotificationContent String error) {
     NotificationGroupManager.getInstance()
       .getNotificationGroup("JSON Schema")
       .createNotification(error, MessageType.WARNING).notify(myProject);

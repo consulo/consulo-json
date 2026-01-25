@@ -3,7 +3,7 @@ package com.jetbrains.jsonSchema.remote;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Disables applying schemastore.org JSON schema mappings for particular files.
@@ -11,5 +11,5 @@ import org.jetbrains.annotations.NotNull;
 public interface JsonSchemaCatalogExclusion {
   ExtensionPointName<JsonSchemaCatalogExclusion> EP_NAME = ExtensionPointName.create("com.intellij.json.catalog.exclusion");
 
-  boolean isExcluded(@NotNull VirtualFile file);
+  boolean isExcluded(@Nonnull VirtualFile file);
 }

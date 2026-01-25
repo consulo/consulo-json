@@ -7,14 +7,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.jetbrains.jsonSchema.extension.JsonSchemaEnabler;
 import com.jetbrains.jsonSchema.impl.light.nodes.JsonSchemaObjectStorage;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 
 public final class JsonSchemaIconProvider implements FileIconProvider {
   @Override
-  public @Nullable Icon getIcon(@NotNull VirtualFile file, int flags, @Nullable Project project) {
+  public @Nullable Icon getIcon(@Nonnull VirtualFile file, int flags, @Nullable Project project) {
     if (project != null
         && JsonSchemaEnabler.EXTENSION_POINT_NAME.getExtensionList().stream().anyMatch(e -> e.canBeSchemaFile(file))) {
       JsonSchemaService service = JsonSchemaService.Impl.get(project);

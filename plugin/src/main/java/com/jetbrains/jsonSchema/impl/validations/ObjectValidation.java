@@ -24,10 +24,10 @@ import com.jetbrains.jsonSchema.extension.adapters.JsonValueAdapter;
 import com.jetbrains.jsonSchema.fus.JsonSchemaFusCountedFeature;
 import com.jetbrains.jsonSchema.fus.JsonSchemaHighlightingSessionStatisticsCollector;
 import com.jetbrains.jsonSchema.impl.*;
+import jakarta.annotation.Nonnull;
 import kotlin.collections.CollectionsKt;
 import one.util.streamex.StreamEx;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,19 +39,19 @@ public final class ObjectValidation implements JsonSchemaValidation {
   public static final ObjectValidation INSTANCE = new ObjectValidation();
 
   @Override
-  public boolean validate(@NotNull JsonValueAdapter propValue,
-                          @NotNull JsonSchemaObject schema,
+  public boolean validate(@Nonnull JsonValueAdapter propValue,
+                          @Nonnull JsonSchemaObject schema,
                           @Nullable JsonSchemaType schemaType,
-                          @NotNull JsonValidationHost consumer,
-                          @NotNull JsonComplianceCheckerOptions options) {
+                          @Nonnull JsonValidationHost consumer,
+                          @Nonnull JsonComplianceCheckerOptions options) {
     JsonSchemaHighlightingSessionStatisticsCollector.getInstance().reportSchemaUsageFeature(JsonSchemaFusCountedFeature.ObjectValidation);
     return checkObject(propValue, schema, consumer, options);
   }
 
   private static final int MIN_LENGTH_TO_FIX_TYPOS = 3;
 
-  private static boolean checkObject(@NotNull JsonValueAdapter value,
-                                     @NotNull JsonSchemaObject schema,
+  private static boolean checkObject(@Nonnull JsonValueAdapter value,
+                                     @Nonnull JsonSchemaObject schema,
                                      JsonValidationHost consumer,
                                      JsonComplianceCheckerOptions options) {
     final JsonObjectValueAdapter object = value.getAsObject();
@@ -167,7 +167,7 @@ public final class ObjectValidation implements JsonSchemaValidation {
     return checkUnevaluatedPropertiesSchemaViolation(consumer, schema, object, options);
   }
 
-  private static @NotNull ArrayList<@NlsSafe String> iteratorToList(Iterator<String> propertyNamesIterator) {
+  private static @Nonnull ArrayList<@NlsSafe String> iteratorToList(Iterator<String> propertyNamesIterator) {
     return Collections.list(
       new Enumeration<>() {
         @Override
@@ -183,10 +183,10 @@ public final class ObjectValidation implements JsonSchemaValidation {
     );
   }
 
-  private static boolean checkUnevaluatedPropertiesSchemaViolation(@NotNull JsonValidationHost consumer,
-                                                                   @NotNull JsonSchemaObject schemaNode,
-                                                                   @NotNull JsonObjectValueAdapter inspectedObject,
-                                                                   @NotNull JsonComplianceCheckerOptions options) {
+  private static boolean checkUnevaluatedPropertiesSchemaViolation(@Nonnull JsonValidationHost consumer,
+                                                                   @Nonnull JsonSchemaObject schemaNode,
+                                                                   @Nonnull JsonObjectValueAdapter inspectedObject,
+                                                                   @Nonnull JsonComplianceCheckerOptions options) {
     var unevaluatedPropertiesSchema = schemaNode.getUnevaluatedPropertiesSchema();
     if (unevaluatedPropertiesSchema == null) return true;
 
@@ -209,9 +209,9 @@ public final class ObjectValidation implements JsonSchemaValidation {
     return isValid;
   }
 
-  private static boolean isCoveredByAdjacentSchemas(@NotNull JsonValidationHost validationHost,
-                                                    @NotNull JsonPropertyAdapter propertyAdapter,
-                                                    @NotNull JsonSchemaObject schemaNode) {
+  private static boolean isCoveredByAdjacentSchemas(@Nonnull JsonValidationHost validationHost,
+                                                    @Nonnull JsonPropertyAdapter propertyAdapter,
+                                                    @Nonnull JsonSchemaObject schemaNode) {
     var instancePropertyName = propertyAdapter.getName();
     if (instancePropertyName != null && schemaNode.getPropertyByName(instancePropertyName) != null) return true;
     if (instancePropertyName != null && schemaNode.getMatchingPatternPropertySchema(instancePropertyName) != null) return true;
@@ -224,10 +224,10 @@ public final class ObjectValidation implements JsonSchemaValidation {
     return false;
   }
 
-  public static JsonValidationError.MissingMultiplePropsIssueData createMissingPropertiesData(@NotNull JsonSchemaObject schema,
+  public static JsonValidationError.MissingMultiplePropsIssueData createMissingPropertiesData(@Nonnull JsonSchemaObject schema,
                                                                                               Set<String> requiredNames,
                                                                                               JsonValidationHost consumer,
-                                                                                              @NotNull JsonValueAdapter inspectedElementAdapter) {
+                                                                                              @Nonnull JsonValueAdapter inspectedElementAdapter) {
     List<JsonValidationError.MissingPropertyIssueData> allProps = new ArrayList<>();
     for (String req : requiredNames) {
       JsonSchemaObject propertySchema = resolvePropertySchema(schema, req);
@@ -279,7 +279,7 @@ public final class ObjectValidation implements JsonSchemaValidation {
     return new JsonValidationError.MissingMultiplePropsIssueData(allProps);
   }
 
-  private static JsonSchemaObject resolvePropertySchema(@NotNull JsonSchemaObject schema, String req) {
+  private static JsonSchemaObject resolvePropertySchema(@Nonnull JsonSchemaObject schema, String req) {
     var propOrNull = schema.getPropertyByName(req);
     if (propOrNull != null) {
       return propOrNull;
@@ -304,7 +304,7 @@ public final class ObjectValidation implements JsonSchemaValidation {
   }
 
 
-  private static @Nullable Object getDefaultValueFromEnum(@NotNull JsonSchemaObject propertySchema, @NotNull Ref<Integer> enumCount) {
+  private static @Nullable Object getDefaultValueFromEnum(@Nonnull JsonSchemaObject propertySchema, @Nonnull Ref<Integer> enumCount) {
     List<Object> enumValues = propertySchema.getEnum();
     if (enumValues != null) {
       enumCount.set(enumValues.size());

@@ -4,7 +4,7 @@ package com.intellij.json.json5;
 import com.intellij.json.JsonFileType;
 import consulo.json.localize.JsonLocalize;
 import consulo.localize.LocalizeValue;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 public final class Json5FileType extends JsonFileType {
     public static final Json5FileType INSTANCE = new Json5FileType();
@@ -15,19 +15,19 @@ public final class Json5FileType extends JsonFileType {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getId() {
         return "JSON5";
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public LocalizeValue getDescription() {
         return JsonLocalize.filetypeJson5Description();
     }
 
     @Override
-    public @NotNull String getDefaultExtension() {
+    public @Nonnull String getDefaultExtension() {
         return DEFAULT_EXTENSION;
     }
 }

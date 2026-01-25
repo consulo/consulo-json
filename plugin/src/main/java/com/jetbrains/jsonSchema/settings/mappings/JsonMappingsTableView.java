@@ -7,7 +7,7 @@ import com.intellij.ui.table.TableView;
 import com.intellij.util.ui.StatusText;
 import com.jetbrains.jsonSchema.JsonMappingKind;
 import com.jetbrains.jsonSchema.UserDefinedJsonSchemaConfiguration;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.table.TableCellEditor;
 
@@ -46,7 +46,7 @@ final class JsonMappingsTableView extends TableView<UserDefinedJsonSchemaConfigu
   }
 
   @Override
-  public @NotNull StatusText getEmptyText() {
+  public @Nonnull StatusText getEmptyText() {
     return myEmptyText;
   }
 }

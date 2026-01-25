@@ -17,27 +17,27 @@ import com.jetbrains.jsonSchema.JsonSchemaService;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
 import com.jetbrains.jsonSchema.impl.JsonSchemaResolver;
 import com.jetbrains.jsonSchema.impl.MatchResult;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public final class JsonSchemaDeprecationInspection extends JsonSchemaBasedInspectionBase {
   @Override
-  protected PsiElementVisitor doBuildVisitor(@NotNull JsonValue root,
+  protected PsiElementVisitor doBuildVisitor(@Nonnull JsonValue root,
                                              @Nullable JsonSchemaObject schema,
-                                             @NotNull JsonSchemaService service,
-                                             @NotNull ProblemsHolder holder,
-                                             @NotNull LocalInspectionToolSession session) {
+                                             @Nonnull JsonSchemaService service,
+                                             @Nonnull ProblemsHolder holder,
+                                             @Nonnull LocalInspectionToolSession session) {
     if (schema == null) return PsiElementVisitor.EMPTY_VISITOR;
     final JsonLikePsiWalker walker = JsonLikePsiWalker.getWalker(root, schema);
     if (walker == null) return PsiElementVisitor.EMPTY_VISITOR;
     Project project = root.getProject();
     return new JsonElementVisitor() {
       @Override
-      public void visitProperty(@NotNull JsonProperty o) {
+      public void visitProperty(@Nonnull JsonProperty o) {
         annotate(o);
         super.visitProperty(o);
       }
-      private void annotate(@NotNull JsonProperty o) {
+      private void annotate(@Nonnull JsonProperty o) {
         JsonPointerPosition position = walker.findPosition(o, true);
         if (position == null) return;
 

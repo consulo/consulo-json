@@ -38,8 +38,8 @@ import com.jetbrains.jsonSchema.extension.JsonSchemaInfo;
 import com.jetbrains.jsonSchema.JsonSchemaService;
 import com.jetbrains.jsonSchema.JsonSchemaVersion;
 import com.jetbrains.jsonSchema.widget.JsonSchemaInfoPopupStep;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -108,7 +108,7 @@ public final class JsonSchemaMappingsView implements Disposable {
       JBPopupFactory.getInstance().createListPopup(new JsonSchemaInfoPopupStep(schemas,
                                                                                myProject, null, service, JsonBundle.message("schema.configuration.mapping.remote")) {
         @Override
-        protected void setMapping(@Nullable JsonSchemaInfo selectedValue, @Nullable VirtualFile virtualFile, @NotNull Project project) {
+        protected void setMapping(@Nullable JsonSchemaInfo selectedValue, @Nullable VirtualFile virtualFile, @Nonnull Project project) {
           if (selectedValue != null) {
             mySchemaField.setText(selectedValue.getUrl(myProject));
             mySchemaPathChangedCallback.accept(selectedValue.getDescription(), true); // force updating name
@@ -120,7 +120,7 @@ public final class JsonSchemaMappingsView implements Disposable {
     SwingHelper.installFileCompletionAndBrowseDialog(myProject, mySchemaField, descriptor);
     mySchemaField.getTextField().getDocument().addDocumentListener(new DocumentAdapter() {
       @Override
-      protected void textChanged(@NotNull DocumentEvent e) {
+      protected void textChanged(@Nonnull DocumentEvent e) {
         mySchemaPathChangedCallback.accept(mySchemaField.getText(), false);
       }
     });
@@ -241,7 +241,7 @@ public final class JsonSchemaMappingsView implements Disposable {
     }
 
     @Override
-    public @NotNull TableCellRenderer getRenderer(UserDefinedJsonSchemaConfiguration.Item item) {
+    public @Nonnull TableCellRenderer getRenderer(UserDefinedJsonSchemaConfiguration.Item item) {
       return new DefaultTableCellRenderer() {
         @Override
         public Component getTableCellRendererComponent(JTable table,
@@ -292,7 +292,7 @@ public final class JsonSchemaMappingsView implements Disposable {
       JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<>(null,
                                                                            JsonMappingKind.values()) {
         @Override
-        public @NotNull String getTextFor(JsonMappingKind value) {
+        public @Nonnull String getTextFor(JsonMappingKind value) {
           return JsonBundle.message("schema.add.mapping.kind.text", StringUtil.capitalizeWords(value.getDescription(), true));
         }
 

@@ -9,8 +9,8 @@ import com.intellij.psi.PsiElement;
 import com.jetbrains.jsonSchema.extension.JsonLikePsiWalker;
 import com.jetbrains.jsonSchema.extension.JsonLikeSyntaxAdapter;
 import com.jetbrains.jsonSchema.extension.adapters.JsonPropertyAdapter;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
 
 public class FixPropertyNameTypoFix extends PsiUpdateModCommandQuickFix {
   private final String myAltName;
@@ -23,12 +23,12 @@ public class FixPropertyNameTypoFix extends PsiUpdateModCommandQuickFix {
   }
 
   @Override
-  public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getFamilyName() {
+  public @Nls(capitalization = Nls.Capitalization.Sentence) @Nonnull String getFamilyName() {
     return JsonBundle.message("fix.property.name.spelling", myAltName);
   }
 
   @Override
-  protected void applyFix(@NotNull Project project, @NotNull PsiElement element, @NotNull ModPsiUpdater updater) {
+  protected void applyFix(@Nonnull Project project, @Nonnull PsiElement element, @Nonnull ModPsiUpdater updater) {
     JsonLikePsiWalker walker = JsonLikePsiWalker.getWalker(element);
     if (walker == null) return;
     JsonPropertyAdapter parentProperty = walker.getParentPropertyAdapter(element);

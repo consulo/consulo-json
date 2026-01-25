@@ -16,16 +16,19 @@
 package com.jetbrains.jsonSchema.extension.adapters;
 
 import consulo.language.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 
 public interface JsonPropertyAdapter {
   @Nullable String getName();
-  @Nullable JsonValueAdapter getNameValueAdapter();
-  @NotNull Collection<JsonValueAdapter> getValues();
-  @NotNull
+  @Nullable
+  JsonValueAdapter getNameValueAdapter();
+  @Nonnull
+  Collection<JsonValueAdapter> getValues();
+  @Nonnull
   PsiElement getDelegate();
-  @Nullable JsonObjectValueAdapter getParentObject();
+  @Nullable
+  JsonObjectValueAdapter getParentObject();
 }

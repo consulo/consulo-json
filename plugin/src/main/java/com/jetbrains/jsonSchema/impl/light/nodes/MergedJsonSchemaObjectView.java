@@ -8,8 +8,8 @@ import com.jetbrains.jsonSchema.impl.MergedJsonSchemaObject;
 import com.jetbrains.jsonSchema.impl.light.legacy.LegacyJsonSchemaObjectMerger;
 import com.jetbrains.jsonSchema.impl.light.versions.JsonSchemaInterpretationStrategy;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
 
@@ -20,22 +20,22 @@ class MergedJsonSchemaObjectView extends JsonSchemaObject implements MergedJsonS
     private final JsonSchemaObject other;
     private final JsonSchemaObject pointTo;
 
-    public MergedJsonSchemaObjectView(@NotNull JsonSchemaObject base,
-                                      @NotNull JsonSchemaObject other,
-                                      @NotNull JsonSchemaObject pointTo) {
+    public MergedJsonSchemaObjectView(@Nonnull JsonSchemaObject base,
+                                      @Nonnull JsonSchemaObject other,
+                                      @Nonnull JsonSchemaObject pointTo) {
         this.base = base;
         this.other = other;
         this.pointTo = pointTo;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public JsonSchemaObject getBase() {
         return base;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public JsonSchemaObject getOther() {
         return other;
     }
@@ -50,7 +50,7 @@ class MergedJsonSchemaObjectView extends JsonSchemaObject implements MergedJsonS
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getPointer() {
         return pointTo.getPointer();
     }
@@ -76,7 +76,7 @@ class MergedJsonSchemaObjectView extends JsonSchemaObject implements MergedJsonS
 
     @Override
     @Nullable
-    public String readChildNodeValue(@NotNull String childNodeName) {
+    public String readChildNodeValue(@Nonnull String childNodeName) {
         return baseIfConditionOrOtherWithArgument(base, other,
             (schema, name) -> schema.readChildNodeValue(name),
             childNodeName,
@@ -84,21 +84,21 @@ class MergedJsonSchemaObjectView extends JsonSchemaObject implements MergedJsonS
     }
 
     @Override
-    public boolean hasChildNode(@NotNull String childNodeName) {
+    public boolean hasChildNode(@Nonnull String childNodeName) {
         return booleanOrWithArgument(base, other,
             (schema, name) -> schema.hasChildNode(name),
             childNodeName);
     }
 
     @Override
-    public boolean hasChildFieldsExcept(@NotNull List<String> namesToSkip) {
+    public boolean hasChildFieldsExcept(@Nonnull List<String> namesToSkip) {
         return booleanOrWithArgument(base, other,
             (schema, names) -> schema.hasChildFieldsExcept(names),
             namesToSkip);
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Iterable<JsonSchemaValidation> getValidations(@Nullable JsonSchemaType type, @Nullable JsonValueAdapter value) {
         JsonSchemaInterpretationStrategy strategy = getMergedSchemaInterpretationStrategy();
         if (strategy == null) {
@@ -110,7 +110,7 @@ class MergedJsonSchemaObjectView extends JsonSchemaObject implements MergedJsonS
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public JsonSchemaObject getRootSchemaObject() {
         return base.getRootSchemaObject();
     }
@@ -139,7 +139,7 @@ class MergedJsonSchemaObjectView extends JsonSchemaObject implements MergedJsonS
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Iterator<String> getDefinitionNames() {
         Set<String> names = new LinkedHashSet<>();
         base.getDefinitionNames().forEachRemaining(names::add);
@@ -149,7 +149,7 @@ class MergedJsonSchemaObjectView extends JsonSchemaObject implements MergedJsonS
 
     @Override
     @Nullable
-    public JsonSchemaObject getDefinitionByName(@NotNull String name) {
+    public JsonSchemaObject getDefinitionByName(@Nonnull String name) {
         JsonSchemaObject baseDef = base.getDefinitionByName(name);
         if (baseDef == null) {
             return other.getDefinitionByName(name);
@@ -164,7 +164,7 @@ class MergedJsonSchemaObjectView extends JsonSchemaObject implements MergedJsonS
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Iterator<String> getPropertyNames() {
         Set<String> names = new LinkedHashSet<>();
         base.getPropertyNames().forEachRemaining(names::add);
@@ -174,7 +174,7 @@ class MergedJsonSchemaObjectView extends JsonSchemaObject implements MergedJsonS
 
     @Override
     @Nullable
-    public JsonSchemaObject getPropertyByName(@NotNull String name) {
+    public JsonSchemaObject getPropertyByName(@Nonnull String name) {
         JsonSchemaObject baseProp = base.getPropertyByName(name);
         if (baseProp == null) {
             return other.getPropertyByName(name);
@@ -189,7 +189,7 @@ class MergedJsonSchemaObjectView extends JsonSchemaObject implements MergedJsonS
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Iterator<String> getSchemaDependencyNames() {
         Set<String> names = new LinkedHashSet<>();
         base.getSchemaDependencyNames().forEachRemaining(names::add);
@@ -199,7 +199,7 @@ class MergedJsonSchemaObjectView extends JsonSchemaObject implements MergedJsonS
 
     @Override
     @Nullable
-    public JsonSchemaObject getSchemaDependencyByName(@NotNull String name) {
+    public JsonSchemaObject getSchemaDependencyByName(@Nonnull String name) {
         JsonSchemaObject baseDef = base.getSchemaDependencyByName(name);
         if (baseDef == null) {
             return other.getSchemaDependencyByName(name);
@@ -470,7 +470,7 @@ class MergedJsonSchemaObjectView extends JsonSchemaObject implements MergedJsonS
 
     @Override
     @Nullable
-    public JsonSchemaObject getExampleByName(@NotNull String name) {
+    public JsonSchemaObject getExampleByName(@Nonnull String name) {
         return baseIfConditionOrOtherWithArgument(base, other,
             (schema, n) -> schema.getExampleByName(n),
             name,
@@ -509,7 +509,7 @@ class MergedJsonSchemaObjectView extends JsonSchemaObject implements MergedJsonS
 
     @Override
     @Nullable
-    public JsonSchemaObject getMatchingPatternPropertySchema(@NotNull String name) {
+    public JsonSchemaObject getMatchingPatternPropertySchema(@Nonnull String name) {
         return baseIfConditionOrOtherWithArgument(base, other,
             (schema, n) -> schema.getMatchingPatternPropertySchema(n),
             name,
@@ -517,7 +517,7 @@ class MergedJsonSchemaObjectView extends JsonSchemaObject implements MergedJsonS
     }
 
     @Override
-    public boolean checkByPattern(@NotNull String value) {
+    public boolean checkByPattern(@Nonnull String value) {
         return booleanOrWithArgument(base, other,
             (schema, v) -> schema.checkByPattern(v),
             value);
@@ -531,7 +531,7 @@ class MergedJsonSchemaObjectView extends JsonSchemaObject implements MergedJsonS
 
     @Override
     @Nullable
-    public JsonSchemaObject findRelativeDefinition(@NotNull String ref) {
+    public JsonSchemaObject findRelativeDefinition(@Nonnull String ref) {
         return baseIfConditionOrOtherWithArgument(base, other,
             (schema, r) -> schema.findRelativeDefinition(r),
             ref,
@@ -601,7 +601,7 @@ class MergedJsonSchemaObjectView extends JsonSchemaObject implements MergedJsonS
 
     @Override
     @Nullable
-    public JsonSchemaObject resolveRefSchema(@NotNull JsonSchemaService service) {
+    public JsonSchemaObject resolveRefSchema(@Nonnull JsonSchemaService service) {
         return other.resolveRefSchema(service);
     }
 
@@ -614,19 +614,19 @@ class MergedJsonSchemaObjectView extends JsonSchemaObject implements MergedJsonS
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Set<JsonSchemaType> mergeTypeVariantSets(@Nullable Set<JsonSchemaType> self,
                                                     @Nullable Set<JsonSchemaType> other) {
         throw new UnsupportedOperationException("Must not call mergeTypeVariantSets on light aggregated object");
     }
 
     @Override
-    public void mergeValues(@NotNull JsonSchemaObject other) {
+    public void mergeValues(@Nonnull JsonSchemaObject other) {
         throw new UnsupportedOperationException("Must not call mergeValues on light aggregated object");
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Map<String, JsonSchemaObject> getProperties() {
         throw new UnsupportedOperationException("Must not call propertiesMap on light aggregated object");
     }

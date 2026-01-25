@@ -3,7 +3,7 @@ package com.intellij.json.highlighting;
 
 import consulo.language.ast.IElementType;
 import consulo.language.lexer.StringLiteralLexer;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 public class JsonStringLiteralLexer extends StringLiteralLexer {
   private static final String PERMISSIVE_ESCAPES;
@@ -26,7 +26,7 @@ public class JsonStringLiteralLexer extends StringLiteralLexer {
   }
 
   @Override
-  protected @NotNull IElementType handleSingleSlashEscapeSequence() {
+  protected @Nonnull IElementType handleSingleSlashEscapeSequence() {
     return myIsPermissiveDialect ? myOriginalLiteralToken : super.handleSingleSlashEscapeSequence();
   }
 

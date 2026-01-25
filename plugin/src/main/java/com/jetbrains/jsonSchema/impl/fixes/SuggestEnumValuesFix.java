@@ -14,8 +14,8 @@ import com.jetbrains.jsonSchema.extension.JsonLikeSyntaxAdapter;
 import com.jetbrains.jsonSchema.JsonSchemaService;
 import com.jetbrains.jsonSchema.impl.JsonSchemaCompletionContributor;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -27,17 +27,17 @@ public final class SuggestEnumValuesFix extends PsiUpdateModCommandQuickFix {
   }
 
   @Override
-  public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getFamilyName() {
+  public @Nls(capitalization = Nls.Capitalization.Sentence) @Nonnull String getFamilyName() {
     return JsonBundle.message("replace.with.allowed.value");
   }
 
   @Override
-  public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getName() {
+  public @Nls(capitalization = Nls.Capitalization.Sentence) @Nonnull String getName() {
     return getFamilyName();
   }
 
   @Override
-  protected void applyFix(@NotNull Project project, @NotNull PsiElement initialElement, @NotNull ModPsiUpdater updater) {
+  protected void applyFix(@Nonnull Project project, @Nonnull PsiElement initialElement, @Nonnull ModPsiUpdater updater) {
     PsiFile file = initialElement.getContainingFile();
     PsiElement element = myQuickFixAdapter.adjustValue(initialElement);
     final JsonSchemaService jsonSchemaService = JsonSchemaService.Impl.get(project);

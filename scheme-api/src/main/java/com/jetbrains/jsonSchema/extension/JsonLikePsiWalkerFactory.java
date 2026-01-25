@@ -20,8 +20,8 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Implement to contribute a JSON-adapter for your language. This allows to run JSON Schemas on non JSON languages.
@@ -30,8 +30,8 @@ import org.jetbrains.annotations.Nullable;
 public interface JsonLikePsiWalkerFactory {
   ExtensionPointName<JsonLikePsiWalkerFactory> EXTENSION_POINT_NAME = ExtensionPointName.create(JsonLikePsiWalkerFactory.class);
 
-  boolean handles(@NotNull PsiElement element);
+  boolean handles(@Nonnull PsiElement element);
 
-  @NotNull
+  @Nonnull
   JsonLikePsiWalker create(@Nullable JsonSchemaObject schemaObject);
 }

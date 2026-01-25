@@ -12,8 +12,8 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Mikhail Golubev
@@ -21,12 +21,12 @@ import org.jetbrains.annotations.Nullable;
 @ExtensionImpl
 public final class JsonQualifiedNameProvider implements QualifiedNameProvider {
   @Override
-  public @Nullable PsiElement adjustElementToCopy(@NotNull PsiElement element) {
+  public @Nullable PsiElement adjustElementToCopy(@Nonnull PsiElement element) {
     return null;
   }
 
   @Override
-  public @Nullable String getQualifiedName(@NotNull PsiElement element) {
+  public @Nullable String getQualifiedName(@Nonnull PsiElement element) {
     return generateQualifiedName(element, JsonQualifiedNameKind.Qualified);
   }
 
@@ -65,7 +65,7 @@ public final class JsonQualifiedNameProvider implements QualifiedNameProvider {
   }
 
   @Override
-  public PsiElement qualifiedNameToElement(@NotNull String fqn, @NotNull Project project) {
+  public PsiElement qualifiedNameToElement(@Nonnull String fqn, @Nonnull Project project) {
     return null;
   }
 }

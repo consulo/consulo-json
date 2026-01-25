@@ -26,10 +26,10 @@ import com.jetbrains.jsonSchema.JsonSchemaType;
 import com.jetbrains.jsonSchema.extension.JsonLikePsiWalker;
 import com.jetbrains.jsonSchema.extension.JsonSchemaFileProvider;
 import com.jetbrains.jsonSchema.JsonSchemaService;
+import jakarta.annotation.Nonnull;
 import org.intellij.markdown.MarkdownParsingException;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,9 +55,9 @@ public class JsonSchemaDocumentationProvider implements DocumentationProvider {
   }
 
   public static @Nullable @Nls String findSchemaAndGenerateDoc(PsiElement element,
-                                                               @Nullable PsiElement originalElement,
-                                                               final boolean preferShort,
-                                                               @Nullable String forcedPropName) {
+                                                                                  @Nullable PsiElement originalElement,
+                                                                                  final boolean preferShort,
+                                                                                  @Nullable String forcedPropName) {
     if (element instanceof FakePsiElement) return null;
     element = isWhitespaceOrComment(originalElement) ? element : ObjectUtils.coalesce(originalElement, element);
     if (originalElement != null && hasFileOrPointerReferences(originalElement.getReferences())) return null;
@@ -85,10 +85,10 @@ public class JsonSchemaDocumentationProvider implements DocumentationProvider {
     return originalElement instanceof PsiWhiteSpace || originalElement instanceof PsiComment;
   }
 
-  public static @Nullable @Nls String generateDoc(final @NotNull PsiElement element,
-                                                  final @NotNull JsonSchemaObject rootSchema,
-                                                  final boolean preferShort,
-                                                  @Nullable String forcedPropName) {
+  public static @Nullable @Nls String generateDoc(final @Nonnull PsiElement element,
+                                                                     final @Nonnull JsonSchemaObject rootSchema,
+                                                                     final boolean preferShort,
+                                                                     @Nullable String forcedPropName) {
     final JsonLikePsiWalker walker = JsonLikePsiWalker.getWalker(element, rootSchema);
     if (walker == null) return null;
 
@@ -141,12 +141,12 @@ public class JsonSchemaDocumentationProvider implements DocumentationProvider {
     return appendNameTypeAndApi(position, getThirdPartyApiInfo(element, rootSchema), possibleTypes, htmlDescription, deprecated, preferShort);
   }
 
-  private static @Nullable @NlsSafe String appendNameTypeAndApi(@NotNull JsonPointerPosition position,
-                                                                @NotNull String apiInfo,
-                                                                @NotNull List<JsonSchemaType> possibleTypes,
-                                                                @Nullable String htmlDescription,
-                                                                boolean deprecated,
-                                                                boolean preferShort) {
+  private static @Nullable @NlsSafe String appendNameTypeAndApi(@Nonnull JsonPointerPosition position,
+                                                                                   @Nonnull String apiInfo,
+                                                                                   @Nonnull List<JsonSchemaType> possibleTypes,
+                                                                                   @Nullable String htmlDescription,
+                                                                                   boolean deprecated,
+                                                                                   boolean preferShort) {
     if (position.isEmpty()) return htmlDescription;
 
     String name = position.getLastName();
@@ -169,8 +169,8 @@ public class JsonSchemaDocumentationProvider implements DocumentationProvider {
     return htmlDescription;
   }
 
-  private static @NotNull String getThirdPartyApiInfo(@NotNull PsiElement element,
-                                                      @NotNull JsonSchemaObject rootSchema) {
+  private static @Nonnull String getThirdPartyApiInfo(@Nonnull PsiElement element,
+                                                      @Nonnull JsonSchemaObject rootSchema) {
     JsonSchemaService service = JsonSchemaService.Impl.get(element.getProject());
     String apiInfo = "";
     JsonSchemaFileProvider provider = service.getSchemaProvider(rootSchema);
@@ -183,7 +183,7 @@ public class JsonSchemaDocumentationProvider implements DocumentationProvider {
     return apiInfo;
   }
 
-  public static @Nullable String getBestDocumentation(boolean preferShort, final @NotNull JsonSchemaObject schema) {
+  public static @Nullable String getBestDocumentation(boolean preferShort, final @Nonnull JsonSchemaObject schema) {
     String htmlDescription = schema.getHtmlDescription();
     if (htmlDescription != null && hasNonTrustedProjects()) {
       htmlDescription = StringUtil.escapeXmlEntities(htmlDescription);
@@ -220,12 +220,12 @@ public class JsonSchemaDocumentationProvider implements DocumentationProvider {
     return false;
   }
 
-  private static @NotNull String plainTextPostProcess(@NotNull String text) {
+  private static @Nonnull String plainTextPostProcess(@Nonnull String text) {
     return StringUtil.escapeXmlEntities(text).replace("\\n", "<br/>");
   }
 
   private static @Nullable String buildDocumentation(@Nullable String title,
-                                                     @Nullable String postProcessedDescription) {
+                                                                        @Nullable String postProcessedDescription) {
     if (title == null) {
       if (postProcessedDescription == null) {
         return null;
@@ -244,7 +244,7 @@ public class JsonSchemaDocumentationProvider implements DocumentationProvider {
     }
   }
 
-  private static @Nullable String getMarkdownDescriptionAsHtml(@NotNull JsonSchemaObject schema) {
+  private static @Nullable String getMarkdownDescriptionAsHtml(@Nonnull JsonSchemaObject schema) {
     String markdownDescription = getMarkdownDescription(schema);
     if (markdownDescription != null) {
       try {
@@ -257,7 +257,7 @@ public class JsonSchemaDocumentationProvider implements DocumentationProvider {
     return null;
   }
 
-  private static @Nullable String getMarkdownDescription(@NotNull JsonSchemaObject schema) {
+  private static @Nullable String getMarkdownDescription(@Nonnull JsonSchemaObject schema) {
     String rawValue = schema.readChildNodeValue("markdownDescription");
     if (rawValue == null) return null;
     return StringUtil.unquoteString(rawValue, '\"');
@@ -275,7 +275,7 @@ public class JsonSchemaDocumentationProvider implements DocumentationProvider {
     private final PsiElement myContextElement;
     private final String myAltName;
 
-    private FakeDocElement(PsiElement context, @NotNull String name) {
+    private FakeDocElement(PsiElement context, @Nonnull String name) {
       myContextElement = context;
       myAltName = name;
     }
@@ -286,12 +286,12 @@ public class JsonSchemaDocumentationProvider implements DocumentationProvider {
     }
 
     @Override
-    public @NotNull TextRange getTextRangeInParent() {
+    public @Nonnull TextRange getTextRangeInParent() {
       return myContextElement.getTextRange().shiftLeft(myContextElement.getTextOffset());
     }
 
     @Override
-    public @NotNull ItemPresentation getPresentation() {
+    public @Nonnull ItemPresentation getPresentation() {
       return new PresentationData(myAltName, null, null, null);
     }
   }

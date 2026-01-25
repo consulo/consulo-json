@@ -10,8 +10,8 @@ import com.jetbrains.jsonSchema.extension.JsonLikePsiWalker;
 import com.jetbrains.jsonSchema.extension.JsonLikeSyntaxAdapter;
 import com.jetbrains.jsonSchema.extension.adapters.JsonPropertyAdapter;
 import com.jetbrains.jsonSchema.JsonValidationError;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -26,17 +26,17 @@ public final class RemoveProhibitedPropertyFix extends PsiUpdateModCommandQuickF
   }
 
   @Override
-  public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getFamilyName() {
+  public @Nls(capitalization = Nls.Capitalization.Sentence) @Nonnull String getFamilyName() {
     return JsonBundle.message("remove.prohibited.property");
   }
 
   @Override
-  public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getName() {
+  public @Nls(capitalization = Nls.Capitalization.Sentence) @Nonnull String getName() {
     return getFamilyName() + " '" + myData.propertyName + "'";
   }
 
   @Override
-  protected void applyFix(@NotNull Project project, @NotNull PsiElement element, @NotNull ModPsiUpdater updater) {
+  protected void applyFix(@Nonnull Project project, @Nonnull PsiElement element, @Nonnull ModPsiUpdater updater) {
     JsonLikePsiWalker walker = JsonLikePsiWalker.getWalker(element);
     if (walker == null) return;
     JsonPropertyAdapter parentProperty = walker.getParentPropertyAdapter(element);

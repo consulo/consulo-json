@@ -20,8 +20,8 @@ import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.ListSeparator;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -34,11 +34,11 @@ import static com.jetbrains.jsonSchema.widget.JsonSchemaStatusPopup.*;
 public class JsonSchemaInfoPopupStep extends BaseListPopupStep<JsonSchemaInfo> implements ListPopupStepEx<JsonSchemaInfo> {
   private final Project myProject;
   private final @Nullable VirtualFile myVirtualFile;
-  private final @NotNull JsonSchemaService myService;
+  private final @Nonnull JsonSchemaService myService;
   private static final Icon EMPTY_ICON = JBUIScale.scaleIcon(EmptyIcon.create(AllIcons.General.Add.getIconWidth()));
 
-  public JsonSchemaInfoPopupStep(@NotNull List<JsonSchemaInfo> allSchemas, @NotNull Project project, @Nullable VirtualFile virtualFile,
-                                 @NotNull JsonSchemaService service, @Nullable @PopupTitle String title) {
+  public JsonSchemaInfoPopupStep(@Nonnull List<JsonSchemaInfo> allSchemas, @Nonnull Project project, @Nullable VirtualFile virtualFile,
+                                 @Nonnull JsonSchemaService service, @Nullable @PopupTitle String title) {
     super(title, allSchemas);
     myProject = project;
     myVirtualFile = virtualFile;
@@ -46,7 +46,7 @@ public class JsonSchemaInfoPopupStep extends BaseListPopupStep<JsonSchemaInfo> i
   }
 
   @Override
-  public @NotNull String getTextFor(JsonSchemaInfo value) {
+  public @Nonnull String getTextFor(JsonSchemaInfo value) {
     return value == null ? "" : value.getDescription();
   }
 
@@ -156,20 +156,20 @@ public class JsonSchemaInfoPopupStep extends BaseListPopupStep<JsonSchemaInfo> i
   }
 
   @Override
-  public void setEmptyText(@NotNull StatusText emptyText) {
+  public void setEmptyText(@Nonnull StatusText emptyText) {
   }
 
-  private static void markIgnored(@Nullable VirtualFile virtualFile, @NotNull Project project) {
+  private static void markIgnored(@Nullable VirtualFile virtualFile, @Nonnull Project project) {
     JsonSchemaMappingsProjectConfiguration configuration = JsonSchemaMappingsProjectConfiguration.getInstance(project);
     configuration.markAsIgnored(virtualFile);
   }
 
-  private static void unmarkIgnored(@Nullable VirtualFile virtualFile, @NotNull Project project) {
+  private static void unmarkIgnored(@Nullable VirtualFile virtualFile, @Nonnull Project project) {
     JsonSchemaMappingsProjectConfiguration configuration = JsonSchemaMappingsProjectConfiguration.getInstance(project);
     if (!configuration.isIgnoredFile(virtualFile)) return;
     configuration.unmarkAsIgnored(virtualFile);
   }
-  protected void setMapping(@Nullable JsonSchemaInfo selectedValue, @Nullable VirtualFile virtualFile, @NotNull Project project) {
+  protected void setMapping(@Nullable JsonSchemaInfo selectedValue, @Nullable VirtualFile virtualFile, @Nonnull Project project) {
     assert virtualFile != null: "override this method to do without a virtual file!";
     JsonSchemaMappingsProjectConfiguration configuration = JsonSchemaMappingsProjectConfiguration.getInstance(project);
 

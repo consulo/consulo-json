@@ -3,12 +3,12 @@ package com.jetbrains.jsonSchema.impl.light.legacy;
 
 import com.jetbrains.jsonSchema.JsonSchemaObject;
 import com.jetbrains.jsonSchema.internal.JsonSchemaObjectImpl;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 @Deprecated
 public class LegacyMutableJsonSchemaObjectMerger implements JsonSchemaObjectMerger {
   @Override
-  public @NotNull JsonSchemaObject mergeObjects(@NotNull JsonSchemaObject base, @NotNull JsonSchemaObject other, @NotNull JsonSchemaObject pointTo) {
+  public @Nonnull JsonSchemaObject mergeObjects(@Nonnull JsonSchemaObject base, @Nonnull JsonSchemaObject other, @Nonnull JsonSchemaObject pointTo) {
     return JsonSchemaObjectImpl.merge(((JsonSchemaObjectImpl)base), ((JsonSchemaObjectImpl)other), ((JsonSchemaObjectImpl)pointTo));
   }
 }

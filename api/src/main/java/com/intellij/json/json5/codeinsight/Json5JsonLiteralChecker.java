@@ -13,7 +13,7 @@ import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 import org.jspecify.annotations.NonNull;
 
 import java.util.regex.Pattern;

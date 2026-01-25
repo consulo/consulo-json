@@ -13,13 +13,12 @@ import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public final class JsonLineWrapPositionStrategy extends DefaultLineWrapPositionStrategy implements LanguageLineWrapPositionStrategy {
     @Override
-    public int calculateWrapPosition(@NotNull Document document,
+    public int calculateWrapPosition(@Nonnull Document document,
                                      @Nullable Project project,
                                      int startOffset,
                                      int endOffset,
@@ -44,7 +43,7 @@ public final class JsonLineWrapPositionStrategy extends DefaultLineWrapPositionS
 
     private static final int SKIP_WRAPPING = -2;
 
-    private static int getMinWrapPosition(@NotNull Document document, @NotNull Project project, int offset) {
+    private static int getMinWrapPosition(@Nonnull Document document, @Nonnull Project project, int offset) {
         PsiDocumentManager manager = PsiDocumentManager.getInstance(project);
         if (manager.isUncommited(document)) {
             manager.commitDocument(document);

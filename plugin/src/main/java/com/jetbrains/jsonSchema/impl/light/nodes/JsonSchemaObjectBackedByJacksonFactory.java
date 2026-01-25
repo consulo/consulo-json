@@ -7,8 +7,8 @@ import com.jetbrains.jsonSchema.impl.JsonSchemaReader;
 import com.jetbrains.jsonSchema.impl.light.JsonSchemaObjectFactory;
 import com.jetbrains.jsonSchema.impl.light.SchemaKeywords;
 import consulo.application.util.ConcurrentFactoryMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Map;
 
@@ -19,22 +19,22 @@ class JsonSchemaObjectBackedByJacksonFactory implements JsonSchemaObjectFactory<
   private final RootJsonSchemaObjectBackedByJackson rootSchemaObject;
   private final Map<String, JsonSchemaObjectBackedByJacksonBase> registeredChildren;
 
-  public JsonSchemaObjectBackedByJacksonFactory(@NotNull RootJsonSchemaObjectBackedByJackson rootSchemaObject) {
+  public JsonSchemaObjectBackedByJacksonFactory(@Nonnull RootJsonSchemaObjectBackedByJackson rootSchemaObject) {
     this.rootSchemaObject = rootSchemaObject;
     this.registeredChildren = ConcurrentFactoryMap.createMap(this::computeSchemaObjectByPointer);
   }
 
   @Override
   @Nullable
-  public JsonSchemaObject getSchemaObjectByAbsoluteJsonPointer(@NotNull String jsonPointer) {
+  public JsonSchemaObject getSchemaObjectByAbsoluteJsonPointer(@Nonnull String jsonPointer) {
     JsonSchemaObjectBackedByJacksonBase result = registeredChildren.get(jsonPointer);
     return result instanceof MissingJsonSchemaObject ? null : result;
   }
 
   @Override
   @Nullable
-  public JsonSchemaObjectBackedByJacksonBase getChildSchemaObjectByName(@NotNull JsonSchemaObjectBackedByJacksonBase parentSchemaObject,
-                                                                         @NotNull String... childNodeRelativePointer) {
+  public JsonSchemaObjectBackedByJacksonBase getChildSchemaObjectByName(@Nonnull JsonSchemaObjectBackedByJacksonBase parentSchemaObject,
+                                                                         @Nonnull String... childNodeRelativePointer) {
     if (childNodeRelativePointer.length == 0) return parentSchemaObject;
 
     String childAbsolutePointer = computeAbsoluteJsonPointer(parentSchemaObject.getPointer(), childNodeRelativePointer);
@@ -47,8 +47,8 @@ class JsonSchemaObjectBackedByJacksonFactory implements JsonSchemaObjectFactory<
     }
   }
 
-  @NotNull
-  private JsonSchemaObjectBackedByJacksonBase computeSchemaObjectByPointer(@NotNull String jsonPointer) {
+  @Nonnull
+  private JsonSchemaObjectBackedByJacksonBase computeSchemaObjectByPointer(@Nonnull String jsonPointer) {
     JsonNode resolvedRelativeChildSchemaNode = JacksonSchemaNodeAccessor.INSTANCE.resolveNode(rootSchemaObject.getRawSchemaNode(), jsonPointer);
 
     if (resolvedRelativeChildSchemaNode == null
@@ -60,8 +60,8 @@ class JsonSchemaObjectBackedByJacksonFactory implements JsonSchemaObjectFactory<
     }
   }
 
-  @NotNull
-  private String computeAbsoluteJsonPointer(@NotNull String basePointer, @NotNull String... relativePointer) {
+  @Nonnull
+  private String computeAbsoluteJsonPointer(@Nonnull String basePointer, @Nonnull String... relativePointer) {
     StringBuilder joinedPointer = new StringBuilder();
     for (int i = 0; i < relativePointer.length; i++) {
       if (i > 0) joinedPointer.append("/");
@@ -70,7 +70,7 @@ class JsonSchemaObjectBackedByJacksonFactory implements JsonSchemaObjectFactory<
     return JsonSchemaReader.getNewPointer(joinedPointer.toString(), basePointer);
   }
 
-  private boolean isRootObjectPointer(@NotNull String jsonPointer) {
+  private boolean isRootObjectPointer(@Nonnull String jsonPointer) {
     return SchemaKeywords.ROOT_POINTER_VARIANTS.contains(jsonPointer);
   }
 }

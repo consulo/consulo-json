@@ -15,7 +15,6 @@ import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.collection.SmartList;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -31,7 +30,7 @@ public final class JsonSurroundDescriptor implements SurroundDescriptor {
     };
 
     @Override
-    public PsiElement @NotNull [] getElementsToSurround(PsiFile file, int startOffset, int endOffset) {
+    public PsiElement @Nonnull [] getElementsToSurround(PsiFile file, int startOffset, int endOffset) {
         PsiElement firstElement = file.findElementAt(startOffset);
         PsiElement lastElement = file.findElementAt(endOffset - 1);
 
@@ -63,7 +62,7 @@ public final class JsonSurroundDescriptor implements SurroundDescriptor {
         return PsiElement.EMPTY_ARRAY;
     }
 
-    private static <T extends PsiElement> PsiElement @NotNull [] collectElements(int endOffset, @NotNull T property, @NotNull Class<T> kind) {
+    private static <T extends PsiElement> PsiElement @Nonnull [] collectElements(int endOffset, @Nonnull T property, @Nonnull Class<T> kind) {
         final List<T> properties = new SmartList<>(property);
         PsiElement nextSibling = property.getNextSibling();
         while (nextSibling != null && nextSibling.getTextRange().getEndOffset() <= endOffset) {
@@ -76,7 +75,7 @@ public final class JsonSurroundDescriptor implements SurroundDescriptor {
     }
 
     @Override
-    public Surrounder @NotNull [] getSurrounders() {
+    public Surrounder @Nonnull [] getSurrounders() {
         return ourSurrounders;
     }
 

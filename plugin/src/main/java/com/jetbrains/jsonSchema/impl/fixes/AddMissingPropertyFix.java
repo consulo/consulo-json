@@ -34,10 +34,10 @@ import com.jetbrains.jsonSchema.extension.adapters.JsonValueAdapter;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
 import com.jetbrains.jsonSchema.JsonValidationError;
 import com.jetbrains.jsonSchema.impl.light.nodes.JsonSchemaObjectRenderingLanguage;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -57,17 +57,17 @@ public final class AddMissingPropertyFix extends ModCommandBatchQuickFix {
   }
 
   @Override
-  public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getFamilyName() {
+  public @Nls(capitalization = Nls.Capitalization.Sentence) @Nonnull String getFamilyName() {
     return JsonBundle.message("add.missing.properties");
   }
 
   @Override
-  public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getName() {
+  public @Nls(capitalization = Nls.Capitalization.Sentence) @Nonnull String getName() {
     return JsonBundle.message("add.missing.0", myData.getMessage(true));
   }
 
   @Override
-  public @NotNull ModCommand perform(@NotNull Project project, @NotNull List<ProblemDescriptor> descriptors) {
+  public @Nonnull ModCommand perform(@Nonnull Project project, @Nonnull List<ProblemDescriptor> descriptors) {
     if (descriptors.isEmpty()) return ModCommand.nop();
     return ModCommand.psiUpdate(ActionContext.from(descriptors.get(0)), updater -> {
       if (descriptors.size() == 1) {
@@ -155,7 +155,7 @@ public final class AddMissingPropertyFix extends ModCommandBatchQuickFix {
   }
 
   @Contract("null, _ -> null")
-  public @Nullable String formatDefaultValue(@Nullable Object defaultValueObject, @NotNull Language targetLanguage) {
+  public @Nullable String formatDefaultValue(@Nullable Object defaultValueObject, @Nonnull Language targetLanguage) {
     if (defaultValueObject instanceof JsonSchemaObject schemaObject) {
       var renderingLanguage = targetLanguage.is(JsonLanguage.INSTANCE) ? JsonSchemaObjectRenderingLanguage.JSON : JsonSchemaObjectRenderingLanguage.YAML;
       return renderSchemaNode(schemaObject, renderingLanguage);
@@ -178,7 +178,7 @@ public final class AddMissingPropertyFix extends ModCommandBatchQuickFix {
     return null;
   }
 
-  private static @Nullable String convertToYamlIfNeeded(@NotNull Language language, JsonNode jsonNode) {
+  private static @Nullable String convertToYamlIfNeeded(@Nonnull Language language, JsonNode jsonNode) {
     JsonFactory jacksonFactory;
     if (language.is(JsonLanguage.INSTANCE))
       jacksonFactory = new JsonFactory();
@@ -199,7 +199,7 @@ public final class AddMissingPropertyFix extends ModCommandBatchQuickFix {
   }
 
 
-  private static @Nullable AddMissingPropertyFix getWorkingQuickFix(QuickFix @NotNull [] fixes) {
+  private static @Nullable AddMissingPropertyFix getWorkingQuickFix(QuickFix @Nonnull [] fixes) {
     for (QuickFix fix : fixes) {
       if (fix instanceof AddMissingPropertyFix) {
         return (AddMissingPropertyFix)fix;

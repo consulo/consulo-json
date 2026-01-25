@@ -18,7 +18,6 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -46,7 +45,7 @@ public final class JsonSmartEnterProcessor extends SmartEnterProcessorWithFixers
     }
 
     @Override
-    protected void collectAdditionalElements(@NotNull PsiElement element, @NotNull List<PsiElement> result) {
+    protected void collectAdditionalElements(@Nonnull PsiElement element, @Nonnull List<PsiElement> result) {
         // include all parents as well
         PsiElement parent = element.getParent();
         while (parent != null && !(parent instanceof JsonFile)) {
@@ -55,7 +54,7 @@ public final class JsonSmartEnterProcessor extends SmartEnterProcessorWithFixers
         }
     }
 
-    private static boolean terminatedOnCurrentLine(@NotNull Editor editor, @NotNull PsiElement element) {
+    private static boolean terminatedOnCurrentLine(@Nonnull Editor editor, @Nonnull PsiElement element) {
         final Document document = editor.getDocument();
         final int caretOffset = editor.getCaretModel().getCurrentCaret().getOffset();
         final int elementEndOffset = element.getTextRange().getEndOffset();
@@ -67,7 +66,7 @@ public final class JsonSmartEnterProcessor extends SmartEnterProcessorWithFixers
         return nextLeaf == null || (nextLeaf instanceof PsiWhiteSpace && nextLeaf.getText().contains("\n"));
     }
 
-    private static boolean isFollowedByTerminal(@NotNull PsiElement element, IElementType type) {
+    private static boolean isFollowedByTerminal(@Nonnull PsiElement element, IElementType type) {
         final PsiElement nextLeaf = PsiTreeUtil.nextVisibleLeaf(element);
         return nextLeaf != null && nextLeaf.getNode().getElementType() == type;
     }
@@ -80,7 +79,7 @@ public final class JsonSmartEnterProcessor extends SmartEnterProcessorWithFixers
 
     private static final class JsonArrayElementFixer extends SmartEnterProcessorWithFixers.Fixer<JsonSmartEnterProcessor> {
         @Override
-        public void apply(@NotNull Editor editor, @NotNull JsonSmartEnterProcessor processor, @NotNull PsiElement element)
+        public void apply(@Nonnull Editor editor, @Nonnull JsonSmartEnterProcessor processor, @Nonnull PsiElement element)
             throws IncorrectOperationException {
             if (element instanceof JsonValue arrayElement && element.getParent() instanceof JsonArray) {
                 if (terminatedOnCurrentLine(editor, arrayElement) && !isFollowedByTerminal(element, COMMA)) {
@@ -93,7 +92,7 @@ public final class JsonSmartEnterProcessor extends SmartEnterProcessorWithFixers
 
     private static final class JsonObjectPropertyFixer extends SmartEnterProcessorWithFixers.Fixer<JsonSmartEnterProcessor> {
         @Override
-        public void apply(@NotNull Editor editor, @NotNull JsonSmartEnterProcessor processor, @NotNull PsiElement element)
+        public void apply(@Nonnull Editor editor, @Nonnull JsonSmartEnterProcessor processor, @Nonnull PsiElement element)
             throws IncorrectOperationException {
             if (element instanceof JsonProperty) {
                 final JsonValue propertyValue = ((JsonProperty) element).getValue();
@@ -127,7 +126,7 @@ public final class JsonSmartEnterProcessor extends SmartEnterProcessorWithFixers
 
     private final class JsonEnterProcessor extends SmartEnterProcessorWithFixers.FixEnterProcessor {
         @Override
-        public boolean doEnter(PsiElement atCaret, PsiFile file, @NotNull Editor editor, boolean modified) {
+        public boolean doEnter(PsiElement atCaret, PsiFile file, @Nonnull Editor editor, boolean modified) {
             if (myShouldAddNewline) {
                 try {
                     plainEnter(editor);

@@ -9,7 +9,7 @@ import com.jetbrains.jsonSchema.impl.light.*;
 import com.jetbrains.jsonSchema.impl.light.legacy.JsonSchemaObjectReadingUtils;
 import com.jetbrains.jsonSchema.impl.light.versions.JsonSchemaInterpretationStrategy;
 import com.jetbrains.jsonSchema.impl.validations.*;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;

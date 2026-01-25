@@ -5,8 +5,8 @@ import com.jetbrains.jsonSchema.internal.JsonSchemaObjectReadingUtils;
 import consulo.util.collection.impl.CollectionFactory;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -14,12 +14,12 @@ import java.util.regex.Pattern;
 import static com.jetbrains.jsonSchema.internal.JsonSchemaObjectReadingUtils.matchPattern;
 
 public final class PropertyNamePattern {
-  public final @NotNull String myPattern;
+  public final @Nonnull String myPattern;
   public final @Nullable Pattern myCompiledPattern;
   public final @Nullable String myPatternError;
-  public final @NotNull Map<String, Boolean> myValuePatternCache;
+  public final @Nonnull Map<String, Boolean> myValuePatternCache;
 
-  public PropertyNamePattern(@NotNull String pattern) {
+  public PropertyNamePattern(@Nonnull String pattern) {
     myPattern = StringUtil.unescapeBackSlashes(pattern);
     final Pair<Pattern, String> pair = JsonSchemaObjectReadingUtils.compilePattern(pattern);
     myPatternError = pair.getSecond();
@@ -31,7 +31,7 @@ public final class PropertyNamePattern {
     return myPatternError;
   }
 
-  public boolean checkByPattern(final @NotNull String name) {
+  public boolean checkByPattern(final @Nonnull String name) {
     if (myPatternError != null) return true;
     if (Boolean.TRUE.equals(myValuePatternCache.get(name))) return true;
     assert myCompiledPattern != null;
@@ -40,7 +40,7 @@ public final class PropertyNamePattern {
     return matches;
   }
 
-  public @NotNull String getPattern() {
+  public @Nonnull String getPattern() {
     return myPattern;
   }
 }

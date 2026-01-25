@@ -6,8 +6,8 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.fileEditor.structureView.StructureViewBuilder;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Used for customization of default structure view for JSON files.
@@ -26,5 +26,5 @@ public interface JsonCustomStructureViewFactory {
    * @return a structure view builder for the given JSON file or {@code null} if the file doesn't need customized structure view.
    */
   @Nullable
-  StructureViewBuilder getStructureViewBuilder(final @NotNull JsonFile jsonFile);
+  StructureViewBuilder getStructureViewBuilder(final @Nonnull JsonFile jsonFile);
 }

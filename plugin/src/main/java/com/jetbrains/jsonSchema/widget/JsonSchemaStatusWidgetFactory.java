@@ -7,22 +7,22 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.impl.status.widget.StatusBarEditorBasedWidgetFactory;
+import jakarta.annotation.Nonnull;
 import kotlinx.coroutines.CoroutineScope;
-import org.jetbrains.annotations.NotNull;
 
 public final class JsonSchemaStatusWidgetFactory extends StatusBarEditorBasedWidgetFactory {
   @Override
-  public @NotNull String getId() {
+  public @Nonnull String getId() {
     return JsonSchemaStatusWidget.ID;
   }
 
   @Override
-  public @NotNull String getDisplayName() {
+  public @Nonnull String getDisplayName() {
     return JsonBundle.message("schema.widget.display.name");
   }
 
   @Override
-  public boolean canBeEnabledOn(@NotNull StatusBar statusBar) {
+  public boolean canBeEnabledOn(@Nonnull StatusBar statusBar) {
     Project project = statusBar.getProject();
     if (project == null) {
       return false;
@@ -33,7 +33,7 @@ public final class JsonSchemaStatusWidgetFactory extends StatusBarEditorBasedWid
   }
 
   @Override
-  public @NotNull StatusBarWidget createWidget(@NotNull Project project, @NotNull CoroutineScope scope) {
+  public @Nonnull StatusBarWidget createWidget(@Nonnull Project project, @Nonnull CoroutineScope scope) {
     return new JsonSchemaStatusWidget(project, scope);
   }
 }

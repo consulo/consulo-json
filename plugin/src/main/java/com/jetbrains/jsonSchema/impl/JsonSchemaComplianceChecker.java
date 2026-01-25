@@ -20,9 +20,9 @@ import consulo.util.collection.SmartList;
 import consulo.util.concurrent.ConcurrencyUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,26 +32,27 @@ import java.util.Set;
 public class JsonSchemaComplianceChecker {
   private static final Key<Set<PsiElement>> ANNOTATED_PROPERTIES = Key.create("JsonSchema.Properties.Annotated");
 
-  private final @NotNull JsonSchemaObject myRootSchema;
-  private final @NotNull ProblemsHolder myHolder;
-  private final @NotNull JsonLikePsiWalker myWalker;
+  private final @Nonnull JsonSchemaObject myRootSchema;
+  private final @Nonnull ProblemsHolder myHolder;
+  private final @Nonnull JsonLikePsiWalker myWalker;
   private final LocalInspectionToolSession mySession;
-  private final @NotNull JsonComplianceCheckerOptions myOptions;
-  private final @Nullable @Nls String myMessagePrefix;
+  private final @Nonnull JsonComplianceCheckerOptions myOptions;
+  private final @Nullable
+  @Nls String myMessagePrefix;
 
-  public JsonSchemaComplianceChecker(@NotNull JsonSchemaObject rootSchema,
-                                     @NotNull ProblemsHolder holder,
-                                     @NotNull JsonLikePsiWalker walker,
-                                     @NotNull LocalInspectionToolSession session,
-                                     @NotNull JsonComplianceCheckerOptions options) {
+  public JsonSchemaComplianceChecker(@Nonnull JsonSchemaObject rootSchema,
+                                     @Nonnull ProblemsHolder holder,
+                                     @Nonnull JsonLikePsiWalker walker,
+                                     @Nonnull LocalInspectionToolSession session,
+                                     @Nonnull JsonComplianceCheckerOptions options) {
     this(rootSchema, holder, walker, session, options, null);
   }
 
-  public JsonSchemaComplianceChecker(@NotNull JsonSchemaObject rootSchema,
-                                     @NotNull ProblemsHolder holder,
-                                     @NotNull JsonLikePsiWalker walker,
-                                     @NotNull LocalInspectionToolSession session,
-                                     @NotNull JsonComplianceCheckerOptions options,
+  public JsonSchemaComplianceChecker(@Nonnull JsonSchemaObject rootSchema,
+                                     @Nonnull ProblemsHolder holder,
+                                     @Nonnull JsonLikePsiWalker walker,
+                                     @Nonnull LocalInspectionToolSession session,
+                                     @Nonnull JsonComplianceCheckerOptions options,
                                      @Nullable @Nls String messagePrefix) {
     myRootSchema = rootSchema;
     myHolder = holder;
@@ -61,11 +62,11 @@ public class JsonSchemaComplianceChecker {
     myMessagePrefix = messagePrefix;
   }
 
-  public void annotate(final @NotNull PsiElement element) {
+  public void annotate(final @Nonnull PsiElement element) {
     JsonSchemaHighlightingSessionStatisticsCollector.getInstance().recordSchemaFeaturesUsage(myRootSchema, () -> doAnnotate(element));
   }
 
-  private void doAnnotate(@NotNull PsiElement element) {
+  private void doAnnotate(@Nonnull PsiElement element) {
     Project project = element.getProject();
     final JsonPropertyAdapter firstProp = myWalker.getParentPropertyAdapter(element);
     if (firstProp != null) {
@@ -79,7 +80,7 @@ public class JsonSchemaComplianceChecker {
     checkRoot(element, firstProp);
   }
 
-  private void checkRoot(@NotNull PsiElement element, @Nullable JsonPropertyAdapter firstProp) {
+  private void checkRoot(@Nonnull PsiElement element, @Nullable JsonPropertyAdapter firstProp) {
     JsonValueAdapter rootToCheck;
     if (firstProp == null) {
       rootToCheck = findTopLevelElement(myWalker, element);
@@ -136,7 +137,7 @@ public class JsonSchemaComplianceChecker {
     }
   }
 
-  private void registerError(@NotNull PsiElement psiElement, @NotNull TextRange range, @NotNull JsonValidationError validationError) {
+  private void registerError(@Nonnull PsiElement psiElement, @Nonnull TextRange range, @Nonnull JsonValidationError validationError) {
     if (checkIfAlreadyProcessed(psiElement)) return;
     String value = validationError.getMessage();
     if (myMessagePrefix != null) value = myMessagePrefix + value;
@@ -150,7 +151,7 @@ public class JsonSchemaComplianceChecker {
     }
   }
 
-  private static JsonValueAdapter findTopLevelElement(@NotNull JsonLikePsiWalker walker, @NotNull PsiElement element) {
+  private static JsonValueAdapter findTopLevelElement(@Nonnull JsonLikePsiWalker walker, @Nonnull PsiElement element) {
     final Ref<PsiElement> ref = new Ref<>();
     PsiTreeUtil.findFirstParent(element, el -> {
       final boolean isTop = walker.isTopJsonElement(el);
@@ -160,7 +161,7 @@ public class JsonSchemaComplianceChecker {
     return ref.isNull() ? (walker.acceptsEmptyRoot() ? walker.createValueAdapter(element) : null) : walker.createValueAdapter(ref.get());
   }
 
-  private boolean checkIfAlreadyProcessed(@NotNull PsiElement property) {
+  private boolean checkIfAlreadyProcessed(@Nonnull PsiElement property) {
     Set<PsiElement> data = ConcurrencyUtil.computeIfAbsent(mySession, ANNOTATED_PROPERTIES, () -> ConcurrentCollectionFactory.createConcurrentSet());
     return !data.add(property);
   }

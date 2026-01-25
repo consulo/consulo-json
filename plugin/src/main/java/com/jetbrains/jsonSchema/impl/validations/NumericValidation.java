@@ -14,8 +14,8 @@ import com.jetbrains.jsonSchema.extension.adapters.JsonValueAdapter;
 import com.jetbrains.jsonSchema.fus.JsonSchemaFusCountedFeature;
 import com.jetbrains.jsonSchema.fus.JsonSchemaHighlightingSessionStatisticsCollector;
 import com.jetbrains.jsonSchema.impl.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public final class NumericValidation implements JsonSchemaValidation {
   public static final NumericValidation INSTANCE = new NumericValidation();
@@ -23,7 +23,7 @@ public final class NumericValidation implements JsonSchemaValidation {
                                      JsonSchemaObject schema,
                                      JsonSchemaType schemaType,
                                      JsonValidationHost consumer,
-                                     @NotNull JsonComplianceCheckerOptions options) {
+                                     @Nonnull JsonComplianceCheckerOptions options) {
     Number value;
     String valueText = JsonSchemaAnnotatorChecker.getValue(propValue, schema);
     if (valueText == null) return true;
@@ -69,7 +69,7 @@ public final class NumericValidation implements JsonSchemaValidation {
                                    Number value,
                                    PsiElement propertyValue,
                                    JsonValidationHost consumer,
-                                   @NotNull JsonComplianceCheckerOptions options) {
+                                   @Nonnull JsonComplianceCheckerOptions options) {
     var isValid = true;
     Number exclusiveMaximumNumber = schema.getExclusiveMaximumNumber();
     if (exclusiveMaximumNumber != null) {
@@ -105,7 +105,7 @@ public final class NumericValidation implements JsonSchemaValidation {
   private static boolean checkMinimum(JsonSchemaObject schema,
                                       Number value,
                                       PsiElement propertyValue,
-                                      JsonValidationHost consumer, @NotNull JsonComplianceCheckerOptions options) {
+                                      JsonValidationHost consumer, @Nonnull JsonComplianceCheckerOptions options) {
     var isValid = true;
     // schema v6 - exclusiveMinimum is numeric now
     Number exclusiveMinimumNumber = schema.getExclusiveMinimumNumber();
@@ -141,11 +141,11 @@ public final class NumericValidation implements JsonSchemaValidation {
   }
 
   @Override
-  public boolean validate(@NotNull JsonValueAdapter propValue,
-                          @NotNull JsonSchemaObject schema,
+  public boolean validate(@Nonnull JsonValueAdapter propValue,
+                          @Nonnull JsonSchemaObject schema,
                           @Nullable JsonSchemaType schemaType,
-                          @NotNull JsonValidationHost consumer,
-                          @NotNull JsonComplianceCheckerOptions options) {
+                          @Nonnull JsonValidationHost consumer,
+                          @Nonnull JsonComplianceCheckerOptions options) {
     JsonSchemaHighlightingSessionStatisticsCollector.getInstance().reportSchemaUsageFeature(JsonSchemaFusCountedFeature.NumberValidation);
     return checkNumber(propValue.getDelegate(), schema, schemaType, consumer, options);
   }

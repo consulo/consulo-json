@@ -6,8 +6,8 @@ import com.jetbrains.jsonSchema.impl.MergedJsonSchemaObject;
 import com.jetbrains.jsonSchema.impl.light.legacy.JsonSchemaObjectMerger;
 import consulo.application.progress.ProgressManager;
 import consulo.util.collection.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
@@ -19,10 +19,10 @@ public class LightweightJsonSchemaObjectMerger implements JsonSchemaObjectMerger
   }
 
   @Override
-  @NotNull
-  public JsonSchemaObject mergeObjects(@NotNull JsonSchemaObject base,
-                                       @NotNull JsonSchemaObject other,
-                                       @NotNull JsonSchemaObject pointTo) {
+  @Nonnull
+  public JsonSchemaObject mergeObjects(@Nonnull JsonSchemaObject base,
+                                       @Nonnull JsonSchemaObject other,
+                                       @Nonnull JsonSchemaObject pointTo) {
     ProgressManager.checkCanceled();
     if (base == other) {
       return base;
@@ -31,8 +31,8 @@ public class LightweightJsonSchemaObjectMerger implements JsonSchemaObjectMerger
   }
 
   @Nullable
-  public static <T> List<T> mergeLists(@NotNull MergedJsonSchemaObject merged,
-                                       @NotNull Function<JsonSchemaObject, List<T>> memberReference) {
+  public static <T> List<T> mergeLists(@Nonnull MergedJsonSchemaObject merged,
+                                       @Nonnull Function<JsonSchemaObject, List<T>> memberReference) {
     List<T> first = memberReference.apply(merged.getBase());
     List<T> second = memberReference.apply(merged.getOther());
 
@@ -45,8 +45,8 @@ public class LightweightJsonSchemaObjectMerger implements JsonSchemaObjectMerger
   }
 
   @Nullable
-  public static <K, V> Map<K, V> mergeMaps(@NotNull MergedJsonSchemaObject merged,
-                                           @NotNull Function<JsonSchemaObject, Map<K, V>> memberReference) {
+  public static <K, V> Map<K, V> mergeMaps(@Nonnull MergedJsonSchemaObject merged,
+                                           @Nonnull Function<JsonSchemaObject, Map<K, V>> memberReference) {
     Map<K, V> first = memberReference.apply(merged.getBase());
     Map<K, V> second = memberReference.apply(merged.getOther());
 
@@ -72,18 +72,18 @@ public class LightweightJsonSchemaObjectMerger implements JsonSchemaObjectMerger
     return ExtensionsKt.toImmutableSet(merged);
   }
 
-  public static boolean booleanOr(@NotNull JsonSchemaObject base,
-                                  @NotNull JsonSchemaObject other,
-                                  @NotNull Function<JsonSchemaObject, Boolean> memberReference) {
+  public static boolean booleanOr(@Nonnull JsonSchemaObject base,
+                                  @Nonnull JsonSchemaObject other,
+                                  @Nonnull Function<JsonSchemaObject, Boolean> memberReference) {
     boolean first = memberReference.apply(base);
     if (first) return true;
     ProgressManager.checkCanceled();
     return memberReference.apply(other);
   }
 
-  public static boolean booleanAnd(@NotNull JsonSchemaObject base,
-                                   @NotNull JsonSchemaObject other,
-                                   @NotNull Function<JsonSchemaObject, Boolean> memberReference) {
+  public static boolean booleanAnd(@Nonnull JsonSchemaObject base,
+                                   @Nonnull JsonSchemaObject other,
+                                   @Nonnull Function<JsonSchemaObject, Boolean> memberReference) {
     boolean first = memberReference.apply(base);
     if (!first) return false;
     ProgressManager.checkCanceled();
@@ -91,18 +91,18 @@ public class LightweightJsonSchemaObjectMerger implements JsonSchemaObjectMerger
   }
 
   @Nullable
-  public static Boolean booleanAndNullable(@NotNull JsonSchemaObject base,
-                                           @NotNull JsonSchemaObject other,
-                                           @NotNull Function<JsonSchemaObject, Boolean> memberReference) {
+  public static Boolean booleanAndNullable(@Nonnull JsonSchemaObject base,
+                                           @Nonnull JsonSchemaObject other,
+                                           @Nonnull Function<JsonSchemaObject, Boolean> memberReference) {
     Boolean first = memberReference.apply(base);
     if (Boolean.FALSE.equals(first)) return false;
     ProgressManager.checkCanceled();
     return memberReference.apply(other);
   }
 
-  public static <V> boolean booleanOrWithArgument(@NotNull JsonSchemaObject base,
-                                                  @NotNull JsonSchemaObject other,
-                                                  @NotNull java.util.function.BiFunction<JsonSchemaObject, V, Boolean> memberReference,
+  public static <V> boolean booleanOrWithArgument(@Nonnull JsonSchemaObject base,
+                                                  @Nonnull JsonSchemaObject other,
+                                                  @Nonnull java.util.function.BiFunction<JsonSchemaObject, V, Boolean> memberReference,
                                                   V argument) {
     boolean first = memberReference.apply(base, argument);
     if (first) return true;
@@ -110,10 +110,10 @@ public class LightweightJsonSchemaObjectMerger implements JsonSchemaObjectMerger
     return memberReference.apply(other, argument);
   }
 
-  public static <T> T baseIfConditionOrOther(@NotNull JsonSchemaObject base,
-                                             @NotNull JsonSchemaObject other,
-                                             @NotNull Function<JsonSchemaObject, T> memberReference,
-                                             @NotNull java.util.function.Predicate<T> condition) {
+  public static <T> T baseIfConditionOrOther(@Nonnull JsonSchemaObject base,
+                                             @Nonnull JsonSchemaObject other,
+                                             @Nonnull Function<JsonSchemaObject, T> memberReference,
+                                             @Nonnull java.util.function.Predicate<T> condition) {
     ProgressManager.checkCanceled();
     T baseResult = memberReference.apply(base);
     ProgressManager.checkCanceled();
@@ -122,11 +122,11 @@ public class LightweightJsonSchemaObjectMerger implements JsonSchemaObjectMerger
     return memberReference.apply(other);
   }
 
-  public static <T, V> T baseIfConditionOrOtherWithArgument(@NotNull JsonSchemaObject base,
-                                                            @NotNull JsonSchemaObject other,
-                                                            @NotNull java.util.function.BiFunction<JsonSchemaObject, V, T> memberReference,
+  public static <T, V> T baseIfConditionOrOtherWithArgument(@Nonnull JsonSchemaObject base,
+                                                            @Nonnull JsonSchemaObject other,
+                                                            @Nonnull java.util.function.BiFunction<JsonSchemaObject, V, T> memberReference,
                                                             V argument,
-                                                            @NotNull java.util.function.Predicate<T> condition) {
+                                                            @Nonnull java.util.function.Predicate<T> condition) {
     ProgressManager.checkCanceled();
     T baseResult = memberReference.apply(base, argument);
     ProgressManager.checkCanceled();

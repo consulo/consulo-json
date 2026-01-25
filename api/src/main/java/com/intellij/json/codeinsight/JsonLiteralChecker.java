@@ -11,7 +11,7 @@ import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface JsonLiteralChecker {

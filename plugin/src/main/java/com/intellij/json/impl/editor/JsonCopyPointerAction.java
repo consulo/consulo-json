@@ -14,7 +14,7 @@ import consulo.language.psi.PsiElement;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,7 +24,7 @@ public final class JsonCopyPointerAction extends CopyReferenceAction {
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     e.getPresentation().setText(JsonBundle.message("action.JsonCopyPointer.text"));
     DataContext dataContext = e.getDataContext();
@@ -40,7 +40,7 @@ public final class JsonCopyPointerAction extends CopyReferenceAction {
   }
 
   @Override
-  protected @NotNull List<PsiElement> getPsiElements(DataContext dataContext, Editor editor) {
+  protected @Nonnull List<PsiElement> getPsiElements(DataContext dataContext, Editor editor) {
     List<PsiElement> elements = super.getPsiElements(dataContext, editor);
     if (!elements.isEmpty()) return elements;
     PsiElement location = ConfigurationContext.getFromContext(dataContext, ActionPlaces.UNKNOWN).getPsiLocation();

@@ -11,12 +11,10 @@ import com.intellij.util.io.URLUtil;
 import com.jetbrains.jsonSchema.impl.EnumArrayValueWrapper;
 import com.jetbrains.jsonSchema.impl.EnumObjectValueWrapper;
 import com.jetbrains.jsonSchema.impl.light.RawJsonSchemaNodeAccessor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 class JacksonSchemaNodeAccessor implements RawJsonSchemaNodeAccessor<JsonNode> {
   private static final Logger LOG = Logger.getInstance(JacksonSchemaNodeAccessor.class);
@@ -27,7 +25,7 @@ class JacksonSchemaNodeAccessor implements RawJsonSchemaNodeAccessor<JsonNode> {
 
   @Override
   @Nullable
-  public JsonNode resolveNode(@NotNull JsonNode rootNode, @NotNull String absoluteNodeJsonPointer) {
+  public JsonNode resolveNode(@Nonnull JsonNode rootNode, @Nonnull String absoluteNodeJsonPointer) {
     JsonPointer compiledPointer = escapeAndCompileJsonPointer(absoluteNodeJsonPointer);
     if (compiledPointer == null) return null;
 
@@ -36,19 +34,19 @@ class JacksonSchemaNodeAccessor implements RawJsonSchemaNodeAccessor<JsonNode> {
   }
 
   @Override
-  @NotNull
-  public JsonNode resolveRelativeNode(@NotNull JsonNode node, @Nullable String relativeChildPath) {
+  @Nonnull
+  public JsonNode resolveRelativeNode(@Nonnull JsonNode node, @Nullable String relativeChildPath) {
     return getExistingChildByNonEmptyPathOrSelf(node, relativeChildPath);
   }
 
   @Override
-  public boolean hasChildNode(@NotNull JsonNode node, @NotNull String relativeChildPath) {
+  public boolean hasChildNode(@Nonnull JsonNode node, @Nonnull String relativeChildPath) {
     return node.isObject() && !getExistingChildByNonEmptyPathOrSelf(node, relativeChildPath).isMissingNode();
   }
 
   @Override
   @Nullable
-  public String readUntypedNodeValueAsText(@NotNull JsonNode node, @Nullable String relativeChildPath) {
+  public String readUntypedNodeValueAsText(@Nonnull JsonNode node, @Nullable String relativeChildPath) {
     if (!node.isObject() && relativeChildPath != null) return null;
 
     JsonNode targetNode = getExistingChildByNonEmptyPathOrSelf(node, relativeChildPath);
@@ -59,7 +57,7 @@ class JacksonSchemaNodeAccessor implements RawJsonSchemaNodeAccessor<JsonNode> {
 
   @Override
   @Nullable
-  public String readTextNodeValue(@NotNull JsonNode node, @Nullable String relativeChildPath) {
+  public String readTextNodeValue(@Nonnull JsonNode node, @Nullable String relativeChildPath) {
     if (!node.isObject() && relativeChildPath != null) return null;
 
     JsonNode maybeString = getExistingChildByNonEmptyPathOrSelf(node, relativeChildPath);
@@ -68,7 +66,7 @@ class JacksonSchemaNodeAccessor implements RawJsonSchemaNodeAccessor<JsonNode> {
 
   @Override
   @Nullable
-  public Boolean readBooleanNodeValue(@NotNull JsonNode node, @Nullable String relativeChildPath) {
+  public Boolean readBooleanNodeValue(@Nonnull JsonNode node, @Nullable String relativeChildPath) {
     if (!(node.isObject() || (node.isBoolean() && relativeChildPath == null))) return null;
 
     JsonNode maybeBoolean = relativeChildPath == null ? node : getExistingChildByNonEmptyPathOrSelf(node, relativeChildPath);
@@ -77,7 +75,7 @@ class JacksonSchemaNodeAccessor implements RawJsonSchemaNodeAccessor<JsonNode> {
 
   @Override
   @Nullable
-  public Number readNumberNodeValue(@NotNull JsonNode node, @Nullable String relativeChildPath) {
+  public Number readNumberNodeValue(@Nonnull JsonNode node, @Nullable String relativeChildPath) {
     if (!node.isObject() && relativeChildPath != null) return null;
 
     JsonNode maybeNumber = getExistingChildByNonEmptyPathOrSelf(node, relativeChildPath);
@@ -89,7 +87,7 @@ class JacksonSchemaNodeAccessor implements RawJsonSchemaNodeAccessor<JsonNode> {
 
   @Override
   @Nullable
-  public Iterable<Object> readUntypedNodesCollection(@NotNull JsonNode node, @Nullable String relativeChildPath) {
+  public Iterable<Object> readUntypedNodesCollection(@Nonnull JsonNode node, @Nullable String relativeChildPath) {
     Iterable<JsonNode> childArrayItems = getChildArrayItems(node, relativeChildPath);
     if (childArrayItems == null) return null;
 
@@ -105,7 +103,7 @@ class JacksonSchemaNodeAccessor implements RawJsonSchemaNodeAccessor<JsonNode> {
 
   @Override
   @Nullable
-  public Iterable<Map.Entry<String, JsonNode>> readNodeAsMapEntries(@NotNull JsonNode node, @Nullable String relativeChildPath) {
+  public Iterable<Map.Entry<String, JsonNode>> readNodeAsMapEntries(@Nonnull JsonNode node, @Nullable String relativeChildPath) {
     if (!node.isObject() && relativeChildPath != null) return null;
 
     JsonNode targetNode = getExistingChildByNonEmptyPathOrSelf(node, relativeChildPath);
@@ -122,7 +120,7 @@ class JacksonSchemaNodeAccessor implements RawJsonSchemaNodeAccessor<JsonNode> {
 
   @Override
   @Nullable
-  public Iterable<Map.Entry<String, List<String>>> readNodeAsMultiMapEntries(@NotNull JsonNode node, @Nullable String relativeChildPath) {
+  public Iterable<Map.Entry<String, List<String>>> readNodeAsMultiMapEntries(@Nonnull JsonNode node, @Nullable String relativeChildPath) {
     Iterable<Map.Entry<String, JsonNode>> mapEntries = readNodeAsMapEntries(node, relativeChildPath);
     if (mapEntries == null) return null;
 
@@ -144,7 +142,7 @@ class JacksonSchemaNodeAccessor implements RawJsonSchemaNodeAccessor<JsonNode> {
 
   @Override
   @Nullable
-  public Iterable<String> readNodeKeys(@NotNull JsonNode node, @Nullable String relativeChildPath) {
+  public Iterable<String> readNodeKeys(@Nonnull JsonNode node, @Nullable String relativeChildPath) {
     JsonNode expandedNode = getExistingChildByNonEmptyPathOrSelf(node, relativeChildPath);
     Iterator<String> fieldNames = expandedNode.fieldNames();
     if (!fieldNames.hasNext()) return null;
@@ -154,8 +152,8 @@ class JacksonSchemaNodeAccessor implements RawJsonSchemaNodeAccessor<JsonNode> {
     return keys;
   }
 
-  @NotNull
-  private JsonNode getExistingChildByNonEmptyPathOrSelf(@NotNull JsonNode node, @Nullable String directChildName) {
+  @Nonnull
+  private JsonNode getExistingChildByNonEmptyPathOrSelf(@Nonnull JsonNode node, @Nullable String directChildName) {
     if (directChildName == null) return node;
 
     JsonNode child = node.get(directChildName);
@@ -163,7 +161,7 @@ class JacksonSchemaNodeAccessor implements RawJsonSchemaNodeAccessor<JsonNode> {
   }
 
   @Nullable
-  private Iterable<JsonNode> getChildArrayItems(@NotNull JsonNode node, @Nullable String relativeChildPath) {
+  private Iterable<JsonNode> getChildArrayItems(@Nonnull JsonNode node, @Nullable String relativeChildPath) {
     if (!node.isObject() && relativeChildPath != null) return null;
 
     JsonNode targetNode = getExistingChildByNonEmptyPathOrSelf(node, relativeChildPath);
@@ -179,7 +177,7 @@ class JacksonSchemaNodeAccessor implements RawJsonSchemaNodeAccessor<JsonNode> {
   }
 
   @Nullable
-  private Object readAnything(@NotNull JsonNode node) {
+  private Object readAnything(@Nonnull JsonNode node) {
     if (node.isTextual()) return asDoubleQuotedTextOrNull(node);
     if (node.isNull()) return node.asText();
     if (node.isInt()) return node.asInt();
@@ -212,13 +210,13 @@ class JacksonSchemaNodeAccessor implements RawJsonSchemaNodeAccessor<JsonNode> {
   }
 
   @Nullable
-  private String asDoubleQuotedTextOrNull(@NotNull JsonNode jsonNode) {
+  private String asDoubleQuotedTextOrNull(@Nonnull JsonNode jsonNode) {
     if (!jsonNode.isTextual()) return null;
     return asDoubleQuotedString(jsonNode.asText());
   }
 
   @Nullable
-  private JsonPointer escapeAndCompileJsonPointer(@NotNull String unescapedPointer) {
+  private JsonPointer escapeAndCompileJsonPointer(@Nonnull String unescapedPointer) {
     if (!fastCheckIfCorrectPointer(unescapedPointer)) return null;
 
     try {
@@ -229,29 +227,29 @@ class JacksonSchemaNodeAccessor implements RawJsonSchemaNodeAccessor<JsonNode> {
     }
   }
 
-  private boolean fastCheckIfCorrectPointer(@NotNull String maybeIncorrectPointer) {
+  private boolean fastCheckIfCorrectPointer(@Nonnull String maybeIncorrectPointer) {
     return maybeIncorrectPointer.startsWith("/");
   }
 
-  @NotNull
-  private String adaptJsonPointerToJacksonImplementation(@NotNull String oldPointer) {
+  @Nonnull
+  private String adaptJsonPointerToJacksonImplementation(@Nonnull String oldPointer) {
     if (oldPointer.equals("/")) return "";
     return URLUtil.unescapePercentSequences(oldPointer);
   }
 
-  @NotNull
-  public static String asUnquotedString(@NotNull String str) {
+  @Nonnull
+  public static String asUnquotedString(@Nonnull String str) {
     return StringUtil.unquoteString(str);
   }
 
-  @NotNull
-  public static String asDoubleQuotedString(@NotNull String str) {
+  @Nonnull
+  public static String asDoubleQuotedString(@Nonnull String str) {
     String unquoted = asUnquotedString(str);
     return "\"" + unquoted + "\"";
   }
 
-  @NotNull
-  public static String escapeForbiddenJsonPointerSymbols(@NotNull String pointerSegment) {
+  @Nonnull
+  public static String escapeForbiddenJsonPointerSymbols(@Nonnull String pointerSegment) {
     return pointerSegment.replace("~", "~0").replace("/", "~1");
   }
 }

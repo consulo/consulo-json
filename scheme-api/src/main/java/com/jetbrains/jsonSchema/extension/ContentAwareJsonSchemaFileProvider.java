@@ -6,8 +6,8 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Provides a JSON schema depending on the contents of the file this schema is requested for.
@@ -18,5 +18,5 @@ public interface ContentAwareJsonSchemaFileProvider {
     ExtensionPointName.create(ContentAwareJsonSchemaFileProvider.class);
 
   @Nullable
-  VirtualFile getSchemaFile(@NotNull PsiFile psiFile);
+  VirtualFile getSchemaFile(@Nonnull PsiFile psiFile);
 }

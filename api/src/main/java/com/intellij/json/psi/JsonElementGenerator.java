@@ -7,7 +7,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Mikhail Golubev
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 public class JsonElementGenerator {
   private final Project myProject;
 
-  public JsonElementGenerator(@NotNull Project project) {
+  public JsonElementGenerator(@Nonnull Project project) {
     myProject = project;
   }
 
@@ -25,7 +25,7 @@ public class JsonElementGenerator {
    * @param content content of the file to be created
    * @return created file
    */
-  public @NotNull PsiFile createDummyFile(@NotNull String content) {
+  public @Nonnull PsiFile createDummyFile(@Nonnull String content) {
     final PsiFileFactory psiFileFactory = PsiFileFactory.getInstance(myProject);
     return psiFileFactory.createFileFromText("dummy." + JsonFileType.INSTANCE.getDefaultExtension(), JsonFileType.INSTANCE, content);
   }
@@ -39,23 +39,23 @@ public class JsonElementGenerator {
    *
    * @see #createStringLiteral(String)
    */
-  public @NotNull <T extends JsonValue> T createValue(@NotNull String content) {
+  public @Nonnull <T extends JsonValue> T createValue(@Nonnull String content) {
     final PsiFile file = createDummyFile("{\"foo\": " + content + "}");
     //noinspection unchecked,ConstantConditions
     return (T)((JsonObject)file.getFirstChild()).getPropertyList().get(0).getValue();
   }
 
-  public @NotNull JsonObject createObject(@NotNull String content) {
+  public @Nonnull JsonObject createObject(@Nonnull String content) {
     final PsiFile file = createDummyFile("{" + content + "}");
     return (JsonObject) file.getFirstChild();
   }
 
-  public @NotNull JsonArray createEmptyArray() {
+  public @Nonnull JsonArray createEmptyArray() {
     final PsiFile file = createDummyFile("[]");
     return (JsonArray) file.getFirstChild();
   }
 
-  public @NotNull JsonValue createArrayItemValue(@NotNull String content) {
+  public @Nonnull JsonValue createArrayItemValue(@Nonnull String content) {
     final PsiFile file = createDummyFile("[" + content + "]");
     JsonArray array = (JsonArray)file.getFirstChild();
     return array.getValueList().get(0);
@@ -67,16 +67,16 @@ public class JsonElementGenerator {
    * @param unescapedContent unescaped content of string literal, e.g. Java literal {@code "new\nline"} (compare with {@link #createValue(String)}).
    * @return JSON string literal created from given text
    */
-  public @NotNull JsonStringLiteral createStringLiteral(@NotNull String unescapedContent) {
+  public @Nonnull JsonStringLiteral createStringLiteral(@Nonnull String unescapedContent) {
     return createValue('"' + StringUtil.escapeStringCharacters(unescapedContent) + '"');
   }
 
-  public @NotNull JsonProperty createProperty(final @NotNull String name, final @NotNull String value) {
+  public @Nonnull JsonProperty createProperty(final @Nonnull String name, final @Nonnull String value) {
     final PsiFile file = createDummyFile("{\"" + name + "\": " + value + "}");
     return ((JsonObject) file.getFirstChild()).getPropertyList().get(0);
   }
 
-  public @NotNull PsiElement createComma() {
+  public @Nonnull PsiElement createComma() {
     final JsonArray jsonArray1 = createValue("[1, 2]");
     return jsonArray1.getValueList().get(0).getNextSibling();
   }

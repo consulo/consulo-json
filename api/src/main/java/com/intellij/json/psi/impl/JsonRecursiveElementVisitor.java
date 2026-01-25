@@ -4,7 +4,7 @@ package com.intellij.json.psi.impl;
 import com.intellij.json.psi.JsonElementVisitor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiRecursiveVisitor;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Mikhail Golubev
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 public class JsonRecursiveElementVisitor extends JsonElementVisitor implements PsiRecursiveVisitor {
 
   @Override
-  public void visitElement(final @NotNull PsiElement element) {
+  public void visitElement(final @Nonnull PsiElement element) {
     element.acceptChildren(this);
   }
 }

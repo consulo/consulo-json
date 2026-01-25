@@ -6,16 +6,16 @@ import com.intellij.psi.PsiElement;
 import com.jetbrains.jsonSchema.extension.adapters.JsonArrayValueAdapter;
 import com.jetbrains.jsonSchema.extension.adapters.JsonObjectValueAdapter;
 import com.jetbrains.jsonSchema.extension.adapters.JsonValueAdapter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public final class JsonJsonArrayAdapter implements JsonArrayValueAdapter {
-  private final @NotNull JsonArray myArray;
+  private final @Nonnull JsonArray myArray;
 
-  public JsonJsonArrayAdapter(@NotNull JsonArray array) {myArray = array;}
+  public JsonJsonArrayAdapter(@Nonnull JsonArray array) {myArray = array;}
 
   @Override
   public boolean isObject() {
@@ -43,7 +43,7 @@ public final class JsonJsonArrayAdapter implements JsonArrayValueAdapter {
   }
 
   @Override
-  public @NotNull PsiElement getDelegate() {
+  public @Nonnull PsiElement getDelegate() {
     return myArray;
   }
 
@@ -58,7 +58,7 @@ public final class JsonJsonArrayAdapter implements JsonArrayValueAdapter {
   }
 
   @Override
-  public @NotNull List<JsonValueAdapter> getElements() {
+  public @Nonnull List<JsonValueAdapter> getElements() {
     return myArray.getValueList().stream().filter(e -> e != null).map(e -> JsonJsonPropertyAdapter.createAdapterByType(e)).collect(
       Collectors.toList());
   }

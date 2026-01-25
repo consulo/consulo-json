@@ -5,16 +5,16 @@ import consulo.language.ast.ASTNode;
 import consulo.language.psi.ContributedReferenceHost;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.ReferenceProvidersRegistry;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 public class JsonReferenceLiteralMixin extends JsonValueImpl implements ContributedReferenceHost {
 
-  public JsonReferenceLiteralMixin(@NotNull ASTNode node) {
+  public JsonReferenceLiteralMixin(@Nonnull ASTNode node) {
     super(node);
   }
 
   @Override
-  public PsiReference @NotNull [] getReferences() {
+  public PsiReference @Nonnull [] getReferences() {
     return ReferenceProvidersRegistry.getReferencesFromProviders(this);
   }
 }

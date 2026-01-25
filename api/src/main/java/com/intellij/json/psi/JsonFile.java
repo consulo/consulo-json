@@ -1,8 +1,8 @@
 package com.intellij.json.psi;
 
 import consulo.language.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 
@@ -18,6 +18,6 @@ public interface JsonFile extends JsonElement, PsiFile {
   @Nullable
   JsonValue getTopLevelValue();
 
-  @NotNull
+  @Nonnull
   List<JsonValue> getAllTopLevelValues();
 }

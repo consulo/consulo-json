@@ -8,8 +8,8 @@ import consulo.json.localize.JsonLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * This surrounder ported from JavaScript allows to wrap single JSON value or several consecutive JSON properties
@@ -42,14 +42,14 @@ public final class JsonWithObjectLiteralSurrounder extends JsonSurrounderBase {
   }
 
   @Override
-  public boolean isApplicable(PsiElement @NotNull [] elements) {
+  public boolean isApplicable(PsiElement @Nonnull [] elements) {
     return !JsonPsiUtil.isPropertyKey(elements[0]) && (elements[0] instanceof JsonProperty || elements.length == 1);
   }
 
   @Override
-  public @Nullable TextRange surroundElements(@NotNull Project project,
-                                              @NotNull Editor editor,
-                                              PsiElement @NotNull [] elements) {
+  public @Nullable TextRange surroundElements(@Nonnull Project project,
+                                              @Nonnull Editor editor,
+                                              PsiElement @Nonnull [] elements) {
 
     if (!isApplicable(elements)) {
       return null;
@@ -78,7 +78,7 @@ public final class JsonWithObjectLiteralSurrounder extends JsonSurrounderBase {
   }
 
   @Override
-  protected @NotNull String createReplacementText(@NotNull String textInRange) {
+  protected @Nonnull String createReplacementText(@Nonnull String textInRange) {
     return "{\n\"property\": " + textInRange + "\n}";
   }
 }

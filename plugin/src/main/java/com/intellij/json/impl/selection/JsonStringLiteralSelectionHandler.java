@@ -12,7 +12,7 @@ import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.lexer.StringLiteralLexer;
 import consulo.language.psi.ElementManipulators;
 import consulo.language.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ import static com.intellij.json.JsonElementTypes.SINGLE_QUOTED_STRING;
 @ExtensionImpl
 public final class JsonStringLiteralSelectionHandler extends ExtendWordSelectionHandlerBase {
   @Override
-  public boolean canSelect(@NotNull PsiElement e) {
+  public boolean canSelect(@Nonnull PsiElement e) {
     if (!(e.getParent() instanceof JsonStringLiteral)) {
       return false;
     }
@@ -33,7 +33,7 @@ public final class JsonStringLiteralSelectionHandler extends ExtendWordSelection
   }
 
   @Override
-  public List<TextRange> select(@NotNull PsiElement e, @NotNull CharSequence editorText, int cursorOffset, @NotNull Editor editor) {
+  public List<TextRange> select(@Nonnull PsiElement e, @Nonnull CharSequence editorText, int cursorOffset, @Nonnull Editor editor) {
     final IElementType type = e.getNode().getElementType();
     final StringLiteralLexer lexer = new StringLiteralLexer(type == SINGLE_QUOTED_STRING ? '\'' : '"', type, false, "/", false, false);
     final List<TextRange> result = new ArrayList<>();

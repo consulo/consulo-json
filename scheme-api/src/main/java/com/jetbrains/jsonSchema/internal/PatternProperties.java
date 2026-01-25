@@ -6,8 +6,8 @@ import consulo.application.progress.ProgressManager;
 import consulo.util.collection.impl.CollectionFactory;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,15 +16,15 @@ import java.util.regex.Pattern;
 import static com.jetbrains.jsonSchema.internal.JsonSchemaObjectReadingUtils.matchPattern;
 
 public final class PatternProperties {
-  public final @NotNull Map<String, JsonSchemaObject> mySchemasMap;
-  public final @NotNull Map<String, Pattern> myCachedPatterns;
-  public final @NotNull Map<String, String> myCachedPatternProperties;
+  public final @Nonnull Map<String, JsonSchemaObject> mySchemasMap;
+  public final @Nonnull Map<String, Pattern> myCachedPatterns;
+  public final @Nonnull Map<String, String> myCachedPatternProperties;
 
-  public @NotNull Map<String, JsonSchemaObject> getSchemasMap() {
+  public @Nonnull Map<String, JsonSchemaObject> getSchemasMap() {
     return mySchemasMap;
   }
 
-  public PatternProperties(final @NotNull Map<String, ? extends JsonSchemaObject> schemasMap) {
+  public PatternProperties(final @Nonnull Map<String, ? extends JsonSchemaObject> schemasMap) {
     mySchemasMap = new HashMap<>();
     schemasMap.keySet().forEach(key -> mySchemasMap.put(StringUtil.unescapeBackSlashes(key), schemasMap.get(key)));
     myCachedPatterns = new HashMap<>();
@@ -39,7 +39,7 @@ public final class PatternProperties {
     });
   }
 
-  public @Nullable JsonSchemaObject getPatternPropertySchema(final @NotNull String name) {
+  public @Nullable JsonSchemaObject getPatternPropertySchema(final @Nonnull String name) {
     String value = myCachedPatternProperties.get(name);
     if (value != null) {
       assert mySchemasMap.containsKey(value);

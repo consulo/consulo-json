@@ -15,21 +15,21 @@ import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferen
 import com.jetbrains.jsonSchema.JsonSchemaService;
 import com.jetbrains.jsonSchema.impl.JsonPointerReferenceProvider;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public final class JsonSchemaRefReferenceInspection extends JsonSchemaBasedInspectionBase {
 
   @Override
-  protected PsiElementVisitor doBuildVisitor(@NotNull JsonValue root,
+  protected PsiElementVisitor doBuildVisitor(@Nonnull JsonValue root,
                                              @Nullable JsonSchemaObject schema,
-                                             @NotNull JsonSchemaService service,
-                                             @NotNull ProblemsHolder holder,
-                                             @NotNull LocalInspectionToolSession session) {
+                                             @Nonnull JsonSchemaService service,
+                                             @Nonnull ProblemsHolder holder,
+                                             @Nonnull LocalInspectionToolSession session) {
     boolean checkRefs = schema != null && service.isSchemaFile(schema);
     return new JsonElementVisitor() {
       @Override
-      public void visitElement(@NotNull PsiElement element) {
+      public void visitElement(@Nonnull PsiElement element) {
         if (element == root) {
           if (element instanceof JsonObject) {
             final JsonProperty schemaProp = ((JsonObject)element).findProperty("$schema");
@@ -42,7 +42,7 @@ public final class JsonSchemaRefReferenceInspection extends JsonSchemaBasedInspe
       }
 
       @Override
-      public void visitProperty(@NotNull JsonProperty o) {
+      public void visitProperty(@Nonnull JsonProperty o) {
         if (!checkRefs) return;
         if ("$ref".equals(o.getName())) {
           doCheck(o.getValue());

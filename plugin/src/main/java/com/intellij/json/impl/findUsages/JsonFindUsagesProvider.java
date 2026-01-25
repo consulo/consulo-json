@@ -11,8 +11,7 @@ import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public final class JsonFindUsagesProvider implements FindUsagesProvider {
@@ -22,12 +21,12 @@ public final class JsonFindUsagesProvider implements FindUsagesProvider {
     }
 
     @Override
-    public boolean canFindUsagesFor(@NotNull PsiElement psiElement) {
+    public boolean canFindUsagesFor(@Nonnull PsiElement psiElement) {
         return psiElement instanceof PsiNamedElement;
     }
 
     @Override
-    public @NotNull String getType(@NotNull PsiElement element) {
+    public @Nonnull String getType(@Nonnull PsiElement element) {
         if (element instanceof JsonProperty) {
             return JsonLocalize.jsonProperty().get();
         }
@@ -35,13 +34,13 @@ public final class JsonFindUsagesProvider implements FindUsagesProvider {
     }
 
     @Override
-    public @NotNull String getDescriptiveName(@NotNull PsiElement element) {
+    public @Nonnull String getDescriptiveName(@Nonnull PsiElement element) {
         final String name = element instanceof PsiNamedElement ? ((PsiNamedElement) element).getName() : null;
         return name != null ? name : JsonLocalize.unnamedDesc().get();
     }
 
     @Override
-    public @NotNull String getNodeText(@NotNull PsiElement element, boolean useFullName) {
+    public @Nonnull String getNodeText(@Nonnull PsiElement element, boolean useFullName) {
         return getDescriptiveName(element);
     }
 

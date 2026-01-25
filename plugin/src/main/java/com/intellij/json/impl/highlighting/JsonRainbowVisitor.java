@@ -8,7 +8,7 @@ import consulo.language.editor.rawHighlight.HighlightVisitor;
 import consulo.language.editor.rawHighlight.RainbowVisitor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,12 +30,12 @@ public final class JsonRainbowVisitor extends RainbowVisitor {
     }
   }
 
-  public boolean suitableForFile(@NotNull PsiFile psiFile) {
+  public boolean suitableForFile(@Nonnull PsiFile psiFile) {
     return psiFile instanceof JsonFile;
   }
 
   @Override
-  public void visit(@NotNull PsiElement element) {
+  public void visit(@Nonnull PsiElement element) {
     if (element instanceof JsonProperty) {
       PsiFile file = element.getContainingFile();
       String fileName = file.getName();
@@ -76,7 +76,7 @@ public final class JsonRainbowVisitor extends RainbowVisitor {
   }
 
   @Override
-  public @NotNull HighlightVisitor clone() {
+  public @Nonnull HighlightVisitor clone() {
     return new JsonRainbowVisitor();
   }
 }

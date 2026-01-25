@@ -1,10 +1,9 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.intellij.json.impl.surroundWith;
 
-import com.intellij.json.JsonBundle;
 import consulo.json.localize.JsonLocalize;
 import consulo.localize.LocalizeValue;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 public final class JsonWithArrayLiteralSurrounder extends JsonSurrounderBase {
   @Override
@@ -13,7 +12,7 @@ public final class JsonWithArrayLiteralSurrounder extends JsonSurrounderBase {
   }
 
   @Override
-  protected @NotNull String createReplacementText(@NotNull String firstElement) {
+  protected @Nonnull String createReplacementText(@Nonnull String firstElement) {
     return "[" + firstElement + "]";
   }
 }

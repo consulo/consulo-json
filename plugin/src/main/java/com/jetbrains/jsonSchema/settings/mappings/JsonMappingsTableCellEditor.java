@@ -19,7 +19,7 @@ import com.intellij.util.ui.AbstractTableCellEditor;
 import com.intellij.util.ui.JBUI;
 import com.jetbrains.jsonSchema.JsonMappingKind;
 import com.jetbrains.jsonSchema.UserDefinedJsonSchemaConfiguration;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -63,7 +63,7 @@ final class JsonMappingsTableCellEditor extends AbstractTableCellEditor {
         new TextBrowseFolderListener(
           descriptor, myProject) {
           @Override
-          protected @NotNull String chosenFileToResultingText(@NotNull VirtualFile chosenFile) {
+          protected @Nonnull String chosenFileToResultingText(@Nonnull VirtualFile chosenFile) {
             String relativePath = VfsUtilCore.getRelativePath(chosenFile, myProject.getBaseDir());
             return relativePath != null ? relativePath : chosenFile.getPath();
           }
@@ -89,7 +89,7 @@ final class JsonMappingsTableCellEditor extends AbstractTableCellEditor {
     });
   }
 
-  private static @NotNull FileChooserDescriptor createDescriptor(UserDefinedJsonSchemaConfiguration.Item item) {
+  private static @Nonnull FileChooserDescriptor createDescriptor(UserDefinedJsonSchemaConfiguration.Item item) {
     return item.mappingKind == JsonMappingKind.File
            ? FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor()
            : FileChooserDescriptorFactory.createSingleFolderDescriptor();

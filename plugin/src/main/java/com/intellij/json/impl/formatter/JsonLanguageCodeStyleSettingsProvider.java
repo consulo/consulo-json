@@ -13,8 +13,8 @@ import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.language.codeStyle.ui.setting.SmartIndentOptionsEditor;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -45,7 +45,7 @@ public final class JsonLanguageCodeStyleSettingsProvider extends LanguageCodeSty
       }""";
   }
   @Override
-  public void customizeSettings(@NotNull CodeStyleSettingsCustomizable consumer, @NotNull SettingsType settingsType) {
+  public void customizeSettings(@Nonnull CodeStyleSettingsCustomizable consumer, @Nonnull SettingsType settingsType) {
     if (settingsType == SettingsType.SPACING_SETTINGS) {
       consumer.showStandardOptions("SPACE_WITHIN_BRACKETS",
                                    "SPACE_WITHIN_BRACES",
@@ -94,7 +94,7 @@ public final class JsonLanguageCodeStyleSettingsProvider extends LanguageCodeSty
   }
 
   @Override
-  public @NotNull Language getLanguage() {
+  public @Nonnull Language getLanguage() {
     return JsonLanguage.INSTANCE;
   }
 
@@ -104,20 +104,20 @@ public final class JsonLanguageCodeStyleSettingsProvider extends LanguageCodeSty
   }
 
   @Override
-  public String getCodeSample(@NotNull SettingsType settingsType) {
+  public String getCodeSample(@Nonnull SettingsType settingsType) {
     return Holder.SAMPLE;
   }
 
   @Override
-  protected void customizeDefaults(@NotNull CommonCodeStyleSettings commonSettings,
-                                   @NotNull CommonCodeStyleSettings.IndentOptions indentOptions) {
+  protected void customizeDefaults(@Nonnull CommonCodeStyleSettings commonSettings,
+                                   @Nonnull CommonCodeStyleSettings.IndentOptions indentOptions) {
     indentOptions.INDENT_SIZE = 2;
     // strip all blank lines by default
     commonSettings.KEEP_BLANK_LINES_IN_CODE = 0;
   }
 
   @Override
-  public @Nullable CodeStyleFieldAccessor getAccessor(@NotNull Object codeStyleObject, @NotNull Field field) {
+  public @Nullable CodeStyleFieldAccessor getAccessor(@Nonnull Object codeStyleObject, @Nonnull Field field) {
     if (codeStyleObject instanceof JsonCodeStyleSettings && field.getName().equals("PROPERTY_ALIGNMENT")) {
       return new MagicIntegerConstAccessor(
         codeStyleObject, field,
@@ -137,7 +137,7 @@ public final class JsonLanguageCodeStyleSettingsProvider extends LanguageCodeSty
   }
 
   @Override
-  public @NotNull CustomCodeStyleSettings createCustomSettings(@NotNull CodeStyleSettings settings) {
+  public @Nonnull CustomCodeStyleSettings createCustomSettings(@Nonnull CodeStyleSettings settings) {
     return new JsonCodeStyleSettings(settings);
   }
 }

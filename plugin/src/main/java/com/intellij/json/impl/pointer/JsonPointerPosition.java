@@ -2,8 +2,8 @@
 package com.intellij.json.impl.pointer;
 
 import consulo.util.collection.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ public final class JsonPointerPosition {
     return new JsonPointerPosition(ContainerUtil.createMaybeSingletonList(Step.createPropertyStep(property)));
   }
 
-  public static JsonPointerPosition parsePointer(@NotNull String pointer) {
+  public static JsonPointerPosition parsePointer(@Nonnull String pointer) {
     final List<String> chain = split(normalizeSlashes(normalizeId(pointer)));
     List<JsonPointerPosition.Step> steps = new ArrayList<>(chain.size());
     for (String s: chain) {
@@ -143,7 +143,7 @@ public final class JsonPointerPosition {
       myIdx = idx;
     }
 
-    public static Step createPropertyStep(final @NotNull String name) {
+    public static Step createPropertyStep(final @Nonnull String name) {
       return new Step(name, -1);
     }
 

@@ -5,15 +5,15 @@ import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.lang.ObjectUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public final class JsonDialectUtil {
-  public static boolean isStandardJson(@NotNull PsiElement element) {
+  public static boolean isStandardJson(@Nonnull PsiElement element) {
     return isStandardJson(getLanguageOrDefaultJson(element));
   }
 
-  public static @NotNull Language getLanguageOrDefaultJson(@NotNull PsiElement element) {
+  public static @Nonnull Language getLanguageOrDefaultJson(@Nonnull PsiElement element) {
     PsiFile file = element.getContainingFile();
     if (file != null) {
       Language language = file.getLanguage();

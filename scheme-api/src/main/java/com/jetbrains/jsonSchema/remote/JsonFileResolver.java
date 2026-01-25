@@ -18,9 +18,9 @@ import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.virtualFileSystem.http.RemoteFileInfo;
 import consulo.virtualFileSystem.http.RemoteFileState;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -34,7 +34,7 @@ public final class JsonFileResolver {
            JsonSchemaCatalogProjectConfiguration.getInstance(project).isRemoteActivityEnabled();
   }
 
-  public static @Nullable VirtualFile urlToFile(@NotNull String urlString) {
+  public static @Nullable VirtualFile urlToFile(@Nonnull String urlString) {
     if (urlString.startsWith(TEMP_URL)) {
       return TempFileSystem.getInstance().findFileByPath(urlString.substring(TEMP_URL.length() - 1));
     }
@@ -55,7 +55,7 @@ public final class JsonFileResolver {
   }
 
   public static @Nullable VirtualFile resolveSchemaByReference(@Nullable VirtualFile currentFile,
-                                                               @Nullable String schemaUrl) {
+                                                                                  @Nullable String schemaUrl) {
     if (schemaUrl == null || StringUtil.isEmpty(schemaUrl)) return null;
 
     boolean isHttpPath = isHttpPath(schemaUrl);
@@ -86,7 +86,7 @@ public final class JsonFileResolver {
     }
   }
 
-  private static @Nullable VirtualFile getOrComputeVirtualFileForValidUrlOrNull(@NotNull String maybeUrl) {
+  private static @Nullable VirtualFile getOrComputeVirtualFileForValidUrlOrNull(@Nonnull String maybeUrl) {
     return urlValidityCache.get(maybeUrl);
   }
 
@@ -100,7 +100,7 @@ public final class JsonFileResolver {
       .executor(SameThreadExecutor.INSTANCE)
       .build(JsonFileResolver::computeVirtualFileForValidUrlOrNull);
 
-  private static @Nullable VirtualFile computeVirtualFileForValidUrlOrNull(@NotNull String url) {
+  private static @Nullable VirtualFile computeVirtualFileForValidUrlOrNull(@Nonnull String url) {
     Url parse = Urls.parse(url, false);
     if (parse == null || StringUtil.isEmpty(parse.getAuthority()) || StringUtil.isEmpty(parse.getPath())) return null;
     return urlToFile(url);
@@ -121,11 +121,11 @@ public final class JsonFileResolver {
     }
   }
 
-  public static boolean isHttpPath(@NotNull String schemaFieldText) {
+  public static boolean isHttpPath(@Nonnull String schemaFieldText) {
     return schemaFieldText.startsWith("http://") || schemaFieldText.startsWith("https://");
   }
 
-  public static boolean isAbsoluteUrl(@NotNull String path) {
+  public static boolean isAbsoluteUrl(@Nonnull String path) {
     return isHttpPath(path) ||
            path.startsWith(TEMP_URL) ||
            FileUtil.toSystemIndependentName(path).startsWith(JarFileSystem.PROTOCOL_PREFIX);
@@ -134,7 +134,7 @@ public final class JsonFileResolver {
   private static final String MOCK_URL = "mock:///";
   public static final String TEMP_URL = "temp:///";
 
-  public static boolean isTempOrMockUrl(@NotNull String path) {
+  public static boolean isTempOrMockUrl(@Nonnull String path) {
     return path.startsWith(TEMP_URL) || path.startsWith(MOCK_URL);
   }
 

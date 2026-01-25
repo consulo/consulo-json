@@ -5,8 +5,8 @@ import com.jetbrains.jsonSchema.extension.JsonSchemaValidation;
 import com.jetbrains.jsonSchema.extension.adapters.JsonValueAdapter;
 import com.jetbrains.jsonSchema.internal.JsonSchemaObjectReadingUtils;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
 
@@ -27,15 +27,15 @@ public abstract class JsonSchemaObject {
 
   public abstract @Nullable Boolean getConstantSchema();
 
-  public abstract boolean hasChildFieldsExcept(@NotNull List<@NotNull String> namesToSkip);
+  public abstract boolean hasChildFieldsExcept(@Nonnull List<@Nonnull String> namesToSkip);
 
-  public abstract @NotNull Iterable<JsonSchemaValidation> getValidations(@Nullable JsonSchemaType type, @NotNull JsonValueAdapter value);
+  public abstract @Nonnull Iterable<JsonSchemaValidation> getValidations(@Nullable JsonSchemaType type, @Nonnull JsonValueAdapter value);
 
-  public abstract @NotNull JsonSchemaObject getRootSchemaObject();
+  public abstract @Nonnull JsonSchemaObject getRootSchemaObject();
 
   public abstract boolean isValidByExclusion();
 
-  public abstract @NotNull String getPointer();
+  public abstract @Nonnull String getPointer();
 
   public abstract @Nullable String getFileUrl();
 
@@ -119,7 +119,7 @@ public abstract class JsonSchemaObject {
 
   public abstract @Nullable Object getDefault();
 
-  public abstract @Nullable JsonSchemaObject getExampleByName(@NotNull String name);
+  public abstract @Nullable JsonSchemaObject getExampleByName(@Nonnull String name);
 
   public abstract @Nullable String getFormat();
 
@@ -131,13 +131,13 @@ public abstract class JsonSchemaObject {
 
   public abstract @Nullable String getTitle();
 
-  public abstract @Nullable JsonSchemaObject getMatchingPatternPropertySchema(@NotNull String name);
+  public abstract @Nullable JsonSchemaObject getMatchingPatternPropertySchema(@Nonnull String name);
 
-  public abstract boolean checkByPattern(@NotNull String value);
+  public abstract boolean checkByPattern(@Nonnull String value);
 
   public abstract @Nullable String getPatternError();
 
-  public abstract @Nullable JsonSchemaObject findRelativeDefinition(@NotNull String ref);
+  public abstract @Nullable JsonSchemaObject findRelativeDefinition(@Nonnull String ref);
 
   public abstract @Nullable Map<String, Map<String, String>> getEnumMetadata();
 
@@ -145,21 +145,21 @@ public abstract class JsonSchemaObject {
 
 
   // Recently introduced methods that replace old inconvenient ones
-  public abstract @Nullable JsonSchemaObject getDefinitionByName(@NotNull String name);
+  public abstract @Nullable JsonSchemaObject getDefinitionByName(@Nonnull String name);
 
-  public abstract @NotNull Iterator<String> getDefinitionNames();
+  public abstract @Nonnull Iterator<String> getDefinitionNames();
 
-  public abstract @Nullable String readChildNodeValue(@NotNull String childNodeName);
+  public abstract @Nullable String readChildNodeValue(@Nonnull String childNodeName);
 
-  public abstract boolean hasChildNode(@NotNull String childNodeName);
+  public abstract boolean hasChildNode(@Nonnull String childNodeName);
 
-  public abstract @NotNull Iterator<String> getPropertyNames();
+  public abstract @Nonnull Iterator<String> getPropertyNames();
 
-  public abstract @Nullable JsonSchemaObject getPropertyByName(@NotNull String name);
+  public abstract @Nullable JsonSchemaObject getPropertyByName(@Nonnull String name);
 
-  public abstract @NotNull Iterator<String> getSchemaDependencyNames();
+  public abstract @Nonnull Iterator<String> getSchemaDependencyNames();
 
-  public abstract @Nullable JsonSchemaObject getSchemaDependencyByName(@NotNull String name);
+  public abstract @Nullable JsonSchemaObject getSchemaDependencyByName(@Nonnull String name);
 
   // custom metadata provided by schemas, can be used in IDE features
   // the format in the schema is a key with either a single string value or an array of string values
@@ -200,7 +200,7 @@ public abstract class JsonSchemaObject {
    * @deprecated use {@link JsonSchemaObject#getPropertyNames} and {@link JsonSchemaObject#getPropertyByName}
    */
   @Deprecated
-  public abstract @NotNull Map<String, ? extends JsonSchemaObject> getProperties();
+  public abstract @Nonnull Map<String, ? extends JsonSchemaObject> getProperties();
 
   /**
    * @deprecated Do not use
@@ -247,7 +247,6 @@ public abstract class JsonSchemaObject {
   /**
    * @deprecated use {@link JsonSchemaObject#getDefinitionNames} and {@link JsonSchemaObject#getDefinitionByName}
    */
-  @ApiStatus.Internal
   @Deprecated
   public abstract @Nullable Map<String, ? extends JsonSchemaObject> getDefinitionsMap();
 
@@ -255,7 +254,7 @@ public abstract class JsonSchemaObject {
    * @deprecated use {@link JsonSchemaObjectReadingUtils#resolveRefSchema}
    */
   @Deprecated
-  public abstract @Nullable JsonSchemaObject resolveRefSchema(@NotNull JsonSchemaService service);
+  public abstract @Nullable JsonSchemaObject resolveRefSchema(@Nonnull JsonSchemaService service);
 
   /**
    * @deprecated Do not use
@@ -275,5 +274,5 @@ public abstract class JsonSchemaObject {
    * @deprecated Do not use
    */
   @Deprecated
-  public abstract void mergeValues(@NotNull JsonSchemaObject other);
+  public abstract void mergeValues(@Nonnull JsonSchemaObject other);
 }

@@ -14,8 +14,8 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.lang.Pair;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public final class JsonLineMover extends LineMover {
@@ -28,7 +28,7 @@ public final class JsonLineMover extends LineMover {
   private Direction myDirection = Direction.Same;
 
   @Override
-  public boolean checkAvailable(@NotNull Editor editor, @NotNull PsiFile file, @NotNull MoveInfo info, boolean down) {
+  public boolean checkAvailable(@Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull MoveInfo info, boolean down) {
     myDirection = Direction.Same;
 
     if (!(file instanceof JsonFile) || !super.checkAvailable(editor, file, info, down)) {
@@ -91,14 +91,14 @@ public final class JsonLineMover extends LineMover {
     return true;
   }
 
-  private static @NotNull Pair<PsiElement, PsiElement> expandCommentsInRange(@NotNull Pair<PsiElement, PsiElement> range) {
+  private static @Nonnull Pair<PsiElement, PsiElement> expandCommentsInRange(@Nonnull Pair<PsiElement, PsiElement> range) {
     final PsiElement upper = JsonPsiUtil.findFurthestSiblingOfSameType(range.getFirst(), false);
     final PsiElement lower = JsonPsiUtil.findFurthestSiblingOfSameType(range.getSecond(), true);
     return Pair.create(upper, lower);
   }
 
   @Override
-  public void afterMove(@NotNull Editor editor, @NotNull PsiFile file, @NotNull MoveInfo info, boolean down) {
+  public void afterMove(@Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull MoveInfo info, boolean down) {
     int diff = (info.toMove.endLine - info.toMove.startLine) - (info.toMove2.endLine - info.toMove2.startLine);
     switch (myDirection) {
       case Same -> {

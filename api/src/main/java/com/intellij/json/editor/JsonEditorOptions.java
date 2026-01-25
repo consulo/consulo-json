@@ -6,8 +6,8 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.util.xml.serializer.XmlSerializerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @State(
     name = "JsonEditorOptions",
@@ -29,7 +29,7 @@ public final class JsonEditorOptions implements PersistentStateComponent<JsonEdi
     }
 
     @Override
-    public void loadState(@NotNull JsonEditorOptions state) {
+    public void loadState(@Nonnull JsonEditorOptions state) {
         XmlSerializerUtil.copyBean(state, this);
     }
 

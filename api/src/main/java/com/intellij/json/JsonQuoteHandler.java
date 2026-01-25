@@ -14,8 +14,8 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import static com.intellij.json.JsonTokenSets.STRING_LITERALS;
 
@@ -28,7 +28,7 @@ public final class JsonQuoteHandler extends SimpleTokenSetQuoteHandler implement
   }
 
   @Override
-  public @Nullable CharSequence getClosingQuote(@NotNull HighlighterIterator iterator, int offset) {
+  public @Nullable CharSequence getClosingQuote(@Nonnull HighlighterIterator iterator, int offset) {
     final IElementType tokenType = (IElementType) iterator.getTokenType();
     if (tokenType == TokenType.WHITE_SPACE) {
       final int index = iterator.getStart() - 1;
@@ -40,7 +40,7 @@ public final class JsonQuoteHandler extends SimpleTokenSetQuoteHandler implement
   }
 
   @Override
-  public void insertClosingQuote(@NotNull Editor editor, int offset, @NotNull PsiFile file, @NotNull CharSequence closingQuote) {
+  public void insertClosingQuote(@Nonnull Editor editor, int offset, @Nonnull PsiFile file, @Nonnull CharSequence closingQuote) {
     PsiElement element = file.findElementAt(offset - 1);
     PsiElement parent = element == null ? null : element.getParent();
     if (parent instanceof JsonStringLiteral) {

@@ -17,7 +17,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public final class JsonTypedHandler extends TypedHandlerDelegate {
@@ -25,7 +25,7 @@ public final class JsonTypedHandler extends TypedHandlerDelegate {
   private boolean myWhitespaceAdded;
 
   @Override
-  public @NotNull Result charTyped(char c, @NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+  public @Nonnull Result charTyped(char c, @Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     if (file instanceof JsonFile) {
       processPairedBracesComma(c, editor, file);
       addWhiteSpaceAfterColonIfNeeded(c, editor, file);
@@ -104,11 +104,11 @@ public final class JsonTypedHandler extends TypedHandlerDelegate {
   }
 
   @Override
-  public @NotNull Result beforeCharTyped(char c,
-                                         @NotNull Project project,
-                                         @NotNull Editor editor,
-                                         @NotNull PsiFile file,
-                                         @NotNull FileType fileType) {
+  public @Nonnull Result beforeCharTyped(char c,
+                                         @Nonnull Project project,
+                                         @Nonnull Editor editor,
+                                         @Nonnull PsiFile file,
+                                         @Nonnull FileType fileType) {
     if (file instanceof JsonFile) {
       addPropertyNameQuotesIfNeeded(c, editor, file);
     }
@@ -116,8 +116,8 @@ public final class JsonTypedHandler extends TypedHandlerDelegate {
   }
 
   private void addWhiteSpaceAfterColonIfNeeded(char c,
-                                               @NotNull Editor editor,
-                                               @NotNull PsiFile file) {
+                                               @Nonnull Editor editor,
+                                               @Nonnull PsiFile file) {
     if (c != ':' || !JsonEditorOptions.getInstance().AUTO_WHITESPACE_AFTER_COLON) {
       if (c != ' ') {
         myWhitespaceAdded = false;
@@ -151,8 +151,8 @@ public final class JsonTypedHandler extends TypedHandlerDelegate {
   }
 
   private static void addPropertyNameQuotesIfNeeded(char c,
-                                                    @NotNull Editor editor,
-                                                    @NotNull PsiFile file) {
+                                                    @Nonnull Editor editor,
+                                                    @Nonnull PsiFile file) {
     if (c != ':' || !JsonDialectUtil.isStandardJson(file) || !JsonEditorOptions.getInstance().AUTO_QUOTE_PROP_NAME) return;
     int offset = editor.getCaretModel().getOffset();
     PsiElement element = PsiTreeUtil.skipWhitespacesBackward(file.findElementAt(offset));
@@ -165,8 +165,8 @@ public final class JsonTypedHandler extends TypedHandlerDelegate {
   }
 
   public static void processPairedBracesComma(char c,
-                                              @NotNull Editor editor,
-                                              @NotNull PsiFile file) {
+                                              @Nonnull Editor editor,
+                                              @Nonnull PsiFile file) {
     if (!JsonEditorOptions.getInstance().COMMA_ON_MATCHING_BRACES) return;
     if (c != '[' && c != '{' && c != '"' && c != '\'') return;
     SmartEnterProcessor.commitDocument(editor);
@@ -184,7 +184,7 @@ public final class JsonTypedHandler extends TypedHandlerDelegate {
     }
   }
 
-  private static boolean shouldAddCommaInParentContainer(@NotNull JsonValue item) {
+  private static boolean shouldAddCommaInParentContainer(@Nonnull JsonValue item) {
     PsiElement parent = item.getParent();
     if (parent instanceof JsonArray || parent instanceof JsonProperty) {
       PsiElement nextElement = PsiTreeUtil.skipWhitespacesForward(parent instanceof JsonProperty ? parent : item);

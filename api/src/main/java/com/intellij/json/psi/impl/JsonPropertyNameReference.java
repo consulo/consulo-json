@@ -8,8 +8,8 @@ import consulo.language.psi.ElementManipulators;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Mikhail Golubev
@@ -17,17 +17,17 @@ import org.jetbrains.annotations.Nullable;
 public class JsonPropertyNameReference implements PsiReference {
   private final JsonProperty myProperty;
 
-  public JsonPropertyNameReference(@NotNull JsonProperty property) {
+  public JsonPropertyNameReference(@Nonnull JsonProperty property) {
     myProperty = property;
   }
 
   @Override
-  public @NotNull PsiElement getElement() {
+  public @Nonnull PsiElement getElement() {
     return myProperty;
   }
 
   @Override
-  public @NotNull TextRange getRangeInElement() {
+  public @Nonnull TextRange getRangeInElement() {
     final JsonValue nameElement = myProperty.getNameElement();
     // Either value of string with quotes stripped or element's text as is
     return ElementManipulators.getValueTextRange(nameElement);
@@ -39,22 +39,22 @@ public class JsonPropertyNameReference implements PsiReference {
   }
 
   @Override
-  public @NotNull String getCanonicalText() {
+  public @Nonnull String getCanonicalText() {
     return myProperty.getName();
   }
 
   @Override
-  public PsiElement handleElementRename(@NotNull String newElementName) throws IncorrectOperationException {
+  public PsiElement handleElementRename(@Nonnull String newElementName) throws IncorrectOperationException {
     return myProperty.setName(newElementName);
   }
 
   @Override
-  public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
+  public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
     return null;
   }
 
   @Override
-  public boolean isReferenceTo(@NotNull PsiElement element) {
+  public boolean isReferenceTo(@Nonnull PsiElement element) {
     if (!(element instanceof JsonProperty otherProperty)) {
       return false;
     }

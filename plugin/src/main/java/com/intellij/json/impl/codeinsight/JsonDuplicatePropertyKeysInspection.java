@@ -19,9 +19,9 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 import sun.tools.jconsole.inspector.IconManager;
 
 import javax.swing.*;
@@ -35,11 +35,11 @@ public class JsonDuplicatePropertyKeysInspection extends LocalInspectionTool {
   private static final String COMMENT = "$comment";
 
   @Override
-  public @NotNull PsiElementVisitor buildVisitor(final @NotNull ProblemsHolder holder, boolean isOnTheFly) {
+  public @Nonnull PsiElementVisitor buildVisitor(final @Nonnull ProblemsHolder holder, boolean isOnTheFly) {
     boolean isSchemaFile = JsonSchemaService.isSchemaFile(holder.getFile());
     return new JsonElementVisitor() {
       @Override
-      public void visitObject(@NotNull JsonObject o) {
+      public void visitObject(@Nonnull JsonObject o) {
         final MultiMap<String, PsiElement> keys = new MultiMap<>();
         for (JsonProperty property : o.getPropertyList()) {
           keys.putValue(property.getName(), property.getNameElement());
@@ -49,7 +49,7 @@ public class JsonDuplicatePropertyKeysInspection extends LocalInspectionTool {
     };
   }
 
-  protected static void visitKeys(MultiMap<String, PsiElement> keys, boolean isSchemaFile, @NotNull ProblemsHolder holder) {
+  protected static void visitKeys(MultiMap<String, PsiElement> keys, boolean isSchemaFile, @Nonnull ProblemsHolder holder) {
     for (Map.Entry<String, Collection<PsiElement>> entry : keys.entrySet()) {
       final Collection<PsiElement> sameNamedKeys = entry.getValue();
       final String entryKey = entry.getKey();
@@ -62,48 +62,48 @@ public class JsonDuplicatePropertyKeysInspection extends LocalInspectionTool {
     }
   }
 
-  protected static @NotNull NavigateToDuplicatesFix getNavigateToDuplicatesFix(Collection<PsiElement> sameNamedKeys,
+  protected static @Nonnull NavigateToDuplicatesFix getNavigateToDuplicatesFix(Collection<PsiElement> sameNamedKeys,
                                                                                PsiElement element,
                                                                                String entryKey) {
     return new NavigateToDuplicatesFix(sameNamedKeys, element, entryKey);
   }
 
   private static final class NavigateToDuplicatesFix extends LocalQuickFixAndIntentionActionOnPsiElement {
-    private final @NotNull Collection<SmartPsiElementPointer<PsiElement>> mySameNamedKeys;
-    private final @NotNull String myEntryKey;
+    private final @Nonnull Collection<SmartPsiElementPointer<PsiElement>> mySameNamedKeys;
+    private final @Nonnull String myEntryKey;
 
-    private NavigateToDuplicatesFix(@NotNull Collection<PsiElement> sameNamedKeys, @NotNull PsiElement element, @NotNull String entryKey) {
+    private NavigateToDuplicatesFix(@Nonnull Collection<PsiElement> sameNamedKeys, @Nonnull PsiElement element, @Nonnull String entryKey) {
       super(element);
       mySameNamedKeys = ContainerUtil.map(sameNamedKeys, k -> SmartPointerManager.createPointer(k));
       myEntryKey = entryKey;
     }
 
     @Override
-    public @NotNull String getText() {
+    public @Nonnull String getText() {
       return JsonBundle.message("navigate.to.duplicates");
     }
 
     @Override
-    public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getFamilyName() {
+    public @Nls(capitalization = Nls.Capitalization.Sentence) @Nonnull String getFamilyName() {
       return getText();
     }
 
     @Override
-    public @NotNull IntentionPreviewInfo generatePreview(@NotNull Project project, @NotNull ProblemDescriptor previewDescriptor) {
+    public @Nonnull IntentionPreviewInfo generatePreview(@Nonnull Project project, @Nonnull ProblemDescriptor previewDescriptor) {
       return IntentionPreviewInfo.EMPTY;
     }
 
     @Override
-    public @NotNull IntentionPreviewInfo generatePreview(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile psiFile) {
+    public @Nonnull IntentionPreviewInfo generatePreview(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile psiFile) {
       return IntentionPreviewInfo.EMPTY;
     }
 
     @Override
-    public void invoke(@NotNull Project project,
-                       @NotNull PsiFile psiFile,
+    public void invoke(@Nonnull Project project,
+                       @Nonnull PsiFile psiFile,
                        @Nullable Editor editor,
-                       @NotNull PsiElement startElement,
-                       @NotNull PsiElement endElement) {
+                       @Nonnull PsiElement startElement,
+                       @Nonnull PsiElement endElement) {
       if (editor == null) return;
 
       if (mySameNamedKeys.size() == 2) {
@@ -119,12 +119,12 @@ public class JsonDuplicatePropertyKeysInspection extends LocalInspectionTool {
         JBPopupFactory.getInstance().createListPopup(
           new BaseListPopupStep<>(JsonBundle.message("navigate.to.duplicates.header", myEntryKey), allElements) {
             @Override
-            public @NotNull Icon getIconFor(PsiElement aValue) {
+            public @Nonnull Icon getIconFor(PsiElement aValue) {
               return IconManager.getInstance().getPlatformIcon(PlatformIcons.Property);
             }
 
             @Override
-            public @NotNull String getTextFor(PsiElement value) {
+            public @Nonnull String getTextFor(PsiElement value) {
               return JsonBundle
                 .message("navigate.to.duplicates.desc", myEntryKey, editor.getDocument().getLineNumber(value.getTextOffset()));
             }
@@ -148,7 +148,7 @@ public class JsonDuplicatePropertyKeysInspection extends LocalInspectionTool {
       }
     }
 
-    private static void navigateTo(@NotNull Editor editor, @NotNull PsiElement toNavigate) {
+    private static void navigateTo(@Nonnull Editor editor, @Nonnull PsiElement toNavigate) {
       editor.getCaretModel().moveToOffset(toNavigate.getTextOffset());
       editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
     }

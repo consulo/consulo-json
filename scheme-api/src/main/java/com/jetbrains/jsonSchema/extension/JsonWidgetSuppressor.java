@@ -6,7 +6,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Implement to suppress showing JSON widget for particular files where assistance is powered by a custom provider.
@@ -19,7 +19,7 @@ public interface JsonWidgetSuppressor {
    * Allows to check whether widget for the file should be suppressed or not.
    * This method is called on EDT.
    */
-  default boolean isCandidateForSuppress(@NotNull VirtualFile file, @NotNull Project project) {
+  default boolean isCandidateForSuppress(@Nonnull VirtualFile file, @Nonnull Project project) {
     return false;
   }
 
@@ -32,5 +32,5 @@ public interface JsonWidgetSuppressor {
    * time to time to check whether widget suppression is still actual for the given file.
    * For instance progress indicator is canceled if another editor tab is selected.
    */
-  boolean suppressSwitcherWidget(@NotNull VirtualFile file, @NotNull Project project);
+  boolean suppressSwitcherWidget(@Nonnull VirtualFile file, @Nonnull Project project);
 }

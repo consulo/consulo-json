@@ -14,8 +14,8 @@ import consulo.language.editor.folding.FoldingBuilder;
 import consulo.language.editor.folding.FoldingDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.Couple;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,15 +29,15 @@ public final class JsonFoldingBuilder implements FoldingBuilder, DumbAware {
   private static final Set<String> PRIORITIZED_KEYS = Set.of("id", "name");
 
   @Override
-  public FoldingDescriptor @NotNull [] buildFoldRegions(@NotNull ASTNode node, @NotNull Document document) {
+  public FoldingDescriptor @Nonnull [] buildFoldRegions(@Nonnull ASTNode node, @Nonnull Document document) {
     final List<FoldingDescriptor> descriptors = new ArrayList<>();
     collectDescriptorsRecursively(node, document, descriptors);
     return descriptors.toArray(FoldingDescriptor[]::new);
   }
 
-  private static void collectDescriptorsRecursively(@NotNull ASTNode node,
-                                                    @NotNull Document document,
-                                                    @NotNull List<FoldingDescriptor> descriptors) {
+  private static void collectDescriptorsRecursively(@Nonnull ASTNode node,
+                                                    @Nonnull Document document,
+                                                    @Nonnull List<FoldingDescriptor> descriptors) {
     final IElementType type = node.getElementType();
     if ((type == JsonElementTypes.OBJECT || type == JsonElementTypes.ARRAY) && spanMultipleLines(node, document)) {
       descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
@@ -60,7 +60,7 @@ public final class JsonFoldingBuilder implements FoldingBuilder, DumbAware {
   }
 
   @Override
-  public @Nullable String getPlaceholderText(@NotNull ASTNode node) {
+  public @Nullable String getPlaceholderText(@Nonnull ASTNode node) {
     final IElementType type = node.getElementType();
     if (type == JsonElementTypes.OBJECT) {
       return buildObjectPlaceholder(node.getPsi(JsonObject.class));
@@ -104,15 +104,15 @@ public final class JsonFoldingBuilder implements FoldingBuilder, DumbAware {
   }
 
   @Override
-  public boolean isCollapsedByDefault(@NotNull ASTNode node) {
+  public boolean isCollapsedByDefault(@Nonnull ASTNode node) {
     return false;
   }
 
-  public static @NotNull Couple<PsiElement> expandLineCommentsRange(@NotNull PsiElement anchor) {
+  public static @Nonnull Couple<PsiElement> expandLineCommentsRange(@Nonnull PsiElement anchor) {
     return Couple.of(JsonPsiUtil.findFurthestSiblingOfSameType(anchor, false), JsonPsiUtil.findFurthestSiblingOfSameType(anchor, true));
   }
 
-  private static boolean spanMultipleLines(@NotNull ASTNode node, @NotNull Document document) {
+  private static boolean spanMultipleLines(@Nonnull ASTNode node, @Nonnull Document document) {
     final TextRange range = node.getTextRange();
     int endOffset = range.getEndOffset();
     return document.getLineNumber(range.getStartOffset())

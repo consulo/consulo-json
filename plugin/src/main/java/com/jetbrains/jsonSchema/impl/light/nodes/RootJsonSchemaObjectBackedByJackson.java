@@ -8,8 +8,8 @@ import com.jetbrains.jsonSchema.impl.light.SchemaKeywords;
 import com.jetbrains.jsonSchema.impl.light.versions.JsonSchemaInterpretationStrategy;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -32,7 +32,7 @@ public class RootJsonSchemaObjectBackedByJackson extends JsonSchemaObjectBackedB
   private final JsonSchemaObjectBackedByJacksonFactory schemaObjectFactory;
   private final JsonSchemaInterpretationStrategy schemaInterpretationStrategy;
 
-  public RootJsonSchemaObjectBackedByJackson(@NotNull JsonNode rootNode, @Nullable VirtualFile schemaFile) {
+  public RootJsonSchemaObjectBackedByJackson(@Nonnull JsonNode rootNode, @Nullable VirtualFile schemaFile) {
     super(rootNode, SchemaKeywords.SCHEMA_ROOT_POINTER);
     this.schemaFile = schemaFile;
     this.schemaObjectFactory = new JsonSchemaObjectBackedByJacksonFactory(this);
@@ -45,21 +45,21 @@ public class RootJsonSchemaObjectBackedByJackson extends JsonSchemaObjectBackedB
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public JsonSchemaInterpretationStrategy getSchemaInterpretationStrategy() {
     return schemaInterpretationStrategy;
   }
 
   @Override
   @Nullable
-  public JsonSchemaObjectBackedByJacksonBase getChildSchemaObjectByName(@NotNull JsonSchemaObjectBackedByJacksonBase parentSchemaObject,
-                                                                         @NotNull String... childNodeRelativePointer) {
+  public JsonSchemaObjectBackedByJacksonBase getChildSchemaObjectByName(@Nonnull JsonSchemaObjectBackedByJacksonBase parentSchemaObject,
+                                                                         @Nonnull String... childNodeRelativePointer) {
     return schemaObjectFactory.getChildSchemaObjectByName(parentSchemaObject, childNodeRelativePointer);
   }
 
   @Override
   @Nullable
-  public JsonSchemaObject getSchemaObjectByAbsoluteJsonPointer(@NotNull String jsonPointer) {
+  public JsonSchemaObject getSchemaObjectByAbsoluteJsonPointer(@Nonnull String jsonPointer) {
     return schemaObjectFactory.getSchemaObjectByAbsoluteJsonPointer(jsonPointer);
   }
 
@@ -104,14 +104,14 @@ public class RootJsonSchemaObjectBackedByJackson extends JsonSchemaObjectBackedB
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public RootJsonSchemaObjectBackedByJackson getRootSchemaObject() {
     return this;
   }
 
   @Override
   @Nullable
-  public String resolveId(@NotNull String id) {
+  public String resolveId(@Nonnull String id) {
     String schemaFeature = schemaInterpretationStrategy.getIdKeyword();
     if (schemaFeature == null) return null;
     return collectValuesWithKey(schemaFeature, IDS_MAP_KEY).get(id);
@@ -119,14 +119,14 @@ public class RootJsonSchemaObjectBackedByJackson extends JsonSchemaObjectBackedB
 
   @Override
   @Nullable
-  public String resolveDynamicAnchor(@NotNull String anchor) {
+  public String resolveDynamicAnchor(@Nonnull String anchor) {
     String schemaFeature = schemaInterpretationStrategy.getDynamicAnchorKeyword();
     if (schemaFeature == null) return null;
     return collectValuesWithKey(schemaFeature, DYNAMIC_ANCHORS_MAP_KEY).get(anchor);
   }
 
-  @NotNull
-  private Map<String, String> collectValuesWithKey(@NotNull String expectedKey, @NotNull Key<Map<String, String>> storeIn) {
+  @Nonnull
+  private Map<String, String> collectValuesWithKey(@Nonnull String expectedKey, @Nonnull Key<Map<String, String>> storeIn) {
     return getOrComputeValue(storeIn, () -> {
       Stream<Map.Entry<String, String>> entries = indexSchema(getRawSchemaNode(), Collections.emptyList(), (node, parentPointer) -> {
         if (!node.isTextual() || parentPointer.isEmpty() || !parentPointer.get(parentPointer.size() - 1).equals(expectedKey)) {
@@ -149,10 +149,10 @@ public class RootJsonSchemaObjectBackedByJackson extends JsonSchemaObjectBackedB
     });
   }
 
-  @NotNull
-  private <T> Stream<T> indexSchema(@NotNull JsonNode root,
-                                    @NotNull List<String> parentPointer,
-                                    @NotNull java.util.function.BiFunction<JsonNode, List<String>, T> retrieveDataFromNode) {
+  @Nonnull
+  private <T> Stream<T> indexSchema(@Nonnull JsonNode root,
+                                    @Nonnull List<String> parentPointer,
+                                    @Nonnull java.util.function.BiFunction<JsonNode, List<String>, T> retrieveDataFromNode) {
     if (root.isObject()) {
       return StreamSupport.stream(
         Spliterators.spliteratorUnknownSize(root.fields(), Spliterator.ORDERED),

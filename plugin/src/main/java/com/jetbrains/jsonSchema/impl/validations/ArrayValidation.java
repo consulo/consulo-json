@@ -15,8 +15,8 @@ import com.jetbrains.jsonSchema.JsonComplianceCheckerOptions;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
 import com.jetbrains.jsonSchema.JsonSchemaType;
 import com.jetbrains.jsonSchema.JsonValidationError;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -25,11 +25,11 @@ import java.util.Map;
 public class ArrayValidation implements JsonSchemaValidation {
   public static final ArrayValidation INSTANCE = new ArrayValidation();
   @Override
-  public boolean validate(@NotNull JsonValueAdapter propValue,
-                          @NotNull JsonSchemaObject schema,
+  public boolean validate(@Nonnull JsonValueAdapter propValue,
+                          @Nonnull JsonSchemaObject schema,
                           @Nullable JsonSchemaType schemaType,
-                          @NotNull JsonValidationHost consumer,
-                          @NotNull JsonComplianceCheckerOptions options) {
+                          @Nonnull JsonValidationHost consumer,
+                          @Nonnull JsonComplianceCheckerOptions options) {
     JsonSchemaHighlightingSessionStatisticsCollector.getInstance().reportSchemaUsageFeature(JsonSchemaFusCountedFeature.ArrayValidation);
     return checkArray(propValue, schema, consumer, options);
   }
@@ -44,8 +44,8 @@ public class ArrayValidation implements JsonSchemaValidation {
     return checkArrayItems(value, elements, schema, consumer, options);
   }
 
-  protected boolean checkArrayItems(@NotNull JsonValueAdapter array,
-                                         final @NotNull List<JsonValueAdapter> list,
+  protected boolean checkArrayItems(@Nonnull JsonValueAdapter array,
+                                         final @Nonnull List<JsonValueAdapter> list,
                                          final JsonSchemaObject schema,
                                          JsonValidationHost consumer,
                                          JsonComplianceCheckerOptions options) {
@@ -65,7 +65,7 @@ public class ArrayValidation implements JsonSchemaValidation {
     }
   }
 
-  protected boolean validateIndividualItems(@NotNull List<JsonValueAdapter> list,
+  protected boolean validateIndividualItems(@Nonnull List<JsonValueAdapter> list,
                                                  JsonSchemaObject schema,
                                                  JsonValidationHost consumer,
                                                  JsonComplianceCheckerOptions options) {
@@ -104,8 +104,8 @@ public class ArrayValidation implements JsonSchemaValidation {
     return isValid;
   }
 
-  protected static boolean validateArrayLengthHeuristically(@NotNull JsonValueAdapter array,
-                                                         @NotNull List<JsonValueAdapter> list,
+  protected static boolean validateArrayLengthHeuristically(@Nonnull JsonValueAdapter array,
+                                                         @Nonnull List<JsonValueAdapter> list,
                                                          JsonSchemaObject schema,
                                                          JsonValidationHost consumer,
                                                          JsonComplianceCheckerOptions options) {
@@ -121,8 +121,8 @@ public class ArrayValidation implements JsonSchemaValidation {
     return true;
   }
 
-  protected static boolean validateArrayLength(@NotNull JsonValueAdapter array,
-                                            @NotNull List<JsonValueAdapter> list,
+  protected static boolean validateArrayLength(@Nonnull JsonValueAdapter array,
+                                            @Nonnull List<JsonValueAdapter> list,
                                             JsonSchemaObject schema,
                                             JsonValidationHost consumer, JsonComplianceCheckerOptions options) {
     if (schema.getMinItems() != null && list.size() < schema.getMinItems()) {
@@ -136,8 +136,8 @@ public class ArrayValidation implements JsonSchemaValidation {
     return true;
   }
 
-  protected static boolean validateAgainstContainsSchema(@NotNull JsonValueAdapter array,
-                                @NotNull List<JsonValueAdapter> list,
+  protected static boolean validateAgainstContainsSchema(@Nonnull JsonValueAdapter array,
+                                @Nonnull List<JsonValueAdapter> list,
                                 JsonSchemaObject schema,
                                 JsonValidationHost consumer,
                                 JsonComplianceCheckerOptions options) {
@@ -158,11 +158,11 @@ public class ArrayValidation implements JsonSchemaValidation {
     return true;
   }
 
-  protected static boolean validateUniqueItems(@NotNull JsonValueAdapter array,
-                                @NotNull List<JsonValueAdapter> list,
+  protected static boolean validateUniqueItems(@Nonnull JsonValueAdapter array,
+                                @Nonnull List<JsonValueAdapter> list,
                                 JsonSchemaObject schema,
                                 JsonValidationHost consumer,
-                                @NotNull JsonComplianceCheckerOptions options) {
+                                @Nonnull JsonComplianceCheckerOptions options) {
     if (schema.isUniqueItems()) {
       final MultiMap<String, JsonValueAdapter> valueTexts = new MultiMap<>();
       final JsonLikePsiWalker walker = JsonLikePsiWalker.getWalker(array.getDelegate(), schema);

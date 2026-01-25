@@ -13,8 +13,8 @@ import consulo.application.util.registry.Registry;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -26,10 +26,10 @@ import static com.jetbrains.jsonSchema.impl.light.SchemaKeywords.*;
 
 public final class JsonSchemaVariantsTreeBuilder {
 
-  public static JsonSchemaTreeNode buildTree(@NotNull Project project,
+  public static JsonSchemaTreeNode buildTree(@Nonnull Project project,
                                              @Nullable JsonSchemaNodeExpansionRequest expansionRequest,
-                                             final @NotNull JsonSchemaObject schema,
-                                             final @NotNull JsonPointerPosition position,
+                                             final @Nonnull JsonSchemaObject schema,
+                                             final @Nonnull JsonPointerPosition position,
                                              final boolean skipLastExpand) {
     final JsonSchemaTreeNode root = new JsonSchemaTreeNode(null, schema);
     JsonSchemaService service = JsonSchemaService.Impl.get(project);
@@ -73,7 +73,7 @@ public final class JsonSchemaVariantsTreeBuilder {
     return root;
   }
 
-  private static boolean typeMatches(final boolean isObject, final @NotNull JsonSchemaObject schema) {
+  private static boolean typeMatches(final boolean isObject, final @Nonnull JsonSchemaObject schema) {
     final JsonSchemaType requiredType = isObject ? JsonSchemaType._object : JsonSchemaType._array;
     if (schema.getType() != null) {
       return requiredType.equals(schema.getType());
@@ -87,10 +87,10 @@ public final class JsonSchemaVariantsTreeBuilder {
     return true;
   }
 
-  private static void expandChildSchema(@NotNull JsonSchemaTreeNode node,
+  private static void expandChildSchema(@Nonnull JsonSchemaTreeNode node,
                                         @Nullable JsonSchemaNodeExpansionRequest expansionRequest,
-                                        @NotNull JsonSchemaObject childSchema,
-                                        @NotNull JsonSchemaService service) {
+                                        @Nonnull JsonSchemaObject childSchema,
+                                        @Nonnull JsonSchemaService service) {
     if (interestingSchema(childSchema)) {
       node.createChildrenFromOperation(getOperation(service, childSchema, expansionRequest));
     }
@@ -99,8 +99,8 @@ public final class JsonSchemaVariantsTreeBuilder {
     }
   }
 
-  private static @NotNull Operation getOperation(@NotNull JsonSchemaService service,
-                                                 @NotNull JsonSchemaObject param,
+  private static @Nonnull Operation getOperation(@Nonnull JsonSchemaService service,
+                                                 @Nonnull JsonSchemaObject param,
                                                  @Nullable JsonSchemaNodeExpansionRequest expansionRequest) {
     final Operation expand = new ProcessDefinitionsOperation(param, service, expansionRequest);
     expand.doMap(new HashSet<>());
@@ -108,8 +108,8 @@ public final class JsonSchemaVariantsTreeBuilder {
     return expand;
   }
 
-  public static @NotNull Pair<ThreeState, JsonSchemaObject> doSingleStep(@NotNull JsonPointerPosition step,
-                                                                         @NotNull JsonSchemaObject parent) {
+  public static @Nonnull Pair<ThreeState, JsonSchemaObject> doSingleStep(@Nonnull JsonPointerPosition step,
+                                                                         @Nonnull JsonSchemaObject parent) {
     final String name = step.getFirstName();
     if (name != null) {
       return propertyStep(name, parent);
@@ -123,8 +123,8 @@ public final class JsonSchemaVariantsTreeBuilder {
 
   // even if there are no definitions to expand, this object may work as an intermediate node in a tree,
   // connecting oneOf and allOf expansion, for example
-  public static List<JsonSchemaObject> andGroups(@NotNull List<? extends JsonSchemaObject> g1,
-                                                 @NotNull List<? extends JsonSchemaObject> g2) {
+  public static List<JsonSchemaObject> andGroups(@Nonnull List<? extends JsonSchemaObject> g1,
+                                                 @Nonnull List<? extends JsonSchemaObject> g2) {
     List<JsonSchemaObject> result = new ArrayList<>(g1.size() * g2.size());
     for (JsonSchemaObject s : g1) {
       result.addAll(andGroup(s, g2));
@@ -133,7 +133,7 @@ public final class JsonSchemaVariantsTreeBuilder {
   }
 
   // here is important, which pointer gets the result: lets make them all different, otherwise two schemas of branches of oneOf would be equal
-  public static List<JsonSchemaObject> andGroup(@NotNull JsonSchemaObject object, @NotNull List<? extends JsonSchemaObject> group) {
+  public static List<JsonSchemaObject> andGroup(@Nonnull JsonSchemaObject object, @Nonnull List<? extends JsonSchemaObject> group) {
     List<JsonSchemaObject> list = new ArrayList<>(group.size());
     for (JsonSchemaObject s : group) {
       var schemaObject = getJsonSchemaObjectMerger().mergeObjects(object, s, s);
@@ -145,7 +145,7 @@ public final class JsonSchemaVariantsTreeBuilder {
   }
 
 
-  private static boolean interestingSchema(@NotNull JsonSchemaObject schema) {
+  private static boolean interestingSchema(@Nonnull JsonSchemaObject schema) {
     boolean hasAggregators;
     if (Registry.is("json.schema.object.v2")) {
       hasAggregators =
@@ -158,8 +158,8 @@ public final class JsonSchemaVariantsTreeBuilder {
   }
 
 
-  private static @NotNull Pair<ThreeState, JsonSchemaObject> propertyStep(@NotNull String name,
-                                                                          @NotNull JsonSchemaObject parent) {
+  private static @Nonnull Pair<ThreeState, JsonSchemaObject> propertyStep(@Nonnull String name,
+                                                                          @Nonnull JsonSchemaObject parent) {
     final JsonSchemaObject child = parent.getPropertyByName(name);
     if (child != null) {
       return Pair.create(ThreeState.UNSURE, JsonSchemaInheritanceUtil.inheritBaseSchemaIfNeeded(parent, child));
@@ -188,7 +188,7 @@ public final class JsonSchemaVariantsTreeBuilder {
     return Pair.create(ThreeState.YES, null);
   }
 
-  private static @NotNull Pair<ThreeState, JsonSchemaObject> arrayOrNumericPropertyElementStep(int idx, @NotNull JsonSchemaObject parent) {
+  private static @Nonnull Pair<ThreeState, JsonSchemaObject> arrayOrNumericPropertyElementStep(int idx, @Nonnull JsonSchemaObject parent) {
     if (parent.getItemsSchema() != null) {
       return Pair.create(ThreeState.UNSURE, JsonSchemaInheritanceUtil.inheritBaseSchemaIfNeeded(parent, parent.getItemsSchema()));
     }
@@ -229,9 +229,9 @@ public final class JsonSchemaVariantsTreeBuilder {
 
   public static final class SchemaUrlSplitter {
     private final @Nullable String mySchemaId;
-    private final @NotNull String myRelativePath;
+    private final @Nonnull String myRelativePath;
 
-    public SchemaUrlSplitter(final @NotNull String ref) {
+    public SchemaUrlSplitter(final @Nonnull String ref) {
       if (isSelfReference(ref)) {
         mySchemaId = null;
         myRelativePath = "";
@@ -262,7 +262,7 @@ public final class JsonSchemaVariantsTreeBuilder {
       return mySchemaId;
     }
 
-    public @NotNull String getRelativePath() {
+    public @Nonnull String getRelativePath() {
       return myRelativePath;
     }
   }

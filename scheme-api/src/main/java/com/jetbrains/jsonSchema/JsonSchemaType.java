@@ -2,8 +2,8 @@
 package com.jetbrains.jsonSchema;
 
 import com.jetbrains.jsonSchema.extension.adapters.JsonValueAdapter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.math.BigInteger;
 
@@ -33,7 +33,7 @@ public enum JsonSchemaType {
     };
   }
 
-  static @Nullable JsonSchemaType getType(final @NotNull JsonValueAdapter value) {
+  static @Nullable JsonSchemaType getType(final @Nonnull JsonValueAdapter value) {
     if (value.isNull()) return _null;
     if (value.isBooleanLiteral()) return _boolean;
     if (value.isStringLiteral()) {
@@ -47,11 +47,11 @@ public enum JsonSchemaType {
     return null;
   }
 
-  public static boolean isInteger(@NotNull String text) {
+  public static boolean isInteger(@Nonnull String text) {
     return getIntegerValue(text) != null;
   }
 
-  public static @Nullable Number getIntegerValue(@NotNull String text) {
+  public static @Nullable Number getIntegerValue(@Nonnull String text) {
     try {
       return Integer.parseInt(text);
     }

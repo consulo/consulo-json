@@ -3,8 +3,8 @@ package com.jetbrains.jsonSchema;
 
 import com.intellij.json.JsonBundle;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public enum JsonSchemaVersion {
   SCHEMA_4,
@@ -32,7 +32,7 @@ public enum JsonSchemaVersion {
   }
 
 
-  public static @Nullable JsonSchemaVersion byId(@NotNull String id) {
+  public static @Nullable JsonSchemaVersion byId(@Nonnull String id) {
     if (id.startsWith("https://")) {
       id = "http://" + id.substring("https://".length());
     }

@@ -1,19 +1,19 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.jetbrains.jsonSchema.impl;
 
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public final class EnumArrayValueWrapper {
-  private final Object @NotNull [] myValues;
+  private final Object @Nonnull [] myValues;
 
-  public EnumArrayValueWrapper(Object @NotNull [] values) {
+  public EnumArrayValueWrapper(Object @Nonnull [] values) {
     myValues = values;
   }
 
-  public Object @NotNull [] getValues() {
+  public Object @Nonnull [] getValues() {
     return myValues;
   }
 

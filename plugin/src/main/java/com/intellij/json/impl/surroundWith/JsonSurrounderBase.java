@@ -9,17 +9,17 @@ import consulo.document.util.TextRange;
 import consulo.language.editor.surroundWith.Surrounder;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public abstract class JsonSurrounderBase implements Surrounder {
   @Override
-  public boolean isApplicable(PsiElement @NotNull [] elements) {
+  public boolean isApplicable(PsiElement @Nonnull [] elements) {
     return elements.length >= 1 && elements[0] instanceof JsonValue && !JsonPsiUtil.isPropertyKey(elements[0]);
   }
 
   @Override
-  public @Nullable TextRange surroundElements(@NotNull Project project, @NotNull Editor editor, PsiElement @NotNull [] elements) {
+  public @Nullable TextRange surroundElements(@Nonnull Project project, @Nonnull Editor editor, PsiElement @Nonnull [] elements) {
     if (!isApplicable(elements)) {
       return null;
     }
@@ -38,7 +38,7 @@ public abstract class JsonSurrounderBase implements Surrounder {
     return null;
   }
 
-  protected static @NotNull String getTextAndRemoveMisc(@NotNull PsiElement firstProperty, @NotNull PsiElement lastProperty) {
+  protected static @Nonnull String getTextAndRemoveMisc(@Nonnull PsiElement firstProperty, @Nonnull PsiElement lastProperty) {
     final TextRange replacedRange = new TextRange(firstProperty.getTextOffset(), lastProperty.getTextRange().getEndOffset());
     final String propertiesText = replacedRange.substring(firstProperty.getContainingFile().getText());
     if (firstProperty != lastProperty) {
@@ -48,5 +48,5 @@ public abstract class JsonSurrounderBase implements Surrounder {
     return propertiesText;
   }
 
-  protected abstract @NotNull String createReplacementText(@NotNull String textInRange);
+  protected abstract @Nonnull String createReplacementText(@Nonnull String textInRange);
 }

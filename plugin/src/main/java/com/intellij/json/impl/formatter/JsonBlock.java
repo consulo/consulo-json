@@ -12,8 +12,8 @@ import consulo.language.ast.TokenType;
 import consulo.language.codeStyle.*;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,12 +48,12 @@ public final class JsonBlock implements ASTBlock {
   private final Wrap myChildWrap;
 
   public JsonBlock(@Nullable JsonBlock parent,
-                   @NotNull ASTNode node,
-                   @NotNull JsonCodeStyleSettings customSettings,
+                   @Nonnull ASTNode node,
+                   @Nonnull JsonCodeStyleSettings customSettings,
                    @Nullable Alignment alignment,
-                   @NotNull Indent indent,
+                   @Nonnull Indent indent,
                    @Nullable Wrap wrap,
-                   @NotNull SpacingBuilder spacingBuilder) {
+                   @Nonnull SpacingBuilder spacingBuilder) {
     myParent = parent;
     myNode = node;
     myPsiElement = node.getPsi();
@@ -82,12 +82,12 @@ public final class JsonBlock implements ASTBlock {
   }
 
   @Override
-  public @NotNull TextRange getTextRange() {
+  public @Nonnull TextRange getTextRange() {
     return myNode.getTextRange();
   }
 
   @Override
-  public @NotNull List<Block> getSubBlocks() {
+  public @Nonnull List<Block> getSubBlocks() {
     if (mySubBlocks == null) {
       int propertyAlignment = myCustomSettings.PROPERTY_ALIGNMENT;
       ASTNode[] children = myNode.getChildren(null);
@@ -100,7 +100,7 @@ public final class JsonBlock implements ASTBlock {
     return mySubBlocks;
   }
 
-  private Block makeSubBlock(@NotNull ASTNode childNode, int propertyAlignment) {
+  private Block makeSubBlock(@Nonnull ASTNode childNode, int propertyAlignment) {
     Indent indent = Indent.getNoneIndent();
     Alignment alignment = null;
     Wrap wrap = null;
@@ -153,12 +153,12 @@ public final class JsonBlock implements ASTBlock {
   }
 
   @Override
-  public @Nullable Spacing getSpacing(@Nullable Block child1, @NotNull Block child2) {
+  public @Nullable Spacing getSpacing(@Nullable Block child1, @Nonnull Block child2) {
     return mySpacingBuilder.getSpacing(this, child1, child2);
   }
 
   @Override
-  public @NotNull ChildAttributes getChildAttributes(int newChildIndex) {
+  public @Nonnull ChildAttributes getChildAttributes(int newChildIndex) {
     if (hasElementType(myNode, JSON_CONTAINERS)) {
       // WEB-13675: For some reason including alignment in child attributes causes
       // indents to consist solely of spaces when both USE_TABS and SMART_TAB

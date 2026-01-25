@@ -22,8 +22,8 @@ import com.jetbrains.jsonSchema.internal.PatternProperties;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.internal.keyFMap.KeyFMap;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -52,32 +52,32 @@ public abstract class JsonSchemaObjectBackedByJacksonBase extends JsonSchemaObje
   private final String jsonPointer;
   private final AtomicReference<KeyFMap> myCompositeObjectsCache = new AtomicReference<>(KeyFMap.EMPTY_MAP);
 
-  public JsonSchemaObjectBackedByJacksonBase(@NotNull JsonNode rawSchemaNode, @NotNull String jsonPointer) {
+  public JsonSchemaObjectBackedByJacksonBase(@Nonnull JsonNode rawSchemaNode, @Nonnull String jsonPointer) {
     this.rawSchemaNode = rawSchemaNode;
     this.jsonPointer = jsonPointer;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public JsonNode getRawSchemaNode() {
     return rawSchemaNode;
   }
 
-  @NotNull
+  @Nonnull
   public String getPointer() {
     return jsonPointer;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public abstract RootJsonSchemaObjectBackedByJackson getRootSchemaObject();
 
-  @NotNull
+  @Nonnull
   private JsonSchemaInterpretationStrategy getSchemaInterpretationStrategy() {
     return getRootSchemaObject().getSchemaInterpretationStrategy();
   }
 
-  protected <V> V getOrComputeValue(@NotNull Key<V> key, @NotNull Supplier<V> computation) {
+  protected <V> V getOrComputeValue(@Nonnull Key<V> key, @Nonnull Supplier<V> computation) {
     return myCompositeObjectsCache.updateAndGet(existingMap -> {
       if (existingMap.get(key) != null) return existingMap;
       return existingMap.plus(key, computation.get());
@@ -85,13 +85,13 @@ public abstract class JsonSchemaObjectBackedByJacksonBase extends JsonSchemaObje
   }
 
   @Nullable
-  private JsonSchemaObjectBackedByJacksonBase createResolvableChild(@NotNull String... childNodeRelativePointer) {
+  private JsonSchemaObjectBackedByJacksonBase createResolvableChild(@Nonnull String... childNodeRelativePointer) {
     // delegate to the root schema's factory - it is the only entry point for objects instantiation and caching
     return getRootSchemaObject().getChildSchemaObjectByName(this, childNodeRelativePointer);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Iterable<JsonSchemaValidation> getValidations(@Nullable JsonSchemaType type, @Nullable JsonValueAdapter value) {
     Iterable<JsonSchemaValidation> validations = getSchemaInterpretationStrategy().getValidations(this, type, value);
     return validations != null ? validations : Collections.emptyList();
@@ -116,7 +116,7 @@ public abstract class JsonSchemaObjectBackedByJacksonBase extends JsonSchemaObje
   }
 
   @Override
-  public boolean hasChildFieldsExcept(@NotNull List<String> namesToSkip) {
+  public boolean hasChildFieldsExcept(@Nonnull List<String> namesToSkip) {
     Iterable<String> keys = JacksonSchemaNodeAccessor.INSTANCE.readNodeKeys(rawSchemaNode, null);
     if (keys == null) return false;
 
@@ -129,13 +129,13 @@ public abstract class JsonSchemaObjectBackedByJacksonBase extends JsonSchemaObje
   }
 
   @Override
-  public boolean hasChildNode(@NotNull String childNodeName) {
+  public boolean hasChildNode(@Nonnull String childNodeName) {
     return JacksonSchemaNodeAccessor.INSTANCE.hasChildNode(rawSchemaNode, childNodeName);
   }
 
   @Override
   @Nullable
-  public String readChildNodeValue(@NotNull String childNodeName) {
+  public String readChildNodeValue(@Nonnull String childNodeName) {
     return JacksonSchemaNodeAccessor.INSTANCE.readUntypedNodeValueAsText(rawSchemaNode, childNodeName);
   }
 
@@ -276,7 +276,7 @@ public abstract class JsonSchemaObjectBackedByJacksonBase extends JsonSchemaObje
     return JacksonSchemaNodeAccessor.INSTANCE.readTextNodeValue(rawSchemaNode, schemaFeature);
   }
 
-  @NotNull
+  @Nonnull
   private PropertyNamePattern getOrComputeCompiledPattern() {
     return getOrComputeValue(PATTERN_KEY, () -> {
       String effectivePattern = getPattern();
@@ -295,7 +295,7 @@ public abstract class JsonSchemaObjectBackedByJacksonBase extends JsonSchemaObje
 
   @Override
   @Nullable
-  public JsonSchemaObject findRelativeDefinition(@NotNull String ref) {
+  public JsonSchemaObject findRelativeDefinition(@Nonnull String ref) {
     return JsonSchemaRefResolverKt.resolveLocalSchemaNode(ref, this);
   }
 
@@ -514,7 +514,7 @@ public abstract class JsonSchemaObjectBackedByJacksonBase extends JsonSchemaObje
 
   @Override
   @Nullable
-  public JsonSchemaObject getExampleByName(@NotNull String name) {
+  public JsonSchemaObject getExampleByName(@Nonnull String name) {
     String schemaFeature = getSchemaInterpretationStrategy().getExampleKeyword();
     if (schemaFeature == null) return null;
     return createResolvableChild(schemaFeature, name);
@@ -563,7 +563,7 @@ public abstract class JsonSchemaObjectBackedByJacksonBase extends JsonSchemaObje
 
   @Override
   @Nullable
-  public JsonSchemaObject getMatchingPatternPropertySchema(@NotNull String name) {
+  public JsonSchemaObject getMatchingPatternPropertySchema(@Nonnull String name) {
     String schemaFeature = getSchemaInterpretationStrategy().getPatternPropertiesKeyword();
     if (schemaFeature == null) return null;
 
@@ -574,7 +574,7 @@ public abstract class JsonSchemaObjectBackedByJacksonBase extends JsonSchemaObje
   }
 
   @Override
-  public boolean checkByPattern(@NotNull String value) {
+  public boolean checkByPattern(@Nonnull String value) {
     return getOrComputeCompiledPattern().checkByPattern(value);
   }
 
@@ -682,14 +682,14 @@ public abstract class JsonSchemaObjectBackedByJacksonBase extends JsonSchemaObje
 
   @Override
   @Nullable
-  public JsonSchemaObject getDefinitionByName(@NotNull String name) {
+  public JsonSchemaObject getDefinitionByName(@Nonnull String name) {
     String schemaFeature = getSchemaInterpretationStrategy().getDefinitionsKeyword();
     if (schemaFeature == null) return null;
     return createResolvableChild(schemaFeature, name);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Iterator<String> getDefinitionNames() {
     Supplier<Iterator<String>> defaultValue = () -> {
       Iterable<String> keys = JacksonSchemaNodeAccessor.INSTANCE.readNodeKeys(rawSchemaNode, null);
@@ -719,14 +719,14 @@ public abstract class JsonSchemaObjectBackedByJacksonBase extends JsonSchemaObje
 
   @Override
   @Nullable
-  public JsonSchemaObject getPropertyByName(@NotNull String name) {
+  public JsonSchemaObject getPropertyByName(@Nonnull String name) {
     String schemaFeature = getSchemaInterpretationStrategy().getPropertiesKeyword();
     if (schemaFeature == null) return null;
     return createResolvableChild(schemaFeature, name);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Iterator<String> getPropertyNames() {
     String schemaFeature = getSchemaInterpretationStrategy().getPropertiesKeyword();
     if (schemaFeature == null) return Collections.emptyIterator();
@@ -755,14 +755,14 @@ public abstract class JsonSchemaObjectBackedByJacksonBase extends JsonSchemaObje
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String toString() {
     // for debug purposes
     return renderSchemaNode(this, JsonSchemaObjectRendering.JsonSchemaObjectRenderingLanguage.JSON);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Iterator<String> getSchemaDependencyNames() {
     String schemaFeature = getSchemaInterpretationStrategy().getDependencySchemasKeyword();
     if (schemaFeature == null) return Collections.emptyIterator();
@@ -779,14 +779,14 @@ public abstract class JsonSchemaObjectBackedByJacksonBase extends JsonSchemaObje
 
   @Override
   @Nullable
-  public JsonSchemaObject getSchemaDependencyByName(@NotNull String name) {
+  public JsonSchemaObject getSchemaDependencyByName(@Nonnull String name) {
     String schemaFeature = getSchemaInterpretationStrategy().getDependencySchemasKeyword();
     if (schemaFeature == null) return null;
     return createResolvableChild(schemaFeature, name);
   }
 
-  @NotNull
-  private List<JsonSchemaObject> createIndexedItemsSequence(@NotNull String containingNodeName) {
+  @Nonnull
+  private List<JsonSchemaObject> createIndexedItemsSequence(@Nonnull String containingNodeName) {
     List<JsonSchemaObject> result = new ArrayList<>();
     int index = 0;
     while (true) {
@@ -799,7 +799,7 @@ public abstract class JsonSchemaObjectBackedByJacksonBase extends JsonSchemaObje
   }
 
   @Nullable
-  private Map<String, JsonSchemaObject> createChildMap(@NotNull String childMapName) {
+  private Map<String, JsonSchemaObject> createChildMap(@Nonnull String childMapName) {
     Iterable<Map.Entry<String, JsonNode>> entries =
       JacksonSchemaNodeAccessor.INSTANCE.readNodeAsMapEntries(rawSchemaNode, childMapName);
     if (entries == null) return null;
@@ -903,7 +903,7 @@ public abstract class JsonSchemaObjectBackedByJacksonBase extends JsonSchemaObje
 
   @Override
   @Nullable
-  public JsonSchemaObject resolveRefSchema(@NotNull JsonSchemaService service) {
+  public JsonSchemaObject resolveRefSchema(@Nonnull JsonSchemaService service) {
     String effectiveReference = getRef();
     if (effectiveReference == null) return null;
 

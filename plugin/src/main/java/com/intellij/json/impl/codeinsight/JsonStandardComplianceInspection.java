@@ -19,8 +19,8 @@ import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Compliance checks include
@@ -42,17 +42,17 @@ public class JsonStandardComplianceInspection extends LocalInspectionTool {
   public boolean myWarnAboutMultipleTopLevelValues = true;
 
   @Override
-  public @NotNull HighlightDisplayLevel getDefaultLevel() {
+  public @Nonnull HighlightDisplayLevel getDefaultLevel() {
     return HighlightDisplayLevel.ERROR;
   }
 
   @Override
-  public @NotNull PsiElementVisitor buildVisitor(final @NotNull ProblemsHolder holder, boolean isOnTheFly) {
+  public @Nonnull PsiElementVisitor buildVisitor(final @Nonnull ProblemsHolder holder, boolean isOnTheFly) {
     if (!JsonDialectUtil.isStandardJson(holder.getFile())) return PsiElementVisitor.EMPTY_VISITOR;
     return new StandardJsonValidatingElementVisitor(holder);
   }
 
-  protected static @Nullable PsiElement findTrailingComma(@NotNull PsiElement lastChild, @NotNull IElementType ending) {
+  protected static @Nullable PsiElement findTrailingComma(@Nonnull PsiElement lastChild, @Nonnull IElementType ending) {
     if (lastChild.getNode().getElementType() != ending) {
       return null;
     }
@@ -72,7 +72,7 @@ public class JsonStandardComplianceInspection extends LocalInspectionTool {
 //      checkbox("myWarnAboutNanInfinity", JsonBundle.message("inspection.compliance.option.nan.infinity")));
 //  }
 
-  protected static @NotNull String escapeSingleQuotedStringContent(@NotNull String content) {
+  protected static @Nonnull String escapeSingleQuotedStringContent(@Nonnull String content) {
     final StringBuilder result = new StringBuilder();
     boolean nextCharEscaped = false;
     for (int i = 0; i < content.length(); i++) {
@@ -96,12 +96,12 @@ public class JsonStandardComplianceInspection extends LocalInspectionTool {
 
   private static final class AddDoubleQuotesFix extends PsiUpdateModCommandQuickFix {
     @Override
-    public @NotNull String getFamilyName() {
+    public @Nonnull String getFamilyName() {
       return JsonBundle.message("quickfix.add.double.quotes.desc");
     }
 
     @Override
-    protected void applyFix(@NotNull Project project, @NotNull PsiElement element, @NotNull ModPsiUpdater updater) {
+    protected void applyFix(@Nonnull Project project, @Nonnull PsiElement element, @Nonnull ModPsiUpdater updater) {
       final String rawText = element.getText();
       if (element instanceof JsonLiteral || element instanceof JsonReferenceExpression) {
         String content = JsonPsiUtil.stripQuotes(rawText);
@@ -131,12 +131,12 @@ public class JsonStandardComplianceInspection extends LocalInspectionTool {
     protected boolean allowIdentifierPropertyNames() { return false; }
     protected boolean allowTrailingCommas() { return false; }
 
-    protected boolean isValidPropertyName(@NotNull PsiElement literal) {
+    protected boolean isValidPropertyName(@Nonnull PsiElement literal) {
       return literal instanceof JsonLiteral && JsonPsiUtil.getElementTextWithoutHostEscaping(literal).startsWith("\"");
     }
 
     @Override
-    public void visitComment(@NotNull PsiComment comment) {
+    public void visitComment(@Nonnull PsiComment comment) {
       if (!allowComments() && myWarnAboutComments) {
         if (JsonStandardComplianceProvider.shouldWarnAboutComment(comment) &&
             comment.getContainingFile().getLanguage() instanceof JsonLanguage) {
@@ -146,7 +146,7 @@ public class JsonStandardComplianceInspection extends LocalInspectionTool {
     }
 
     @Override
-    public void visitStringLiteral(@NotNull JsonStringLiteral stringLiteral) {
+    public void visitStringLiteral(@Nonnull JsonStringLiteral stringLiteral) {
       if (!allowSingleQuotes() && JsonPsiUtil.getElementTextWithoutHostEscaping(stringLiteral).startsWith("'")) {
         myHolder.registerProblem(stringLiteral, JsonLocalize.inspectionComplianceMsgSingleQuotedStrings().get(),
                                  new AddDoubleQuotesFix());
@@ -156,7 +156,7 @@ public class JsonStandardComplianceInspection extends LocalInspectionTool {
     }
 
     @Override
-    public void visitLiteral(@NotNull JsonLiteral literal) {
+    public void visitLiteral(@Nonnull JsonLiteral literal) {
       if (JsonPsiUtil.isPropertyKey(literal) && !isValidPropertyName(literal)) {
         myHolder.registerProblem(literal, JsonBundle.message("inspection.compliance.msg.illegal.property.key"), new AddDoubleQuotesFix());
       }
@@ -178,7 +178,7 @@ public class JsonStandardComplianceInspection extends LocalInspectionTool {
     }
 
     @Override
-    public void visitReferenceExpression(@NotNull JsonReferenceExpression reference) {
+    public void visitReferenceExpression(@Nonnull JsonReferenceExpression reference) {
       if (!allowIdentifierPropertyNames() || !JsonPsiUtil.isPropertyKey(reference) || !isValidPropertyName(reference)) {
         if (!MISSING_VALUE.equals(reference.getText()) || !InjectedLanguageManager.getInstance(myHolder.getProject()).isInjectedFragment(myHolder.getFile())) {
           myHolder.registerProblem(reference, JsonBundle.message("inspection.compliance.msg.bad.token"), new AddDoubleQuotesFix());
@@ -189,7 +189,7 @@ public class JsonStandardComplianceInspection extends LocalInspectionTool {
     }
 
     @Override
-    public void visitArray(@NotNull JsonArray array) {
+    public void visitArray(@Nonnull JsonArray array) {
       if (myWarnAboutTrailingCommas && !allowTrailingCommas() &&
           JsonStandardComplianceProvider.shouldWarnAboutTrailingComma(array)) {
         final PsiElement trailingComma = findTrailingComma(array.getLastChild(), JsonElementTypes.R_BRACKET);
@@ -201,7 +201,7 @@ public class JsonStandardComplianceInspection extends LocalInspectionTool {
     }
 
     @Override
-    public void visitObject(@NotNull JsonObject object) {
+    public void visitObject(@Nonnull JsonObject object) {
       if (myWarnAboutTrailingCommas && !allowTrailingCommas() &&
           JsonStandardComplianceProvider.shouldWarnAboutTrailingComma(object)) {
         final PsiElement trailingComma = findTrailingComma(object.getLastChild(), JsonElementTypes.R_CURLY);
@@ -213,7 +213,7 @@ public class JsonStandardComplianceInspection extends LocalInspectionTool {
     }
 
     @Override
-    public void visitValue(@NotNull JsonValue value) {
+    public void visitValue(@Nonnull JsonValue value) {
       if (value.getContainingFile() instanceof JsonFile jsonFile) {
         if (myWarnAboutMultipleTopLevelValues &&
             value.getParent() == jsonFile &&

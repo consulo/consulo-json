@@ -13,7 +13,7 @@ import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.Pair;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public final class JsonLiteralAnnotator implements Annotator {
     private final boolean isDebug = ApplicationManager.getApplication().isUnitTestMode();
 
     @Override
-    public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
+    public void annotate(@Nonnull PsiElement element, @Nonnull AnnotationHolder holder) {
         List<JsonLiteralChecker> extensions = JsonLiteralChecker.EP_NAME.getExtensionList();
         if (element instanceof JsonReferenceExpression) {
             highlightPropertyKey(element, holder);
@@ -70,7 +70,7 @@ public final class JsonLiteralAnnotator implements Annotator {
     }
 
     @RequiredReadAction
-    private void highlightPropertyKey(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
+    private void highlightPropertyKey(@Nonnull PsiElement element, @Nonnull AnnotationHolder holder) {
         if (JsonPsiUtil.isPropertyKey(element)) {
             if (isDebug) {
                 holder.newAnnotation(HighlightSeverity.INFORMATION, JsonLocalize.annotationPropertyKey()).textAttributes(JsonSyntaxHighlighterFactory.JSON_PROPERTY_KEY).create();

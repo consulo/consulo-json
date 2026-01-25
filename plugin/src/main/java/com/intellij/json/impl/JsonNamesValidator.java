@@ -16,7 +16,6 @@ import consulo.language.lexer.Lexer;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 import static com.intellij.json.JsonTokenSets.JSON_KEYWORDS;
 
@@ -26,14 +25,14 @@ public final class JsonNamesValidator implements NamesValidator {
     private final Lexer myLexer = new JsonLexer();
 
     @Override
-    public synchronized boolean isKeyword(@NotNull String name, Project project) {
+    public synchronized boolean isKeyword(@Nonnull String name, Project project) {
         myLexer.start(name);
         IElementType tokenType = myLexer.getTokenType();
         return tokenType != null && JSON_KEYWORDS.contains(myLexer.getTokenType()) && myLexer.getTokenEnd() == name.length();
     }
 
     @Override
-    public synchronized boolean isIdentifier(@NotNull String name, final Project project) {
+    public synchronized boolean isIdentifier(@Nonnull String name, final Project project) {
         if (!StringUtil.startsWithChar(name, '\'') && !StringUtil.startsWithChar(name, '"')) {
             name = "\"" + name;
         }

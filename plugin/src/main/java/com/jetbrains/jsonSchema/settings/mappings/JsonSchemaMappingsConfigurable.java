@@ -23,10 +23,10 @@ import com.jetbrains.jsonSchema.JsonSchemaMappingsProjectConfiguration;
 import com.jetbrains.jsonSchema.UserDefinedJsonSchemaConfiguration;
 import com.jetbrains.jsonSchema.JsonSchemaService;
 import com.jetbrains.jsonSchema.JsonSchemaVersion;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.tree.DefaultTreeModel;
 import java.io.File;
@@ -47,7 +47,7 @@ public final class JsonSchemaMappingsConfigurable extends MasterDetailsComponent
   static final @Nls String STUB_SCHEMA_NAME = JsonBundle.message("new.schema");
   private @Nls String myError;
 
-  private final @NotNull Project myProject;
+  private final @Nonnull Project myProject;
   private final TreeUpdater myTreeUpdater = showWarning -> {
     TREE_UPDATER.run();
     updateWarningText(showWarning);
@@ -55,7 +55,7 @@ public final class JsonSchemaMappingsConfigurable extends MasterDetailsComponent
 
   private final Function<String, String> myNameCreator = s -> createUniqueName(s);
 
-  public JsonSchemaMappingsConfigurable(final @NotNull Project project) {
+  public JsonSchemaMappingsConfigurable(final @Nonnull Project project) {
     myProject = project;
     initTree();
   }
@@ -78,7 +78,7 @@ public final class JsonSchemaMappingsConfigurable extends MasterDetailsComponent
         registerCustomShortcutSet(CommonShortcuts.getInsert(), myTree);
       }
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         addProjectSchema();
       }
     });
@@ -95,7 +95,7 @@ public final class JsonSchemaMappingsConfigurable extends MasterDetailsComponent
   }
 
   @SuppressWarnings("SameParameterValue")
-  private @NotNull @Nls String createUniqueName(@NotNull @NlsSafe String s) {
+  private @Nonnull @Nls String createUniqueName(@Nonnull @NlsSafe String s) {
     int max = -1;
     Enumeration children = myRoot.children();
     while (children.hasMoreElements()) {
@@ -116,7 +116,7 @@ public final class JsonSchemaMappingsConfigurable extends MasterDetailsComponent
     return max == -1 ? s : (s + " " + (max + 1));
   }
 
-  private static int tryParseInt(@NotNull String s) {
+  private static int tryParseInt(@Nonnull String s) {
     try {
       return Integer.parseInt(s);
     }
@@ -125,7 +125,7 @@ public final class JsonSchemaMappingsConfigurable extends MasterDetailsComponent
     }
   }
 
-  private void addCreatedMappings(final @NotNull UserDefinedJsonSchemaConfiguration info) {
+  private void addCreatedMappings(final @Nonnull UserDefinedJsonSchemaConfiguration info) {
     final JsonSchemaConfigurable configurable = new JsonSchemaConfigurable(myProject, "", info, myTreeUpdater, myNameCreator);
     configurable.setError(myError, true);
     final MyNode node = new MyNode(configurable);
@@ -153,7 +153,7 @@ public final class JsonSchemaMappingsConfigurable extends MasterDetailsComponent
     }
   }
 
-  private @NotNull List<UserDefinedJsonSchemaConfiguration> getStoredList() {
+  private @Nonnull List<UserDefinedJsonSchemaConfiguration> getStoredList() {
     final List<UserDefinedJsonSchemaConfiguration> list = new ArrayList<>();
     final Map<String, UserDefinedJsonSchemaConfiguration> projectState = JsonSchemaMappingsProjectConfiguration
       .getInstance(myProject).getStateMap();
@@ -184,7 +184,7 @@ public final class JsonSchemaMappingsConfigurable extends MasterDetailsComponent
     EditorNotifications.getInstance(myProject).updateAllNotifications();
   }
 
-  private static void validate(@NotNull List<UserDefinedJsonSchemaConfiguration> list) throws ConfigurationException {
+  private static void validate(@Nonnull List<UserDefinedJsonSchemaConfiguration> list) throws ConfigurationException {
     final Set<String> set = new HashSet<>();
     for (UserDefinedJsonSchemaConfiguration info : list) {
       if (set.contains(info.getName())) {
@@ -265,7 +265,7 @@ public final class JsonSchemaMappingsConfigurable extends MasterDetailsComponent
     }
   }
 
-  private @NotNull List<UserDefinedJsonSchemaConfiguration> getUiList(boolean applyChildren) throws ConfigurationException {
+  private @Nonnull List<UserDefinedJsonSchemaConfiguration> getUiList(boolean applyChildren) throws ConfigurationException {
     final List<UserDefinedJsonSchemaConfiguration> uiList = new ArrayList<>();
     final Enumeration children = myRoot.children();
     while (children.hasMoreElements()) {
@@ -282,7 +282,7 @@ public final class JsonSchemaMappingsConfigurable extends MasterDetailsComponent
     return uiList;
   }
 
-  public void setInitializer(@NotNull Runnable initializer) {
+  public void setInitializer(@Nonnull Runnable initializer) {
     myInitializer = initializer;
   }
 
@@ -306,7 +306,7 @@ public final class JsonSchemaMappingsConfigurable extends MasterDetailsComponent
     };
   }
 
-  private static UserDefinedJsonSchemaConfiguration getSchemaInfo(final @NotNull MyNode node) {
+  private static UserDefinedJsonSchemaConfiguration getSchemaInfo(final @Nonnull MyNode node) {
     return ((JsonSchemaConfigurable) node.getConfigurable()).getSchema();
   }
 
@@ -328,7 +328,7 @@ public final class JsonSchemaMappingsConfigurable extends MasterDetailsComponent
   }
 
   @Override
-  public @NotNull String getId() {
+  public @Nonnull String getId() {
     return SETTINGS_JSON_SCHEMA;
   }
 

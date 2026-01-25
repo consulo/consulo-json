@@ -8,8 +8,7 @@ import consulo.language.PairedBraceMatcher;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiFile;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Mikhail Golubev
@@ -22,12 +21,12 @@ public class JsonBraceMatcher implements PairedBraceMatcher {
     };
 
     @Override
-    public BracePair @NotNull [] getPairs() {
+    public BracePair @Nonnull [] getPairs() {
         return PAIRS;
     }
 
     @Override
-    public boolean isPairedBracesAllowedBeforeType(@NotNull IElementType lbraceType, @Nullable IElementType contextType) {
+    public boolean isPairedBracesAllowedBeforeType(@Nonnull IElementType lbraceType, @Nullable IElementType contextType) {
         return true;
     }
 

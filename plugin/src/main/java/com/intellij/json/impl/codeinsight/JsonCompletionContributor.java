@@ -9,7 +9,7 @@ import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.language.pattern.PsiElementPattern;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.ProcessingContext;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import static consulo.language.pattern.PlatformPatterns.psiElement;
 
@@ -35,9 +35,9 @@ public class JsonCompletionContributor extends CompletionContributor {
     private static final String[] KEYWORDS = new String[]{"null", "true", "false"};
 
     @Override
-    public void addCompletions(@NotNull CompletionParameters parameters,
-                                  @NotNull ProcessingContext context,
-                                  @NotNull CompletionResultSet result) {
+    public void addCompletions(@Nonnull CompletionParameters parameters,
+                                  @Nonnull ProcessingContext context,
+                                  @Nonnull CompletionResultSet result) {
       for (String keyword : KEYWORDS) {
         result.addElement(LookupElementBuilder.create(keyword).bold());
       }

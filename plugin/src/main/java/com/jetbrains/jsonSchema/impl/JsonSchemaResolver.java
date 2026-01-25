@@ -15,8 +15,8 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,10 +27,10 @@ import static JsonSchemaValidityCacheKt.getOrComputeAdapterValidityAgainstGivenS
 import static SchemaKeywordsKt.*;
 
 public final class JsonSchemaResolver {
-  private final @NotNull Project myProject;
-  private final @NotNull JsonSchemaObject mySchema;
-  private final @NotNull JsonPointerPosition myPosition;
-  private final @NotNull JsonSchemaNodeExpansionRequest myExpansionRequest;
+  private final @Nonnull Project myProject;
+  private final @Nonnull JsonSchemaObject mySchema;
+  private final @Nonnull JsonPointerPosition myPosition;
+  private final @Nonnull JsonSchemaNodeExpansionRequest myExpansionRequest;
 
 
   /**
@@ -42,23 +42,23 @@ public final class JsonSchemaResolver {
    * )
    */
   @Deprecated(forRemoval = true)
-  public JsonSchemaResolver(@NotNull Project project,
-                            @NotNull JsonSchemaObject schema,
-                            @NotNull JsonPointerPosition position) {
+  public JsonSchemaResolver(@Nonnull Project project,
+                            @Nonnull JsonSchemaObject schema,
+                            @Nonnull JsonPointerPosition position) {
     this(project, schema, position, new JsonSchemaNodeExpansionRequest(null, true));
   }
 
-  public JsonSchemaResolver(@NotNull Project project,
-                            @NotNull JsonSchemaObject schema,
-                            @NotNull JsonPointerPosition position,
+  public JsonSchemaResolver(@Nonnull Project project,
+                            @Nonnull JsonSchemaObject schema,
+                            @Nonnull JsonPointerPosition position,
                             @Nullable JsonValueAdapter inspectedValueAdapter) {
     this(project, schema, position, new JsonSchemaNodeExpansionRequest(inspectedValueAdapter, true));
   }
 
-  public JsonSchemaResolver(@NotNull Project project,
-                            @NotNull JsonSchemaObject schema,
-                            @NotNull JsonPointerPosition position,
-                            @NotNull JsonSchemaNodeExpansionRequest expansionRequest) {
+  public JsonSchemaResolver(@Nonnull Project project,
+                            @Nonnull JsonSchemaObject schema,
+                            @Nonnull JsonPointerPosition position,
+                            @Nonnull JsonSchemaNodeExpansionRequest expansionRequest) {
     myProject = project;
     mySchema = schema;
     myPosition = position;
@@ -70,7 +70,7 @@ public final class JsonSchemaResolver {
     return MatchResult.create(node);
   }
 
-  public @NotNull Collection<JsonSchemaObject> resolve() {
+  public @Nonnull Collection<JsonSchemaObject> resolve() {
     final MatchResult result = detailedResolve();
     final List<JsonSchemaObject> list = new LinkedList<>();
     list.addAll(result.mySchemas);
@@ -93,9 +93,9 @@ public final class JsonSchemaResolver {
     return walker == null ? null : resolvePosition(walker, psiFile, JsonPointerPosition.parsePointer(schema.getPointer()));
   }
 
-  public static @Nullable PsiElement resolvePosition(@NotNull JsonLikePsiWalker walker,
+  public static @Nullable PsiElement resolvePosition(@Nonnull JsonLikePsiWalker walker,
                                                       @Nullable PsiElement element,
-                                                      @NotNull JsonPointerPosition position) {
+                                                      @Nonnull JsonPointerPosition position) {
     PsiElement psiElement = element instanceof PsiFile ? ContainerUtil.getFirstItem(walker.getRoots((PsiFile)element)) : element;
     if (psiElement == null) return null;
     JsonValueAdapter value = walker.createValueAdapter(psiElement);
@@ -152,19 +152,19 @@ public final class JsonSchemaResolver {
     return propertyNameElement == null ? delegate : propertyNameElement;
   }
 
-  private static @Nullable JsonValueAdapter getValue(@NotNull JsonPropertyAdapter property) {
+  private static @Nullable JsonValueAdapter getValue(@Nonnull JsonPropertyAdapter property) {
     Collection<JsonValueAdapter> values = property.getValues();
     return values.size() == 1 ? values.iterator().next() : null;
   }
 
-  private static @Nullable JsonPropertyAdapter findProperty(@NotNull JsonObjectValueAdapter value, @NotNull String name) {
+  private static @Nullable JsonPropertyAdapter findProperty(@Nonnull JsonObjectValueAdapter value, @Nonnull String name) {
     List<JsonPropertyAdapter> list = value.getPropertyList();
     return ContainerUtil.find(list, p -> name.equals(p.getName()));
   }
 
-  public static @Nullable JsonSchemaObject selectSchema(final @NotNull JsonSchemaTreeNode resolveRoot,
-                                                  final @Nullable PsiElement element,
-                                                  boolean topLevelSchema) {
+  public static @Nullable JsonSchemaObject selectSchema(final @Nonnull JsonSchemaTreeNode resolveRoot,
+                                                                           final @Nullable PsiElement element,
+                                                                           boolean topLevelSchema) {
     final MatchResult matchResult = MatchResult.create(resolveRoot);
     List<JsonSchemaObject> schemas = new ArrayList<>(matchResult.mySchemas);
     schemas.addAll(matchResult.myExcludingSchemas.stream().flatMap(Collection::stream).toList());
@@ -208,7 +208,7 @@ public final class JsonSchemaResolver {
     return schemas.stream().findFirst().orElse(null);
   }
 
-  public static boolean isCorrect(final @NotNull JsonValueAdapter value, final @NotNull JsonSchemaObject schema) {
+  public static boolean isCorrect(final @Nonnull JsonValueAdapter value, final @Nonnull JsonSchemaObject schema) {
     return getOrComputeAdapterValidityAgainstGivenSchema(value, schema);
   }
 }

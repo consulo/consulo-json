@@ -13,9 +13,9 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,10 +32,10 @@ public class JsonSchemaObjectImpl extends JsonSchemaObject {
   public static final @NonNls String ADDITIONAL_ITEMS = "additionalItems";
   public final @Nullable String myFileUrl;
   public @Nullable JsonSchemaObjectImpl myBackRef;
-  public final @NotNull String myPointer;
+  public final @Nonnull String myPointer;
   public final @Nullable VirtualFile myRawFile;
   public @Nullable Map<String, JsonSchemaObjectImpl> myDefinitionsMap;
-  public @NotNull Map<String, JsonSchemaObjectImpl> myProperties;
+  public @Nonnull Map<String, JsonSchemaObjectImpl> myProperties;
 
   public @Nullable PatternProperties myPatternProperties;
   public @Nullable PropertyNamePattern myPattern;
@@ -116,12 +116,12 @@ public class JsonSchemaObjectImpl extends JsonSchemaObject {
   public final UserDataHolderBase myUserDataHolder = new UserDataHolderBase();
 
   @Override
-  public @Nullable String readChildNodeValue(@NotNull String childNodeName) {
+  public @Nullable String readChildNodeValue(@Nonnull String childNodeName) {
     return null;
   }
 
   @Override
-  public boolean hasChildNode(@NotNull String childNodeName) {
+  public boolean hasChildNode(@Nonnull String childNodeName) {
     return false;
   }
 
@@ -131,22 +131,22 @@ public class JsonSchemaObjectImpl extends JsonSchemaObject {
   }
 
   @Override
-  public boolean hasChildFieldsExcept(@NotNull List<@NotNull String> namesToSkip) {
+  public boolean hasChildFieldsExcept(@Nonnull List<@Nonnull String> namesToSkip) {
     return false;
   }
 
   @Override
-  public @NotNull Iterable<JsonSchemaValidation> getValidations(@Nullable JsonSchemaType type, @NotNull JsonValueAdapter value) {
+  public @Nonnull Iterable<JsonSchemaValidation> getValidations(@Nullable JsonSchemaType type, @Nonnull JsonValueAdapter value) {
     return new Iterable<>() {
       @Override
-      public @NotNull Iterator<JsonSchemaValidation> iterator() {
+      public @Nonnull Iterator<JsonSchemaValidation> iterator() {
         return getSchema7AndEarlierValidations(JsonSchemaObjectImpl.this, type, value).iterator();
       }
     };
   }
 
   @Override
-  public @NotNull JsonSchemaObject getRootSchemaObject() {
+  public @Nonnull JsonSchemaObject getRootSchemaObject() {
     throw new UnsupportedOperationException("Do not use the method against old json schema implementation!");
   }
 
@@ -170,21 +170,21 @@ public class JsonSchemaObjectImpl extends JsonSchemaObject {
 
   public boolean myIsValidByExclusion = true;
 
-  public JsonSchemaObjectImpl(@Nullable VirtualFile file, @NotNull String pointer) {
+  public JsonSchemaObjectImpl(@Nullable VirtualFile file, @Nonnull String pointer) {
     myFileUrl = file == null ? null : file.getUrl();
     myRawFile = myFileUrl != null && JsonFileResolver.isTempOrMockUrl(myFileUrl) ? file : null;
     myPointer = pointer;
     myProperties = new HashMap<>();
   }
 
-  public JsonSchemaObjectImpl(@Nullable VirtualFile rawFile, @Nullable String fileUrl, @NotNull String pointer) {
+  public JsonSchemaObjectImpl(@Nullable VirtualFile rawFile, @Nullable String fileUrl, @Nonnull String pointer) {
     myFileUrl = fileUrl;
     myRawFile = rawFile;
     myPointer = pointer;
     myProperties = new HashMap<>();
   }
 
-  public JsonSchemaObjectImpl(@NotNull String pointer) {
+  public JsonSchemaObjectImpl(@Nonnull String pointer) {
     this(null, pointer);
   }
 
@@ -198,7 +198,7 @@ public class JsonSchemaObjectImpl extends JsonSchemaObject {
   }
 
   @Override
-  public @NotNull String getPointer() {
+  public @Nonnull String getPointer() {
     return myPointer;
   }
 
@@ -252,8 +252,8 @@ public class JsonSchemaObjectImpl extends JsonSchemaObject {
     return myLanguageInjectionPostfix;
   }
 
-  public static @Nullable JsonSchemaType getSubtypeOfBoth(@NotNull JsonSchemaType selfType,
-                                                          @NotNull JsonSchemaType otherType) {
+  public static @Nullable JsonSchemaType getSubtypeOfBoth(@Nonnull JsonSchemaType selfType,
+                                                          @Nonnull JsonSchemaType otherType) {
     if (otherType == JsonSchemaType._any) return selfType;
     if (selfType == JsonSchemaType._any) return otherType;
     return switch (selfType) {
@@ -279,8 +279,8 @@ public class JsonSchemaObjectImpl extends JsonSchemaObject {
 
   @Override
   public @Nullable JsonSchemaType mergeTypes(@Nullable JsonSchemaType selfType,
-                                             @Nullable JsonSchemaType otherType,
-                                             @Nullable Set<JsonSchemaType> otherTypeVariants) {
+                                                                @Nullable JsonSchemaType otherType,
+                                                                @Nullable Set<JsonSchemaType> otherTypeVariants) {
     if (selfType == null) return otherType;
     if (otherType == null) {
       if (otherTypeVariants != null && !otherTypeVariants.isEmpty()) {
@@ -330,7 +330,7 @@ public class JsonSchemaObjectImpl extends JsonSchemaObject {
 
   //peer pointer is not merged!
   @Override
-  public void mergeValues(@NotNull JsonSchemaObject otherBase) {
+  public void mergeValues(@Nonnull JsonSchemaObject otherBase) {
     var other = ((JsonSchemaObjectImpl)otherBase);
     // we do not copy id, schema
     mergeProperties(this, other);
@@ -419,7 +419,7 @@ public class JsonSchemaObjectImpl extends JsonSchemaObject {
     myForceCaseInsensitive = myForceCaseInsensitive || other.myForceCaseInsensitive;
   }
 
-  public static void mergeProperties(@NotNull JsonSchemaObjectImpl thisObject, @NotNull JsonSchemaObject otherObject) {
+  public static void mergeProperties(@Nonnull JsonSchemaObjectImpl thisObject, @Nonnull JsonSchemaObject otherObject) {
     for (var prop : otherObject.getProperties().entrySet()) {
       String key = prop.getKey();
       var otherProp = prop.getValue();
@@ -462,16 +462,16 @@ public class JsonSchemaObjectImpl extends JsonSchemaObject {
     return myDefinitionsMap;
   }
 
-  public void setDefinitionsMap(@NotNull Map<String, JsonSchemaObjectImpl> definitionsMap) {
+  public void setDefinitionsMap(@Nonnull Map<String, JsonSchemaObjectImpl> definitionsMap) {
     myDefinitionsMap = definitionsMap;
   }
 
   @Override
-  public @NotNull Map<String, JsonSchemaObjectImpl> getProperties() {
+  public @Nonnull Map<String, JsonSchemaObjectImpl> getProperties() {
     return myProperties;
   }
 
-  public void setProperties(@NotNull Map<String, JsonSchemaObjectImpl> properties) {
+  public void setProperties(@Nonnull Map<String, JsonSchemaObjectImpl> properties) {
     myProperties = properties;
   }
 
@@ -480,7 +480,7 @@ public class JsonSchemaObjectImpl extends JsonSchemaObject {
     return myPatternProperties != null;
   }
 
-  public void setPatternProperties(@NotNull Map<String, JsonSchemaObjectImpl> patternProperties) {
+  public void setPatternProperties(@Nonnull Map<String, JsonSchemaObjectImpl> patternProperties) {
     myPatternProperties = new PatternProperties(patternProperties);
   }
 
@@ -907,7 +907,7 @@ public class JsonSchemaObjectImpl extends JsonSchemaObject {
 
 
   @Override
-  public @Nullable JsonSchemaObject getExampleByName(@NotNull String name) {
+  public @Nullable JsonSchemaObject getExampleByName(@Nonnull String name) {
     return null;
   }
 
@@ -952,7 +952,7 @@ public class JsonSchemaObjectImpl extends JsonSchemaObject {
     return myDescription;
   }
 
-  public void setDescription(@NotNull String description) {
+  public void setDescription(@Nonnull String description) {
     myDescription = unescapeJsonString(description);
   }
 
@@ -961,7 +961,7 @@ public class JsonSchemaObjectImpl extends JsonSchemaObject {
     return myHtmlDescription;
   }
 
-  public void setHtmlDescription(@NotNull String htmlDescription) {
+  public void setHtmlDescription(@Nonnull String htmlDescription) {
     myHtmlDescription = unescapeJsonString(htmlDescription);
   }
 
@@ -970,56 +970,56 @@ public class JsonSchemaObjectImpl extends JsonSchemaObject {
     return myTitle;
   }
 
-  public void setTitle(@NotNull String title) {
+  public void setTitle(@Nonnull String title) {
     myTitle = unescapeJsonString(title);
   }
 
-  public static String unescapeJsonString(final @NotNull String text) {
+  public static String unescapeJsonString(final @Nonnull String text) {
     return StringUtil.unescapeStringCharacters(text);
   }
 
   @Override
-  public @Nullable JsonSchemaObjectImpl getMatchingPatternPropertySchema(@NotNull String name) {
+  public @Nullable JsonSchemaObjectImpl getMatchingPatternPropertySchema(@Nonnull String name) {
     if (myPatternProperties == null) return null;
     return (JsonSchemaObjectImpl)myPatternProperties.getPatternPropertySchema(name);
   }
 
   @Override
-  public @NotNull Iterator<String> getSchemaDependencyNames() {
+  public @Nonnull Iterator<String> getSchemaDependencyNames() {
     var dependencies = getSchemaDependencies();
     return dependencies == null ? Collections.emptyIterator() : dependencies.keySet().iterator();
   }
 
   @Override
-  public @Nullable JsonSchemaObject getSchemaDependencyByName(@NotNull String name) {
+  public @Nullable JsonSchemaObject getSchemaDependencyByName(@Nonnull String name) {
     var dependencies = getSchemaDependencies();
     return dependencies == null ? null : dependencies.get(name);
   }
 
   @Override
-  public @Nullable JsonSchemaObject getDefinitionByName(@NotNull String name) {
+  public @Nullable JsonSchemaObject getDefinitionByName(@Nonnull String name) {
     var map = getDefinitionsMap();
     return map == null ? null : map.get(name);
   }
 
   @Override
-  public @NotNull Iterator<String> getDefinitionNames() {
+  public @Nonnull Iterator<String> getDefinitionNames() {
     var map = getDefinitionsMap();
     return map == null ? Collections.emptyIterator() : map.keySet().iterator();
   }
 
   @Override
-  public @NotNull Iterator<String> getPropertyNames() {
+  public @Nonnull Iterator<String> getPropertyNames() {
     return getProperties().keySet().iterator();
   }
 
   @Override
-  public @Nullable JsonSchemaObject getPropertyByName(@NotNull String name) {
+  public @Nullable JsonSchemaObject getPropertyByName(@Nonnull String name) {
     return getProperties().get(name);
   }
 
   @Override
-  public boolean checkByPattern(@NotNull String value) {
+  public boolean checkByPattern(@Nonnull String value) {
     return myPattern != null && myPattern.checkByPattern(value);
   }
 
@@ -1029,25 +1029,25 @@ public class JsonSchemaObjectImpl extends JsonSchemaObject {
   }
 
   @Override
-  public @Nullable JsonSchemaObject findRelativeDefinition(@NotNull String ref) {
+  public @Nullable JsonSchemaObject findRelativeDefinition(@Nonnull String ref) {
     return JsonSchemaObjectReadingUtils.findRelativeDefinition(this, ref);
   }
 
   @Override
-  public @Nullable JsonSchemaObject resolveRefSchema(@NotNull JsonSchemaService service) {
+  public @Nullable JsonSchemaObject resolveRefSchema(@Nonnull JsonSchemaService service) {
     return JsonSchemaObjectReadingUtils.resolveRefSchema(this, service);
   }
 
-  public ConcurrentMap<String, JsonSchemaObject> getComputedRefsStorage(@NotNull Project project) {
+  public ConcurrentMap<String, JsonSchemaObject> getComputedRefsStorage(@Nonnull Project project) {
     return CachedValuesManager.getManager(project).getCachedValue(
       myUserDataHolder,
       () -> CachedValueProvider.Result.create(new ConcurrentHashMap<>(), JsonDependencyModificationTracker.forProject(project))
     );
   }
 
-  public static @NotNull JsonSchemaObjectImpl merge(@NotNull JsonSchemaObjectImpl base,
-                                                    @NotNull JsonSchemaObjectImpl other,
-                                                    @NotNull JsonSchemaObjectImpl pointTo) {
+  public static @Nonnull JsonSchemaObjectImpl merge(@Nonnull JsonSchemaObjectImpl base,
+                                                    @Nonnull JsonSchemaObjectImpl other,
+                                                    @Nonnull JsonSchemaObjectImpl pointTo) {
     final JsonSchemaObjectImpl object = new JsonSchemaObjectImpl(pointTo.myRawFile, pointTo.myFileUrl, pointTo.getPointer());
     object.mergeValues(other);
     object.mergeValues(base);

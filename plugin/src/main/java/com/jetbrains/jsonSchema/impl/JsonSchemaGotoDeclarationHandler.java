@@ -18,7 +18,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
 import com.jetbrains.jsonSchema.extension.JsonSchemaGotoDeclarationSuppressor;
 import com.jetbrains.jsonSchema.JsonSchemaService;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.Arrays;
 

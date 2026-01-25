@@ -8,8 +8,8 @@ import com.intellij.openapi.vfs.impl.http.DefaultRemoteContentProvider;
 import com.intellij.util.Url;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.HttpRequests;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +31,7 @@ public final class JsonSchemaRemoteContentProvider extends DefaultRemoteContentP
   private long myLastUpdateTime = 0;
 
   @Override
-  public boolean canProvideContent(@NotNull Url url) {
+  public boolean canProvideContent(@Nonnull Url url) {
     String externalForm = url.toExternalForm();
     return externalForm.startsWith(STORE_URL_PREFIX_HTTP)
            || externalForm.startsWith(STORE_URL_PREFIX_HTTPS)
@@ -41,14 +41,14 @@ public final class JsonSchemaRemoteContentProvider extends DefaultRemoteContentP
   }
 
   @Override
-  protected void saveAdditionalData(@NotNull HttpRequests.Request request, @NotNull File file) throws IOException {
+  protected void saveAdditionalData(@Nonnull HttpRequests.Request request, @Nonnull File file) throws IOException {
     URLConnection connection = request.getConnection();
     if (saveTag(file, connection, ETAG_HEADER)) return;
     saveTag(file, connection, LAST_MODIFIED_HEADER);
   }
 
   @Override
-  protected @Nullable FileType adjustFileType(@Nullable FileType type, @NotNull Url url) {
+  protected @Nullable FileType adjustFileType(@Nullable FileType type, @Nonnull Url url) {
     if (type == null) {
       String fullUrl = url.toExternalForm();
       if (fullUrl.startsWith(SCHEMA_URL_PREFIX) || fullUrl.startsWith(SCHEMA_URL_PREFIX_HTTPS)) {
@@ -59,7 +59,7 @@ public final class JsonSchemaRemoteContentProvider extends DefaultRemoteContentP
     return super.adjustFileType(type, url);
   }
 
-  private static boolean saveTag(@NotNull File file, @NotNull URLConnection connection, @NotNull String header) throws IOException {
+  private static boolean saveTag(@Nonnull File file, @Nonnull URLConnection connection, @Nonnull String header) throws IOException {
     String tag = connection.getHeaderField(header);
     if (tag != null) {
       String path = file.getAbsolutePath();
@@ -71,13 +71,13 @@ public final class JsonSchemaRemoteContentProvider extends DefaultRemoteContentP
     return false;
   }
 
-  private static void saveToFile(@NotNull File tagFile, @NotNull String headerValue) throws IOException {
+  private static void saveToFile(@Nonnull File tagFile, @Nonnull String headerValue) throws IOException {
     if (!tagFile.exists()) if (!tagFile.createNewFile()) return;
     Files.write(tagFile.toPath(), ContainerUtil.createMaybeSingletonList(headerValue));
   }
 
   @Override
-  public boolean isUpToDate(@NotNull Url url, @NotNull VirtualFile local) {
+  public boolean isUpToDate(@Nonnull Url url, @Nonnull VirtualFile local) {
     long now = System.currentTimeMillis();
     // don't update more frequently than once in 4 hours
     if (now - myLastUpdateTime < UPDATE_DELAY) {
@@ -97,7 +97,7 @@ public final class JsonSchemaRemoteContentProvider extends DefaultRemoteContentP
     return false;
   }
 
-  private boolean checkUpToDate(@NotNull Url url, @NotNull String path, @NotNull String header) {
+  private boolean checkUpToDate(@Nonnull Url url, @Nonnull String path, @Nonnull String header) {
     File file = new File(path + "." + header);
     try {
       return isUpToDate(url, file, header);
@@ -115,7 +115,7 @@ public final class JsonSchemaRemoteContentProvider extends DefaultRemoteContentP
     return DEFAULT_CONNECT_TIMEOUT;
   }
 
-  private boolean isUpToDate(@NotNull Url url, @NotNull File file, @NotNull String header) throws IOException {
+  private boolean isUpToDate(@Nonnull Url url, @Nonnull File file, @Nonnull String header) throws IOException {
     List<String> strings = file.exists() ? Files.readAllLines(file.toPath()) : ContainerUtil.emptyList();
 
     String currentTag = !strings.isEmpty() ? strings.get(0) : null;

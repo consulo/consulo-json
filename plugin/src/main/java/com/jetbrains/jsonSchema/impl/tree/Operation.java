@@ -8,8 +8,8 @@ import com.jetbrains.jsonSchema.JsonSchemaService;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
 import com.jetbrains.jsonSchema.internal.JsonSchemaObjectImpl;
 import com.jetbrains.jsonSchema.impl.SchemaResolveState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,24 +19,24 @@ import java.util.stream.Collectors;
 import static com.jetbrains.jsonSchema.impl.light.SchemaKeywordsKt.*;
 
 public abstract class Operation {
-  public final @NotNull JsonSchemaNodeExpansionRequest myExpansionRequest;
-  public final @NotNull List<JsonSchemaObject> myAnyOfGroup = new SmartList<>();
-  public final @NotNull List<List<JsonSchemaObject>> myOneOfGroup = new SmartList<>();
-  public final @NotNull List<Operation> myChildOperations;
-  public final @NotNull JsonSchemaObject mySourceNode;
+  public final @Nonnull JsonSchemaNodeExpansionRequest myExpansionRequest;
+  public final @Nonnull List<JsonSchemaObject> myAnyOfGroup = new SmartList<>();
+  public final @Nonnull List<List<JsonSchemaObject>> myOneOfGroup = new SmartList<>();
+  public final @Nonnull List<Operation> myChildOperations;
+  public final @Nonnull JsonSchemaObject mySourceNode;
   public SchemaResolveState myState = SchemaResolveState.normal;
 
-  protected Operation(@NotNull JsonSchemaObject sourceNode, @Nullable JsonSchemaNodeExpansionRequest expansionRequest) {
+  protected Operation(@Nonnull JsonSchemaObject sourceNode, @Nullable JsonSchemaNodeExpansionRequest expansionRequest) {
     mySourceNode = sourceNode;
     myChildOperations = new ArrayList<>();
     myExpansionRequest = expansionRequest == null ?
                          new JsonSchemaNodeExpansionRequest(null, true) : expansionRequest;
   }
 
-  protected abstract void map(@NotNull Set<JsonSchemaObject> visited);
+  protected abstract void map(@Nonnull Set<JsonSchemaObject> visited);
   protected abstract void reduce();
 
-  public void doMap(final @NotNull Set<JsonSchemaObject> visited) {
+  public void doMap(final @Nonnull Set<JsonSchemaObject> visited) {
     map(visited);
     for (Operation operation : myChildOperations) {
       ProgressManager.checkCanceled();
@@ -64,7 +64,7 @@ public abstract class Operation {
     myChildOperations.clear();
   }
 
-  private static void clearVariants(@NotNull JsonSchemaObject object) {
+  private static void clearVariants(@Nonnull JsonSchemaObject object) {
     if (!(object instanceof JsonSchemaObjectImpl cst)) {
       return;
     }
@@ -73,8 +73,8 @@ public abstract class Operation {
     cst.setOneOf(null);
   }
 
-  protected @Nullable Operation createExpandOperation(@NotNull JsonSchemaObject schema,
-                                                      @NotNull JsonSchemaService service,
+  protected @Nullable Operation createExpandOperation(@Nonnull JsonSchemaObject schema,
+                                                      @Nonnull JsonSchemaService service,
                                                       @Nullable JsonSchemaNodeExpansionRequest expansionRequest) {
     Operation forConflict = getOperationForConflict(schema, service, expansionRequest);
     if (forConflict != null) return forConflict;
@@ -85,8 +85,8 @@ public abstract class Operation {
     return null;
   }
 
-  private static @Nullable Operation getOperationForConflict(@NotNull JsonSchemaObject schema,
-                                                             @NotNull JsonSchemaService service,
+  private static @Nullable Operation getOperationForConflict(@Nonnull JsonSchemaObject schema,
+                                                             @Nonnull JsonSchemaService service,
                                                              @Nullable JsonSchemaNodeExpansionRequest expansionRequest) {
     // in case of several incompatible operations, choose the most permissive one
     var anyOf = Registry.is("json.schema.object.v2") && schema.hasChildNode(ANY_OF) || schema.getAnyOf() != null;

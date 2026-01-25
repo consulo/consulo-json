@@ -6,7 +6,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.Commenter;
 import consulo.language.Language;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * JSON standard (RFC 4627) doesn't allow comments in documents, but they are added for compatibility with legacy JSON integration.

@@ -12,8 +12,8 @@ import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.breadcrumbs.BreadcrumbsProvider;
 import com.jetbrains.jsonSchema.impl.JsonSchemaDocumentationProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.datatransfer.StringSelection;
@@ -33,12 +33,12 @@ public final class JsonBreadcrumbsProvider implements BreadcrumbsProvider {
   }
 
   @Override
-  public boolean acceptElement(@NotNull PsiElement e) {
+  public boolean acceptElement(@Nonnull PsiElement e) {
     return e instanceof JsonProperty || JsonUtil.isArrayElement(e);
   }
 
   @Override
-  public @NotNull String getElementInfo(@NotNull PsiElement e) {
+  public @Nonnull String getElementInfo(@Nonnull PsiElement e) {
     if (e instanceof JsonProperty) {
       return ((JsonProperty)e).getName();
     }
@@ -50,12 +50,12 @@ public final class JsonBreadcrumbsProvider implements BreadcrumbsProvider {
   }
 
   @Override
-  public @Nullable String getElementTooltip(@NotNull PsiElement e) {
+  public @Nullable String getElementTooltip(@Nonnull PsiElement e) {
     return JsonSchemaDocumentationProvider.findSchemaAndGenerateDoc(e, null, true, null);
   }
 
   @Override
-  public @NotNull List<? extends Action> getContextActions(@NotNull PsiElement element) {
+  public @Nonnull List<? extends Action> getContextActions(@Nonnull PsiElement element) {
     JsonQualifiedNameKind[] values = JsonQualifiedNameKind.values();
     List<Action> actions = new ArrayList<>(values.length);
     for (JsonQualifiedNameKind kind: values) {

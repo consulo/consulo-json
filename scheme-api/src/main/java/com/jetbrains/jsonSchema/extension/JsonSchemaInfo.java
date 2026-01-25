@@ -10,9 +10,9 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -23,9 +23,10 @@ import java.util.Set;
 public class JsonSchemaInfo {
   private final @Nullable JsonSchemaFileProvider myProvider;
   private final @Nullable String myUrl;
-  private @Nullable @Nls String myName = null;
+  private @Nullable
+  @Nls String myName = null;
   private @Nullable @Nls String myDocumentation = null;
-  private static final @NotNull Set<String> myDumbNames = Set.of(
+  private static final @Nonnull Set<String> myDumbNames = Set.of(
     "schema",
     "lib",
     "cli",
@@ -36,19 +37,19 @@ public class JsonSchemaInfo {
     "config");
 
   // Strange cases such as meaningless 'config' as a name, etc.
-  private static final @NotNull Map<String, String> myWeirdNames = Map.of(
+  private static final @Nonnull Map<String, String> myWeirdNames = Map.of(
     "http://json.schemastore.org/config", "asp.net config",
     "https://schemastore.azurewebsites.net/schemas/json/config.json", "asp.net config",
     "http://json.schemastore.org/2.0.0-csd.2.beta.2018-10-10.json", "sarif-2.0.0-csd.2.beta.2018-10-10",
     "https://schemastore.azurewebsites.net/schemas/json/2.0.0-csd.2.beta.2018-10-10.json", "sarif-2.0.0-csd.2.beta.2018-10-10"
   );
 
-  public JsonSchemaInfo(@NotNull JsonSchemaFileProvider provider) {
+  public JsonSchemaInfo(@Nonnull JsonSchemaFileProvider provider) {
     myProvider = provider;
     myUrl = null;
   }
 
-  public JsonSchemaInfo(@NotNull String url) {
+  public JsonSchemaInfo(@Nonnull String url) {
     myUrl = url;
     myProvider = null;
   }
@@ -57,7 +58,7 @@ public class JsonSchemaInfo {
     return myProvider;
   }
 
-  public @NotNull String getUrl(Project project) {
+  public @Nonnull String getUrl(Project project) {
     if (myProvider != null) {
       String remoteSource = myProvider.getRemoteSource();
       if (remoteSource != null) {
@@ -83,7 +84,7 @@ public class JsonSchemaInfo {
     }
   }
 
-  public @NotNull @Nls String getDescription() {
+  public @Nonnull @Nls String getDescription() {
     if (myProvider != null) {
       String providerName = myProvider.getPresentableName();
       return sanitizeName(providerName);
@@ -128,15 +129,15 @@ public class JsonSchemaInfo {
     return StringUtil.split(possibleName, ".").stream().allMatch(s -> JsonSchemaType.isInteger(s));
   }
 
-  private static @NotNull @NlsSafe String sanitizeName(@NotNull String providerName) {
+  private static @Nonnull @NlsSafe String sanitizeName(@Nonnull String providerName) {
     return StringUtil.trimEnd(StringUtil.trimEnd(StringUtil.trimEnd(providerName, ".json"), "-schema"), ".schema");
   }
 
-  public @NotNull JsonSchemaVersion getSchemaVersion() {
+  public @Nonnull JsonSchemaVersion getSchemaVersion() {
     return myProvider != null ? myProvider.getSchemaVersion() : JsonSchemaVersion.SCHEMA_4;
   }
 
-  public static @NotNull String getRelativePath(@NotNull Project project, @NotNull String text) {
+  public static @Nonnull String getRelativePath(@Nonnull Project project, @Nonnull String text) {
     text = text.trim();
     if (project.isDefault() || project.getBasePath() == null || Strings.isEmptyOrSpaces(text)) {
       return text;

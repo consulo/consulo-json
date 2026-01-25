@@ -13,8 +13,7 @@ import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 
@@ -28,7 +27,7 @@ public final class JsonStructureViewBuilderFactory implements PsiStructureViewFa
   }
 
   @Override
-  public @Nullable StructureViewBuilder getStructureViewBuilder(final @NotNull PsiFile psiFile) {
+  public @Nullable StructureViewBuilder getStructureViewBuilder(final @Nonnull PsiFile psiFile) {
     if (!(psiFile instanceof JsonFile)) {
       return null;
     }
@@ -49,7 +48,7 @@ public final class JsonStructureViewBuilderFactory implements PsiStructureViewFa
 
     return new TreeBasedStructureViewBuilder() {
       @Override
-      public @NotNull StructureViewModel createStructureViewModel(@Nullable Editor editor) {
+      public @Nonnull StructureViewModel createStructureViewModel(@Nullable Editor editor) {
         return new JsonStructureViewModel(psiFile, editor);
       }
     };

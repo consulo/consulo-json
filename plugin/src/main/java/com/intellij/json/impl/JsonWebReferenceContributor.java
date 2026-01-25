@@ -8,23 +8,23 @@ import consulo.document.util.TextRange;
 import consulo.language.impl.psi.path.WebReference;
 import consulo.language.psi.*;
 import consulo.language.util.ProcessingContext;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import static consulo.language.pattern.PlatformPatterns.psiElement;
 
 final class JsonWebReferenceContributor extends PsiReferenceContributor {
   @Override
-  public void registerReferenceProviders(@NotNull PsiReferenceRegistrar registrar) {
+  public void registerReferenceProviders(@Nonnull PsiReferenceRegistrar registrar) {
     registrar.registerReferenceProvider(
       psiElement(JsonStringLiteral.class),
       new PsiReferenceProvider() {
         @Override
-        public boolean acceptsTarget(@NotNull PsiElement target) {
+        public boolean acceptsTarget(@Nonnull PsiElement target) {
           return false; // web references do not point to any real PsiElement
         }
 
         @Override
-        public PsiReference @NotNull [] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+        public PsiReference @Nonnull [] getReferencesByElement(@Nonnull PsiElement element, @Nonnull ProcessingContext context) {
           if (!(element instanceof JsonStringLiteral stringLiteral)) return PsiReference.EMPTY_ARRAY;
 
           PsiElement parent = stringLiteral.getParent();

@@ -18,8 +18,8 @@ import com.jetbrains.jsonSchema.extension.adapters.JsonValueAdapter;
 import com.jetbrains.jsonSchema.impl.JsonSchemaObject;
 import com.jetbrains.jsonSchema.impl.JsonSchemaResolver;
 import com.jetbrains.jsonSchema.impl.JsonSchemaType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -38,11 +38,11 @@ import static com.jetbrains.jsonSchema.impl.light.nodes.LightweightJsonSchemaObj
 public class NestedCompletions {
   private static final String DUMMY_STRING = "jsonRulezzz111";
 
-  public static void collectNestedCompletions(@NotNull JsonSchemaObject schemaObject,
-                                              @NotNull Project project,
+  public static void collectNestedCompletions(@Nonnull JsonSchemaObject schemaObject,
+                                              @Nonnull Project project,
                                               @Nullable NestedCompletionsNode node,
                                               @Nullable SchemaPath completionPath,
-                                              @NotNull BiFunction<SchemaPath, JsonSchemaObject, CompletionNextStep> collector) {
+                                              @Nonnull BiFunction<SchemaPath, JsonSchemaObject, CompletionNextStep> collector) {
     CompletionNextStep nextStep = collector.apply(completionPath, schemaObject); // Breadth first
     if (nextStep == CompletionNextStep.Stop) return;
 
@@ -60,20 +60,20 @@ public class NestedCompletions {
     }
   }
 
-  @NotNull
-  private static Iterable<JsonSchemaObject> findSubSchemasByName(@NotNull JsonSchemaObject schemaObject,
-                                                                  @NotNull Project project,
-                                                                  @NotNull String name) {
+  @Nonnull
+  private static Iterable<JsonSchemaObject> findSubSchemasByName(@Nonnull JsonSchemaObject schemaObject,
+                                                                  @Nonnull Project project,
+                                                                  @Nonnull String name) {
     JsonPointerPosition position = new JsonPointerPosition();
     position.addFollowingStep(name);
     JsonSchemaResolver resolver = new JsonSchemaResolver(project, schemaObject, position, null);
     return resolver.resolve();
   }
 
-  @NotNull
-  public static PsiElement findChildBy(@NotNull JsonLikePsiWalker walker,
+  @Nonnull
+  public static PsiElement findChildBy(@Nonnull JsonLikePsiWalker walker,
                                        @Nullable SchemaPath path,
-                                       @NotNull PsiElement start) {
+                                       @Nonnull PsiElement start) {
     if (path == null) return start;
 
     JsonObjectValueAdapter objectAdapter = findContainingObjectAdapter(walker, start);
@@ -84,8 +84,8 @@ public class NestedCompletions {
   }
 
   @Nullable
-  private static JsonObjectValueAdapter findContainingObjectAdapter(@NotNull JsonLikePsiWalker walker,
-                                                                     @NotNull PsiElement start) {
+  private static JsonObjectValueAdapter findContainingObjectAdapter(@Nonnull JsonLikePsiWalker walker,
+                                                                     @Nonnull PsiElement start) {
     PsiElement current = start;
     while (current != null) {
       JsonValueAdapter adapter = walker.createValueAdapter(current);
@@ -99,8 +99,8 @@ public class NestedCompletions {
   }
 
   @Nullable
-  private static JsonValueAdapter findChildBy(@NotNull JsonObjectValueAdapter objectAdapter,
-                                             @NotNull List<String> path,
+  private static JsonValueAdapter findChildBy(@Nonnull JsonObjectValueAdapter objectAdapter,
+                                             @Nonnull List<String> path,
                                              int offset) {
     if (offset > path.size() - 1) return objectAdapter;
 
@@ -118,7 +118,7 @@ public class NestedCompletions {
     return null;
   }
 
-  public static void expandMissingPropertiesAndMoveCaret(@NotNull InsertionContext context,
+  public static void expandMissingPropertiesAndMoveCaret(@Nonnull InsertionContext context,
                                                          @Nullable SchemaPath completionPath) {
     List<String> path = completionPath != null ? completionPath.accessor() : null;
     if (path == null || path.isEmpty()) return;
@@ -168,10 +168,10 @@ public class NestedCompletions {
   }
 
   @Nullable
-  private static JsonObjectValueAdapter getOrCreateParentObject(@NotNull PsiElement element,
-                                                                @NotNull JsonLikePsiWalker walker,
-                                                                @NotNull InsertionContext context,
-                                                                @NotNull List<String> path) {
+  private static JsonObjectValueAdapter getOrCreateParentObject(@Nonnull PsiElement element,
+                                                                @Nonnull JsonLikePsiWalker walker,
+                                                                @Nonnull InsertionContext context,
+                                                                @Nonnull List<String> path) {
     PsiElement container = element.getParent();
     if (container == null) return null;
 
@@ -207,11 +207,11 @@ public class NestedCompletions {
     return meaningfulLeaf;
   }
 
-  @NotNull
-  private static PsiElement replaceAtCaretAndGetParentObject(@NotNull PsiElement element,
-                                                             @NotNull JsonLikePsiWalker walker,
-                                                             @NotNull InsertionContext context,
-                                                             @NotNull List<String> path) {
+  @Nonnull
+  private static PsiElement replaceAtCaretAndGetParentObject(@Nonnull PsiElement element,
+                                                             @Nonnull JsonLikePsiWalker walker,
+                                                             @Nonnull InsertionContext context,
+                                                             @Nonnull List<String> path) {
     PsiElement newProperty = walker.getSyntaxAdapter(context.getProject())
       .createProperty(path.get(0), DUMMY_STRING, context.getProject());
 
@@ -236,8 +236,8 @@ public class NestedCompletions {
     return element.replace(newProperty.getParent());
   }
 
-  private static void cleanupWhitespacesAndDelete(@NotNull PsiElement element,
-                                                  @NotNull JsonLikePsiWalker walker) {
+  private static void cleanupWhitespacesAndDelete(@Nonnull PsiElement element,
+                                                  @Nonnull JsonLikePsiWalker walker) {
     Set<PsiElement> toCleanup = new HashSet<>();
 
     // cleanup redundant whitespace
@@ -264,11 +264,11 @@ public class NestedCompletions {
     element.delete();
   }
 
-  @NotNull
-  private static JsonPropertyAdapter addNewPropertyWithObjectValue(@NotNull JsonObjectValueAdapter parentObject,
-                                                                   @NotNull String propertyName,
-                                                                   @NotNull JsonLikePsiWalker walker,
-                                                                   @NotNull PsiElement element,
+  @Nonnull
+  private static JsonPropertyAdapter addNewPropertyWithObjectValue(@Nonnull JsonObjectValueAdapter parentObject,
+                                                                   @Nonnull String propertyName,
+                                                                   @Nonnull JsonLikePsiWalker walker,
+                                                                   @Nonnull PsiElement element,
                                                                    @Nullable PsiElement fakeProperty) {
     Project project = parentObject.getDelegate().getProject();
     PsiElement newProperty = walker.getSyntaxAdapter(project).createProperty(propertyName, DUMMY_STRING, project);
@@ -286,10 +286,10 @@ public class NestedCompletions {
   }
 
   @Nullable
-  private static PsiElement doExpand(@NotNull JsonObjectValueAdapter parentObject,
-                                    @NotNull List<String> completionPath,
-                                    @NotNull JsonLikePsiWalker walker,
-                                    @NotNull PsiElement element,
+  private static PsiElement doExpand(@Nonnull JsonObjectValueAdapter parentObject,
+                                    @Nonnull List<String> completionPath,
+                                    @Nonnull JsonLikePsiWalker walker,
+                                    @Nonnull PsiElement element,
                                     int index,
                                     @Nullable PsiElement fakeProperty) {
     JsonPropertyAdapter parentProperty = walker.getParentPropertyAdapter(element);
@@ -371,7 +371,7 @@ public class NestedCompletions {
     }
   }
 
-  private static void switchToObjectSeparator(@NotNull JsonLikePsiWalker walker, @NotNull PsiElement node) {
+  private static void switchToObjectSeparator(@Nonnull JsonLikePsiWalker walker, @Nonnull PsiElement node) {
     String nonObjectSeparator = walker.getPropertyValueSeparator(null).trim();
     String objectSeparator = walker.getPropertyValueSeparator(JsonSchemaType._object).trim();
 
@@ -389,7 +389,7 @@ public class NestedCompletions {
     }
   }
 
-  private static void removePropertyValue(@NotNull JsonLikePsiWalker walker, @NotNull PsiElement element) {
+  private static void removePropertyValue(@Nonnull JsonLikePsiWalker walker, @Nonnull PsiElement element) {
     JsonPropertyAdapter adapter = walker.getParentPropertyAdapter(element);
     if (adapter != null) {
       List<JsonValueAdapter> values = adapter.getValues();
@@ -407,7 +407,7 @@ public class NestedCompletions {
     }
   }
 
-  private static void deleteWithWsAround(@NotNull PsiElement element, boolean deleteBefore) {
+  private static void deleteWithWsAround(@Nonnull PsiElement element, boolean deleteBefore) {
     if (deleteBefore) {
       PsiElement prev = element.getPrevSibling();
       if (prev != null && prev.getText().isBlank()) {
@@ -421,10 +421,10 @@ public class NestedCompletions {
     element.delete();
   }
 
-  @NotNull
-  private static PsiElement addBeforeOrAfter(@NotNull JsonValueAdapter value,
-                                            @NotNull PsiElement elementToAdd,
-                                            @NotNull PsiElement element,
+  @Nonnull
+  private static PsiElement addBeforeOrAfter(@Nonnull JsonValueAdapter value,
+                                            @Nonnull PsiElement elementToAdd,
+                                            @Nonnull PsiElement element,
                                             @Nullable PsiElement fakeProperty) {
     List<JsonPropertyAdapter> properties = value.getAsObject() != null
                                            ? value.getAsObject().getPropertyList()
@@ -465,8 +465,8 @@ public class NestedCompletions {
   }
 
   @Nullable
-  private static PsiElement expandOrNull(@NotNull JsonLikePsiWalker walker,
-                                        @NotNull JsonValueAdapter shorthandValue) {
+  private static PsiElement expandOrNull(@Nonnull JsonLikePsiWalker walker,
+                                        @Nonnull JsonValueAdapter shorthandValue) {
     Project project = shorthandValue.getDelegate().getProject();
 
     List<String> stepNames = null;
@@ -483,10 +483,10 @@ public class NestedCompletions {
     return shorthandValue.getDelegate().replace(expandedProperty.getParent());
   }
 
-  @NotNull
-  private static PsiElement replaceValueForNesting(@NotNull JsonLikePsiWalker walker,
-                                                  @NotNull JsonValueAdapter value,
-                                                  @NotNull PsiElement element) {
+  @Nonnull
+  private static PsiElement replaceValueForNesting(@Nonnull JsonLikePsiWalker walker,
+                                                  @Nonnull JsonValueAdapter value,
+                                                  @Nonnull PsiElement element) {
     Project project = value.getDelegate().getProject();
     String name = StringUtil.unquoteString(element.getText());
 
@@ -535,7 +535,7 @@ public class NestedCompletions {
   }
 
   @Nullable
-  private static JsonSchemaShorthandValueHandler.KeyValue expandShorthandIfApplicable(@NotNull JsonValueAdapter value,
+  private static JsonSchemaShorthandValueHandler.KeyValue expandShorthandIfApplicable(@Nonnull JsonValueAdapter value,
                                                                                       @Nullable List<String> elementPath) {
     if (elementPath == null) return null;
 
@@ -557,8 +557,8 @@ public class NestedCompletions {
     return null;
   }
 
-  @NotNull
-  private static LeafPsiElement createLeaf(@NotNull String content, @NotNull PsiElement context) {
+  @Nonnull
+  private static LeafPsiElement createLeaf(@Nonnull String content, @Nonnull PsiElement context) {
     PsiFileFactory psiFileFactory = PsiFileFactory.getInstance(context.getProject());
     String extension = context.getContainingFile().getVirtualFile().getExtension();
     PsiFile file = psiFileFactory.createFileFromText("dummy." + extension,

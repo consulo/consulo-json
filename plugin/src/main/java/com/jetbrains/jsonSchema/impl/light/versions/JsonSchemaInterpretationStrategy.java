@@ -12,7 +12,7 @@ import com.jetbrains.jsonSchema.impl.light.JsonSchemaRefResolver;
 import com.jetbrains.jsonSchema.impl.light.nodes.InheritedJsonSchemaObjectView;
 import com.jetbrains.jsonSchema.impl.light.versions.v201909.JsonSchema201909Strategy;
 import com.jetbrains.jsonSchema.impl.light.versions.v202012.JsonSchema202012Strategy;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.List;

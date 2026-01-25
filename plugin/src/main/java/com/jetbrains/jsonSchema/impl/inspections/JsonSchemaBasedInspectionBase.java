@@ -14,15 +14,15 @@ import com.intellij.util.containers.ContainerUtil;
 import com.jetbrains.jsonSchema.JsonSchemaService;
 import com.jetbrains.jsonSchema.impl.JsonOriginalPsiWalker;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 
 public abstract class JsonSchemaBasedInspectionBase extends LocalInspectionTool {
 
   @Override
-  public @NotNull PsiElementVisitor buildVisitor(final @NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
+  public @Nonnull PsiElementVisitor buildVisitor(final @Nonnull ProblemsHolder holder, boolean isOnTheFly, @Nonnull LocalInspectionToolSession session) {
     PsiFile file = holder.getFile();
     Collection<PsiElement> allRoots = JsonOriginalPsiWalker.INSTANCE.getRoots(file);
     // JSON may have only a single root element
@@ -36,9 +36,9 @@ public abstract class JsonSchemaBasedInspectionBase extends LocalInspectionTool 
     return doBuildVisitor(root, service.getSchemaObject(file), service, holder, session);
   }
 
-  protected abstract PsiElementVisitor doBuildVisitor(@NotNull JsonValue root,
+  protected abstract PsiElementVisitor doBuildVisitor(@Nonnull JsonValue root,
                                                       @Nullable JsonSchemaObject schema,
-                                                      @NotNull JsonSchemaService service,
-                                                      @NotNull ProblemsHolder holder,
-                                                      @NotNull LocalInspectionToolSession session);
+                                                      @Nonnull JsonSchemaService service,
+                                                      @Nonnull ProblemsHolder holder,
+                                                      @Nonnull LocalInspectionToolSession session);
 }

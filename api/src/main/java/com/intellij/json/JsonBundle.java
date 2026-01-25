@@ -3,9 +3,9 @@ package com.intellij.json;
 
 import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.json.localize.JsonLocalize;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.PropertyKey;
 
 @Deprecated
@@ -16,7 +16,7 @@ public final class JsonBundle {
   private JsonBundle() {
   }
 
-  public static @NotNull @Nls String message(@NotNull @PropertyKey(resourceBundle = BUNDLE) String key, Object @NotNull ... params) {
+  public static @Nonnull @Nls String message(@Nonnull @PropertyKey(resourceBundle = BUNDLE) String key, Object @Nonnull ... params) {
     return key;
   }
 }

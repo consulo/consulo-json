@@ -9,7 +9,7 @@ import com.jetbrains.jsonSchema.impl.light.JsonSchemaRefResolver;
 import com.jetbrains.jsonSchema.impl.light.LocalSchemaReferenceResolver;
 import com.jetbrains.jsonSchema.impl.light.RemoteSchemaReferenceResolver;
 import com.jetbrains.jsonSchema.impl.validations.JsonSchemaValidationsCollector;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.Arrays;
 

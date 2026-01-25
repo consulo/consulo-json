@@ -11,15 +11,15 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 public abstract class JsonPropertyMixin extends JsonElementImpl implements JsonProperty {
-  JsonPropertyMixin(@NotNull ASTNode node) {
+  JsonPropertyMixin(@Nonnull ASTNode node) {
     super(node);
   }
 
   @Override
-  public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
+  public PsiElement setName(@NonNls @Nonnull String name) throws IncorrectOperationException {
     final JsonElementGenerator generator = new JsonElementGenerator(getProject());
     // Strip only both quotes in case user wants some exotic name like key'
     getNameElement().replace(generator.createStringLiteral(StringUtil.unquoteString(name)));
@@ -32,7 +32,7 @@ public abstract class JsonPropertyMixin extends JsonElementImpl implements JsonP
   }
 
   @Override
-  public PsiReference @NotNull [] getReferences() {
+  public PsiReference @Nonnull [] getReferences() {
     final PsiReference[] fromProviders = ReferenceProvidersRegistry.getReferencesFromProviders(this);
     return ArrayUtil.prepend(new JsonPropertyNameReference(this), fromProviders);
   }

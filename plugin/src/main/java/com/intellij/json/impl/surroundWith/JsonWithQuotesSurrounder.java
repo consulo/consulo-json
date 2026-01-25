@@ -4,7 +4,7 @@ package com.intellij.json.impl.surroundWith;
 import consulo.json.localize.JsonLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 public final class JsonWithQuotesSurrounder extends JsonSurrounderBase {
   @Override
@@ -13,7 +13,7 @@ public final class JsonWithQuotesSurrounder extends JsonSurrounderBase {
   }
 
   @Override
-  protected @NotNull String createReplacementText(@NotNull String firstElement) {
+  protected @Nonnull String createReplacementText(@Nonnull String firstElement) {
     return "\"" + StringUtil.escapeStringCharacters(firstElement) + "\"";
   }
 }

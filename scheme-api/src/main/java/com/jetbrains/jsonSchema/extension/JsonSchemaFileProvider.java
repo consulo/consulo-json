@@ -5,13 +5,13 @@ import com.jetbrains.jsonSchema.JsonSchemaVersion;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface JsonSchemaFileProvider {
-  boolean isAvailable(@NotNull VirtualFile file);
+  boolean isAvailable(@Nonnull VirtualFile file);
 
-  @NotNull
+  @Nonnull
   @Nls
   String getName();
 
@@ -21,7 +21,7 @@ public interface JsonSchemaFileProvider {
   @Nullable
   VirtualFile getSchemaFile();
 
-  @NotNull
+  @Nonnull
   SchemaType getSchemaType();
 
   default JsonSchemaVersion getSchemaVersion() {
@@ -46,7 +46,7 @@ public interface JsonSchemaFileProvider {
   /**
    * Presentable name of the schema shown in the UI.
    */
-  default @NotNull String getPresentableName() { return getName(); }
+  default @Nonnull String getPresentableName() { return getName(); }
 
   /**
    * A URL to download an up-to-date schema version.

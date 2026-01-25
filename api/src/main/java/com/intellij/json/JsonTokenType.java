@@ -2,11 +2,11 @@
 package com.intellij.json;
 
 import consulo.language.ast.IElementType;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 
 public final class JsonTokenType extends IElementType {
-  public JsonTokenType(@NotNull @NonNls String debugName) {
+  public JsonTokenType(@Nonnull @NonNls String debugName) {
     super(debugName, JsonLanguage.INSTANCE);
   }
 }

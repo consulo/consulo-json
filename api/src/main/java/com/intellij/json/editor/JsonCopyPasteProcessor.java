@@ -14,8 +14,8 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public final class JsonCopyPasteProcessor implements CopyPastePreProcessor {
@@ -50,7 +50,7 @@ public final class JsonCopyPasteProcessor implements CopyPastePreProcessor {
   }
 
   @Override
-  public @NotNull String preprocessOnPaste(Project project, PsiFile file, Editor editor, String text, RawText rawText) {
+  public @Nonnull String preprocessOnPaste(Project project, PsiFile file, Editor editor, String text, RawText rawText) {
     if (!JsonEditorOptions.getInstance().ESCAPE_PASTED_TEXT) {
       return text;
     }
@@ -74,7 +74,7 @@ public final class JsonCopyPasteProcessor implements CopyPastePreProcessor {
     return file instanceof JsonFile && file.isPhysical();
   }
 
-  public boolean requiresAllDocumentsToBeCommitted(@NotNull Editor editor, @NotNull Project project) {
+  public boolean requiresAllDocumentsToBeCommitted(@Nonnull Editor editor, @Nonnull Project project) {
     return false;
   }
 }

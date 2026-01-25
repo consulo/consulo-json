@@ -2,7 +2,6 @@
 package com.intellij.json.impl;
 
 import com.intellij.json.JsonElementTypes;
-import com.intellij.json.impl.JsonSchemaSpellcheckerClient;
 import com.intellij.json.psi.JsonStringLiteral;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.Pair;
@@ -15,7 +14,7 @@ import com.intellij.spellchecker.inspections.PlainTextSplitter;
 import com.intellij.spellchecker.tokenizer.SpellcheckingStrategy;
 import com.intellij.spellchecker.tokenizer.TokenConsumer;
 import com.intellij.spellchecker.tokenizer.Tokenizer;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -29,7 +28,7 @@ public class JsonSpellcheckerStrategy extends SpellcheckingStrategy implements D
 
   private final Tokenizer<JsonStringLiteral> ourStringLiteralTokenizer = new Tokenizer<>() {
     @Override
-    public void tokenize(@NotNull JsonStringLiteral element, @NotNull TokenConsumer consumer) {
+    public void tokenize(@Nonnull JsonStringLiteral element, @Nonnull TokenConsumer consumer) {
       final PlainTextSplitter textSplitter = PlainTextSplitter.getInstance();
       if (element.textContains('\\')) {
         final List<Pair<TextRange, String>> fragments = element.getTextFragments();
@@ -49,7 +48,7 @@ public class JsonSpellcheckerStrategy extends SpellcheckingStrategy implements D
   };
 
   @Override
-  protected boolean isLiteral(@NotNull PsiElement element) {
+  protected boolean isLiteral(@Nonnull PsiElement element) {
     if (element instanceof JsonStringLiteral || PsiUtilCore.getElementType(element) == JsonElementTypes.DOUBLE_QUOTED_STRING) {
       String text = element.getText();
       if (text.contains(" ")) return true;
@@ -63,7 +62,7 @@ public class JsonSpellcheckerStrategy extends SpellcheckingStrategy implements D
   }
 
   @Override
-  public @NotNull Tokenizer<?> getTokenizer(PsiElement element) {
+  public @Nonnull Tokenizer<?> getTokenizer(PsiElement element) {
     if (element instanceof JsonStringLiteral) {
       if (isInjectedLanguageFragment(element)) {
         return EMPTY_TOKENIZER;
@@ -77,19 +76,19 @@ public class JsonSpellcheckerStrategy extends SpellcheckingStrategy implements D
   }
 
   public static final class JsonSchemaSpellcheckerClientForJson extends JsonSchemaSpellcheckerClient {
-    private final @NotNull JsonStringLiteral element;
+    private final @Nonnull JsonStringLiteral element;
 
-    public JsonSchemaSpellcheckerClientForJson(@NotNull JsonStringLiteral element) {
+    public JsonSchemaSpellcheckerClientForJson(@Nonnull JsonStringLiteral element) {
       this.element = element;
     }
 
     @Override
-    protected @NotNull JsonStringLiteral getElement() {
+    protected @Nonnull JsonStringLiteral getElement() {
       return element;
     }
 
     @Override
-    protected @NotNull String getValue() {
+    protected @Nonnull String getValue() {
       return element.getValue();
     }
   }

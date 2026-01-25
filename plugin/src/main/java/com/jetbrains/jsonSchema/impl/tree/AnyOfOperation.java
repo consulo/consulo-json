@@ -7,8 +7,8 @@ import com.jetbrains.jsonSchema.fus.JsonSchemaHighlightingSessionStatisticsColle
 import com.jetbrains.jsonSchema.JsonSchemaService;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
 import com.jetbrains.jsonSchema.impl.SchemaResolveState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Set;
 
@@ -17,13 +17,13 @@ import static com.jetbrains.jsonSchema.impl.JsonSchemaVariantsTreeBuilder.andGro
 public class AnyOfOperation extends Operation {
   private final JsonSchemaService myService;
 
-  public AnyOfOperation(@NotNull JsonSchemaObject sourceNode, JsonSchemaService service, @Nullable JsonSchemaNodeExpansionRequest expansionRequest) {
+  public AnyOfOperation(@Nonnull JsonSchemaObject sourceNode, JsonSchemaService service, @Nullable JsonSchemaNodeExpansionRequest expansionRequest) {
     super(sourceNode, expansionRequest);
     myService = service;
   }
 
   @Override
-  public void map(final @NotNull Set<JsonSchemaObject> visited) {
+  public void map(final @Nonnull Set<JsonSchemaObject> visited) {
     JsonSchemaHighlightingSessionStatisticsCollector.getInstance().reportSchemaUsageFeature(JsonSchemaFusCountedFeature.AnyOfExpanded);
     var anyOf = mySourceNode.getAnyOf();
     assert anyOf != null;

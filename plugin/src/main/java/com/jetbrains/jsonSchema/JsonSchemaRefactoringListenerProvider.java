@@ -11,8 +11,8 @@ import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public final class JsonSchemaRefactoringListenerProvider implements RefactoringElementListenerProvider {
   @Override
@@ -33,7 +33,7 @@ public final class JsonSchemaRefactoringListenerProvider implements RefactoringE
       final JsonSchemaMappingsProjectConfiguration configuration = JsonSchemaMappingsProjectConfiguration.getInstance(project);
       return new UndoRefactoringElementAdapter() {
         @Override
-        protected void refactored(@NotNull PsiElement element, @Nullable String oldQualifiedName) {
+        protected void refactored(@Nonnull PsiElement element, @Nullable String oldQualifiedName) {
           final VirtualFile newFile = PsiUtilBase.asVirtualFile(element);
           if (newFile != null) {
             final String newRelativePath = VirtualFileUtil.getRelativePath(newFile, project.getBaseDir());

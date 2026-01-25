@@ -6,8 +6,8 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.PsiReferenceBase;
 import consulo.language.psi.resolve.ResolveCache;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public abstract class JsonSchemaBaseReference<T extends PsiElement> extends PsiReferenceBase<T> {
   public JsonSchemaBaseReference(T element, TextRange textRange) {
@@ -45,7 +45,7 @@ public abstract class JsonSchemaBaseReference<T extends PsiElement> extends PsiR
     private static final MyResolver INSTANCE = new MyResolver();
 
     @Override
-    public @Nullable PsiElement resolve(@NotNull PsiReference ref, boolean incompleteCode) {
+    public @Nullable PsiElement resolve(@Nonnull PsiReference ref, boolean incompleteCode) {
       return ((JsonSchemaBaseReference<?>)ref).resolveInner();
     }
   }

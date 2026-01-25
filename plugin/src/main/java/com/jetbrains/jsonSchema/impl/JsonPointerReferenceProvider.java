@@ -28,8 +28,8 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import sun.tools.jconsole.inspector.IconManager;
 
 import javax.swing.*;
@@ -48,7 +48,7 @@ public final class JsonPointerReferenceProvider extends PsiReferenceProvider {
   }
 
   @Override
-  public PsiReference @NotNull [] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+  public PsiReference @Nonnull [] getReferencesByElement(@Nonnull PsiElement element, @Nonnull ProcessingContext context) {
     if (!(element instanceof JsonStringLiteral)) return PsiReference.EMPTY_ARRAY;
     List<PsiReference> refs = new ArrayList<>();
 
@@ -89,7 +89,7 @@ public final class JsonPointerReferenceProvider extends PsiReferenceProvider {
     return refs.isEmpty() ? PsiReference.EMPTY_ARRAY : ContainerUtil.toArray(refs, PsiReference[]::new);
   }
 
-  private void addFileOrWebReferences(@NotNull PsiElement element, List<PsiReference> refs, int hashIndex, String id) {
+  private void addFileOrWebReferences(@Nonnull PsiElement element, List<PsiReference> refs, int hashIndex, String id) {
     if (isHttpPath(id)) {
       refs.add(new WebReference(element, new TextRange(1, hashIndex >= 0 ? hashIndex : id.length() + 1), id));
       return;
@@ -123,7 +123,7 @@ public final class JsonPointerReferenceProvider extends PsiReferenceProvider {
           }
 
           @Override
-          public Object @NotNull [] getVariants() {
+          public Object @Nonnull [] getVariants() {
             final Object[] fileVariants = super.getVariants();
             if (!isCompletion || getRangeInElement().getStartOffset() != 1) {
               return fileVariants;
@@ -131,7 +131,7 @@ public final class JsonPointerReferenceProvider extends PsiReferenceProvider {
             return ArrayUtil.mergeArrays(fileVariants, collectCatalogVariants());
           }
 
-          private Object @NotNull [] collectCatalogVariants() {
+          private Object @Nonnull [] collectCatalogVariants() {
             List<LookupElement> elements = new ArrayList<>();
             final Project project = getElement().getProject();
             final List<JsonSchemaInfo> schemas = JsonSchemaService.Impl.get(project).getAllUserVisibleSchemas();
@@ -185,7 +185,7 @@ public final class JsonPointerReferenceProvider extends PsiReferenceProvider {
       myText = text;
     }
 
-    private static @NotNull TextRange getRange(JsonValue element) {
+    private static @Nonnull TextRange getRange(JsonValue element) {
       final TextRange range = element.getTextRange().shiftLeft(element.getTextOffset());
       return new TextRange(range.getStartOffset() + 1, range.getEndOffset() - 1);
     }
@@ -208,7 +208,7 @@ public final class JsonPointerReferenceProvider extends PsiReferenceProvider {
     }
 
     @Override
-    public Object @NotNull [] getVariants() {
+    public Object @Nonnull [] getVariants() {
       return JsonCachedValues.getAllIdsInFile(myElement.getContainingFile()).toArray();
     }
   }
@@ -222,7 +222,7 @@ public final class JsonPointerReferenceProvider extends PsiReferenceProvider {
     }
 
     @Override
-    public @NotNull String getCanonicalText() {
+    public @Nonnull String getCanonicalText() {
       return myFullPath;
     }
 
@@ -237,7 +237,7 @@ public final class JsonPointerReferenceProvider extends PsiReferenceProvider {
     }
 
     @Override
-    public Object @NotNull [] getVariants() {
+    public Object @Nonnull [] getVariants() {
       String text = getCanonicalText();
       int index = text.indexOf(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED);
       if (index >= 0) {
@@ -283,7 +283,7 @@ public final class JsonPointerReferenceProvider extends PsiReferenceProvider {
     }
   }
 
-  private static @NotNull String prepare(String part) {
+  private static @Nonnull String prepare(String part) {
     return part.endsWith("#/") ? part : StringUtil.trimEnd(part, '/');
   }
 }

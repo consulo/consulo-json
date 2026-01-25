@@ -7,7 +7,7 @@ import com.jetbrains.jsonSchema.impl.JsonSchemaObject;
 import com.jetbrains.jsonSchema.impl.JsonSchemaType;
 import com.jetbrains.jsonSchema.impl.light.*;
 import com.jetbrains.jsonSchema.impl.validations.JsonSchemaValidationsCollector;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Iterator;

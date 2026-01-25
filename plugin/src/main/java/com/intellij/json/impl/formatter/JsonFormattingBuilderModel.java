@@ -6,14 +6,13 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.Language;
 import consulo.language.codeStyle.*;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 import static com.intellij.json.JsonElementTypes.*;
 
 @ExtensionImpl
 public final class JsonFormattingBuilderModel implements FormattingModelBuilder {
     @Override
-    public @NotNull FormattingModel createModel(@NotNull FormattingContext formattingContext) {
+    public @Nonnull FormattingModel createModel(@Nonnull FormattingContext formattingContext) {
         CodeStyleSettings settings = formattingContext.getCodeStyleSettings();
         JsonCodeStyleSettings customSettings = settings.getCustomSettings(JsonCodeStyleSettings.class);
         SpacingBuilder spacingBuilder = createSpacingBuilder(settings);
@@ -23,7 +22,7 @@ public final class JsonFormattingBuilderModel implements FormattingModelBuilder 
         return FormattingModelProvider.createFormattingModelForPsiFile(formattingContext.getContainingFile(), block, settings);
     }
 
-    static @NotNull SpacingBuilder createSpacingBuilder(CodeStyleSettings settings) {
+    static @Nonnull SpacingBuilder createSpacingBuilder(CodeStyleSettings settings) {
         final JsonCodeStyleSettings jsonSettings = settings.getCustomSettings(JsonCodeStyleSettings.class);
         final CommonCodeStyleSettings commonSettings = settings.getCommonSettings(JsonLanguage.INSTANCE);
 

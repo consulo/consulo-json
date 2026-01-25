@@ -11,15 +11,15 @@ import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.fileEditor.structureView.tree.Sorter;
 import consulo.language.editor.structureView.StructureViewModelBase;
 import consulo.language.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Mikhail Golubev
  */
 public final class JsonStructureViewModel extends StructureViewModelBase implements StructureViewModel.ElementInfoProvider {
 
-  public JsonStructureViewModel(@NotNull PsiFile psiFile, @Nullable Editor editor) {
+  public JsonStructureViewModel(@Nonnull PsiFile psiFile, @Nullable Editor editor) {
     super(psiFile, editor, new JsonStructureViewElement((JsonFile)psiFile));
     withSuitableClasses(JsonFile.class, JsonProperty.class, JsonObject.class, JsonArray.class);
     withSorters(Sorter.ALPHA_SORTER);

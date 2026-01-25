@@ -7,16 +7,16 @@ import com.jetbrains.jsonSchema.internal.JsonSchemaObjectImpl;
 import com.jetbrains.jsonSchema.internal.PatternProperties;
 import consulo.application.progress.ProgressManager;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
 
 @Deprecated
 public class LegacyJsonSchemaObjectMerger implements JsonSchemaObjectMerger {
-  private static @NotNull JsonSchemaObjectImpl mergeObjectsInner(@NotNull JsonSchemaObjectImpl first,
-                                                                 @NotNull JsonSchemaObjectImpl second,
-                                                                 @NotNull JsonSchemaObjectImpl pointTo) {
+  private static @Nonnull JsonSchemaObjectImpl mergeObjectsInner(@Nonnull JsonSchemaObjectImpl first,
+                                                                 @Nonnull JsonSchemaObjectImpl second,
+                                                                 @Nonnull JsonSchemaObjectImpl pointTo) {
     final JsonSchemaObjectImpl object = new JsonSchemaObjectImpl(pointTo.getRawFile(), pointTo.getFileUrl(), pointTo.getPointer());
     mergeValues(object, second);
     mergeValues(object, first);
@@ -25,7 +25,7 @@ public class LegacyJsonSchemaObjectMerger implements JsonSchemaObjectMerger {
   }
 
 
-  private static void mergeValues(@NotNull JsonSchemaObjectImpl base, @NotNull JsonSchemaObjectImpl other) {
+  private static void mergeValues(@Nonnull JsonSchemaObjectImpl base, @Nonnull JsonSchemaObjectImpl other) {
     // we do not copy id, schema
     base.myProperties = mergeProperties(base.getProperties(), other.getProperties());
     base.myDefinitionsMap = mergeMaps(base.getDefinitionsMap(), other.getDefinitionsMap());
@@ -107,7 +107,7 @@ public class LegacyJsonSchemaObjectMerger implements JsonSchemaObjectMerger {
   }
 
   @Override
-  public @NotNull JsonSchemaObject mergeObjects(@NotNull JsonSchemaObject base, @NotNull JsonSchemaObject other, @NotNull JsonSchemaObject pointTo) {
+  public @Nonnull JsonSchemaObject mergeObjects(@Nonnull JsonSchemaObject base, @Nonnull JsonSchemaObject other, @Nonnull JsonSchemaObject pointTo) {
     JsonSchemaObjectImpl base1 = (JsonSchemaObjectImpl)base;
     JsonSchemaObjectImpl other1 = (JsonSchemaObjectImpl)other;
     JsonSchemaObjectImpl pointTo1 = (JsonSchemaObjectImpl)pointTo;
@@ -184,13 +184,13 @@ public class LegacyJsonSchemaObjectMerger implements JsonSchemaObjectMerger {
     public Set<JsonSchemaType> types;
   }
 
-  public static @Nullable JsonSchemaType getSubtypeOfBoth(@NotNull JsonSchemaType selfType,
-                                                          @NotNull JsonSchemaType otherType) {
+  public static @Nullable JsonSchemaType getSubtypeOfBoth(@Nonnull JsonSchemaType selfType,
+                                                          @Nonnull JsonSchemaType otherType) {
     return JsonSchemaObjectImpl.getSubtypeOfBoth(selfType, otherType);
   }
 
-  public static HashMap<String, JsonSchemaObjectImpl> mergeProperties(@NotNull Map<String, JsonSchemaObjectImpl> baseProperties,
-                                                                      @NotNull Map<String, JsonSchemaObjectImpl> otherProperties) {
+  public static HashMap<String, JsonSchemaObjectImpl> mergeProperties(@Nonnull Map<String, JsonSchemaObjectImpl> baseProperties,
+                                                                      @Nonnull Map<String, JsonSchemaObjectImpl> otherProperties) {
     var mergedProperties = new HashMap<>(baseProperties);
     for (var prop : otherProperties.entrySet()) {
       String key = prop.getKey();

@@ -13,8 +13,8 @@ import com.intellij.psi.filters.ElementFilter;
 import com.intellij.psi.filters.position.FilterPattern;
 import com.intellij.util.ObjectUtils;
 import com.jetbrains.jsonSchema.JsonSchemaService;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public final class JsonSchemaReferenceContributor extends PsiReferenceContributor {
   private static final class Holder {
@@ -24,7 +24,7 @@ public final class JsonSchemaReferenceContributor extends PsiReferenceContributo
     private static final PsiElementPattern.Capture<JsonStringLiteral> REQUIRED_PROP_PATTERN = createRequiredPropPattern();
   }
   @Override
-  public void registerReferenceProviders(@NotNull PsiReferenceRegistrar registrar) {
+  public void registerReferenceProviders(@Nonnull PsiReferenceRegistrar registrar) {
     registrar.registerReferenceProvider(Holder.REF_PATTERN, new JsonPointerReferenceProvider(false));
     registrar.registerReferenceProvider(Holder.REC_REF_PATTERN, new JsonPointerReferenceProvider(false));
     registrar.registerReferenceProvider(Holder.SCHEMA_PATTERN, new JsonPointerReferenceProvider(true));
@@ -32,7 +32,7 @@ public final class JsonSchemaReferenceContributor extends PsiReferenceContributo
   }
 
   private static PsiElementPattern.Capture<JsonValue> createPropertyValuePattern(
-    @SuppressWarnings("SameParameterValue") final @NotNull String propertyName, boolean schemaOnly, boolean rootOnly) {
+      @SuppressWarnings("SameParameterValue") final @Nonnull String propertyName, boolean schemaOnly, boolean rootOnly) {
 
     return PlatformPatterns.psiElement(JsonValue.class).and(new FilterPattern(new ElementFilter() {
       @Override

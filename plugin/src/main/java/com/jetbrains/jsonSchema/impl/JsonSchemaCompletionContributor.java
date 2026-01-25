@@ -43,9 +43,9 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
+import jakarta.annotation.Nonnull;
 import one.util.streamex.StreamEx;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 import sun.tools.jconsole.inspector.IconManager;
 
 import javax.swing.*;
@@ -63,7 +63,7 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
   private static final String REMOTE_USAGE_KEY = "remote";
 
   @Override
-  public void fillCompletionVariants(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result) {
+  public void fillCompletionVariants(@Nonnull CompletionParameters parameters, @Nonnull CompletionResultSet result) {
     PsiElement position = parameters.getPosition();
     VirtualFile file = PsiUtilCore.getVirtualFile(position);
     if (file == null) return;
@@ -79,9 +79,9 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
     doCompletion(parameters, result, rootSchema, true);
   }
 
-  private boolean skipForSchemaAndRef(@NotNull PsiElement position,
-                                      @NotNull JsonSchemaService service,
-                                      @NotNull VirtualFile file) {
+  private boolean skipForSchemaAndRef(@Nonnull PsiElement position,
+                                      @Nonnull JsonSchemaService service,
+                                      @Nonnull VirtualFile file) {
     PsiElement positionParent = position.getParent();
     if (positionParent == null) return false;
     PsiElement grandParent = positionParent.getParent();
@@ -107,11 +107,11 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
     private final JsonLikePsiWalker psiWalker;
     private final Project myProject;
 
-    private Worker(@NotNull JsonSchemaObject rootSchema,
-                   @NotNull PsiElement completionPsiElement,
-                   @NotNull PsiElement originalPosition,
-                   @NotNull CompletionType completionType,
-                   @NotNull java.util.function.Consumer<Collection<LookupElement>> resultHandler) {
+    private Worker(@Nonnull JsonSchemaObject rootSchema,
+                   @Nonnull PsiElement completionPsiElement,
+                   @Nonnull PsiElement originalPosition,
+                   @Nonnull CompletionType completionType,
+                   @Nonnull java.util.function.Consumer<Collection<LookupElement>> resultHandler) {
       this.rootSchema = rootSchema;
       this.completionPsiElement = completionPsiElement;
       this.originalPosition = originalPosition;
@@ -175,9 +175,9 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
      * @param completionPath Linked node representation of the names of all the parent
      * schema objects that we have navigated for nested completions
      */
-    void processSchema(@NotNull JsonSchemaObject schema,
-                       @NotNull ThreeState isName,
-                       @NotNull Set<String> knownNames,
+    void processSchema(@Nonnull JsonSchemaObject schema,
+                       @Nonnull ThreeState isName,
+                       @Nonnull Set<String> knownNames,
                        @Nullable SchemaPath completionPath) {
       if (isName != ThreeState.NO) {
         assert psiWalker != null;
@@ -198,7 +198,7 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
       }
     }
 
-    void addPropertyNameSchemaVariants(@NotNull JsonSchemaObject schema) {
+    void addPropertyNameSchemaVariants(@Nonnull JsonSchemaObject schema) {
       JsonSchemaObject propertyNamesSchema = schema.getPropertyNamesSchema();
       if (propertyNamesSchema == null) return;
       List<Object> anEnum = propertyNamesSchema.getEnum();
@@ -213,10 +213,10 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
       }
     }
 
-    void addAllPropertyVariants(@NotNull JsonSchemaObject schema,
-                                @NotNull Set<String> forbiddenNames,
+    void addAllPropertyVariants(@Nonnull JsonSchemaObject schema,
+                                @Nonnull Set<String> forbiddenNames,
                                 @Nullable JsonPropertyAdapter adapter,
-                                @NotNull Set<String> knownNames,
+                                @Nonnull Set<String> knownNames,
                                 @Nullable SchemaPath completionPath) {
       JsonSchemaCompletionCustomizer completionCustomizer = getCompletionCustomizer();
 
@@ -232,7 +232,7 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
         });
     }
 
-    void suggestValues(@NotNull JsonSchemaObject schema, boolean isSurelyValue, @Nullable SchemaPath completionPath) {
+    void suggestValues(@Nonnull JsonSchemaObject schema, boolean isSurelyValue, @Nullable SchemaPath completionPath) {
       suggestValuesForSchemaVariants(schema.getAnyOf(), isSurelyValue, completionPath);
       suggestValuesForSchemaVariants(schema.getOneOf(), isSurelyValue, completionPath);
       suggestValuesForSchemaVariants(schema.getAllOf(), isSurelyValue, completionPath);
@@ -288,7 +288,7 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
       }
     }
 
-    @NotNull
+    @Nonnull
     private Set<String> getEnumItemsToSkip() {
       // if the parent is an array, and it assumes unique items, we don't suggest the same enum items again
       if (psiWalker == null) return Collections.emptySet();
@@ -395,7 +395,7 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
         .forEach(this::addStringVariant);
     }
 
-    void suggestByType(@NotNull JsonSchemaObject schema, @NotNull JsonSchemaType type) {
+    void suggestByType(@Nonnull JsonSchemaObject schema, @Nonnull JsonSchemaType type) {
       if (JsonSchemaType._string == type) {
         addPossibleStringValue(schema);
       }
@@ -445,7 +445,7 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
       }
     }
 
-    void addPossibleStringValue(@NotNull JsonSchemaObject schema) {
+    void addPossibleStringValue(@Nonnull JsonSchemaObject schema) {
       Object defaultValue = schema.getDefault();
       String defaultValueString = defaultValue != null ? defaultValue.toString() : null;
       addStringVariant(defaultValueString);
@@ -473,7 +473,7 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
       }
     }
 
-    void addValueVariant(@NotNull String key,
+    void addValueVariant(@Nonnull String key,
                          @Nullable String description,
                          @Nullable String altText,
                          @Nullable InsertHandler<LookupElement> handler,
@@ -501,8 +501,8 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
              (isValue && psiWalker.requiresValueQuotes() || !isValue && psiWalker.requiresNameQuotes() || key != null && !psiWalker.isValidIdentifier(key, myProject));
     }
 
-    void addPropertyVariant(@NotNull String key,
-                            @NotNull JsonSchemaObject jsonSchemaObject,
+    void addPropertyVariant(@Nonnull String key,
+                            @Nonnull JsonSchemaObject jsonSchemaObject,
                             @Nullable SchemaPath completionPath,
                             @Nullable JsonValueAdapter sourcePsiAdapter) {
       String propertyKey = key;
@@ -560,16 +560,16 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
       }
     }
 
-    @NotNull
-    private LookupElementBuilder withDeprecation(@NotNull LookupElementBuilder builder, boolean deprecated) {
+    @Nonnull
+    private LookupElementBuilder withDeprecation(@Nonnull LookupElementBuilder builder, boolean deprecated) {
       if (!deprecated) return builder;
       return builder.withTailText(JsonBundle.message("schema.documentation.deprecated.postfix"), true).withStrikeoutness(true);
     }
 
-    @NotNull
+    @Nonnull
     private InsertHandler<LookupElement> choosePropertyInsertHandler(@Nullable SchemaPath completionPath,
-                                                                      @NotNull Collection<JsonSchemaObject> variants,
-                                                                      @NotNull JsonSchemaObject schemaObject) {
+                                                                      @Nonnull Collection<JsonSchemaObject> variants,
+                                                                      @Nonnull JsonSchemaObject schemaObject) {
       if (hasSameType(variants)) {
         JsonSchemaType type = JsonSchemaObjectReadingUtils.guessType(schemaObject);
         List<Object> values = schemaObject.getEnum();
@@ -593,7 +593,7 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
     }
 
     @Nullable
-    private String getDocumentationOrTypeName(@NotNull JsonSchemaObject schemaObject) {
+    private String getDocumentationOrTypeName(@Nonnull JsonSchemaObject schemaObject) {
       String docText = JsonSchemaDocumentationProvider.getBestDocumentation(true, schemaObject);
       if (docText != null && !docText.isBlank()) {
         return findFirstSentence(StringUtil.removeHtmlTags(docText));
@@ -603,13 +603,13 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
       }
     }
 
-    @NotNull
+    @Nonnull
     private InsertHandler<LookupElement> createDefaultPropertyInsertHandler(@Nullable SchemaPath completionPath,
                                                                              boolean hasEnumValues,
                                                                              @Nullable Set<JsonSchemaType> valueTypes) {
       return new InsertHandler<LookupElement>() {
         @Override
-        public void handleInsert(@NotNull InsertionContext context, @NotNull LookupElement item) {
+        public void handleInsert(@Nonnull InsertionContext context, @Nonnull LookupElement item) {
           ApplicationManager.getApplication().assertWriteAccessAllowed();
           Editor editor = context.getEditor();
           Project project = context.getProject();
@@ -684,8 +684,8 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
       };
     }
 
-    @NotNull
-    InsertHandler<LookupElement> createPropertyInsertHandler(@NotNull JsonSchemaObject jsonSchemaObject,
+    @Nonnull
+    InsertHandler<LookupElement> createPropertyInsertHandler(@Nonnull JsonSchemaObject jsonSchemaObject,
                                                               @Nullable SchemaPath completionPath) {
       String defaultValueAsString;
       Object defaultValue = jsonSchemaObject.getDefault();
@@ -714,8 +714,8 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
   private static final Set<String> FILTERED_BY_DEFAULT = new HashSet<>(Arrays.asList("[]", "{}", "[ ]", "{ }"));
   private static final List<String> COMMON_ABBREVIATIONS = Arrays.asList("e.g.", "i.e.");
 
-  @NotNull
-  private static String findFirstSentence(@NotNull String sentence) {
+  @Nonnull
+  private static String findFirstSentence(@Nonnull String sentence) {
     int i = sentence.indexOf(". ");
     while (i >= 0) {
       boolean isAbbreviation = false;
@@ -733,7 +733,7 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
     return sentence;
   }
 
-  @NotNull
+  @Nonnull
   private static Icon getIcon(@Nullable JsonSchemaType type) {
     if (type == null) {
       return IconManager.getInstance().getPlatformIcon(PlatformIcons.Property);
@@ -748,7 +748,7 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
     }
   }
 
-  private static boolean hasSameType(@NotNull Collection<JsonSchemaObject> variants) {
+  private static boolean hasSameType(@Nonnull Collection<JsonSchemaObject> variants) {
     // enum is not a separate type, so we should treat whether it can be an enum distinctly from the types
     long distinctCount = variants.stream()
       .map(it -> new Pair<>(JsonSchemaObjectReadingUtils.guessType(it), isUntypedEnum(it)))
@@ -757,11 +757,11 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
     return distinctCount <= 1;
   }
 
-  private static boolean isUntypedEnum(@NotNull JsonSchemaObject it) {
+  private static boolean isUntypedEnum(@Nonnull JsonSchemaObject it) {
     return JsonSchemaObjectReadingUtils.guessType(it) == null && it.getEnum() != null && !it.getEnum().isEmpty();
   }
 
-  @NotNull
+  @Nonnull
   private static InsertHandler<LookupElement> createArrayOrObjectLiteralInsertHandler(boolean newline, int insertedTextSize) {
     return (context, item) -> {
       Editor editor = context.getEditor();
@@ -779,7 +779,7 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
   }
 
   @Nullable
-  private static JsonSchemaType detectTypeByEnumValues(@NotNull List<Object> values) {
+  private static JsonSchemaType detectTypeByEnumValues(@Nonnull List<Object> values) {
     JsonSchemaType type = null;
     for (Object value : values) {
       JsonSchemaType newType = null;
@@ -790,9 +790,9 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
     return type;
   }
 
-  public static void doCompletion(@NotNull CompletionParameters parameters,
-                                  @NotNull CompletionResultSet result,
-                                  @NotNull JsonSchemaObject rootSchema,
+  public static void doCompletion(@Nonnull CompletionParameters parameters,
+                                  @Nonnull CompletionResultSet result,
+                                  @Nonnull JsonSchemaObject rootSchema,
                                   boolean stop) {
     Worker worker = new Worker(rootSchema,
                                parameters.getPosition(),
@@ -806,11 +806,11 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
     }
   }
 
-  @NotNull
-  public static List<LookupElement> getCompletionVariants(@NotNull JsonSchemaObject schema,
-                                                          @NotNull PsiElement position,
-                                                          @NotNull PsiElement originalPosition,
-                                                          @NotNull CompletionType completionType) {
+  @Nonnull
+  public static List<LookupElement> getCompletionVariants(@Nonnull JsonSchemaObject schema,
+                                                          @Nonnull PsiElement position,
+                                                          @Nonnull PsiElement originalPosition,
+                                                          @Nonnull CompletionType completionType) {
     List<LookupElement> result = new ArrayList<>();
     new Worker(schema, position, originalPosition, completionType, result::addAll).work();
     return result;
@@ -846,14 +846,14 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
     JsonSchemaUsageTriggerCollector.trigger(key);
   }
 
-  private static void invokeEnterHandler(@NotNull Editor editor) {
+  private static void invokeEnterHandler(@Nonnull Editor editor) {
     EditorActionHandler handler = EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_ENTER);
     com.intellij.openapi.editor.Caret caret = editor.getCaretModel().getCurrentCaret();
     handler.execute(editor, caret, EditorActionHandler.caretDataContext(
       DataManager.getInstance().getDataContext(editor.getContentComponent()), caret));
   }
 
-  private static boolean handleInsideQuotesInsertion(@NotNull InsertionContext context, @NotNull Editor editor, boolean insideStringLiteral) {
+  private static boolean handleInsideQuotesInsertion(@Nonnull InsertionContext context, @Nonnull Editor editor, boolean insideStringLiteral) {
     if (!insideStringLiteral) return false;
     int offset = editor.getCaretModel().getOffset();
     PsiElement element = context.getFile().findElementAt(offset);
@@ -877,7 +877,7 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
     return false;
   }
 
-  private static boolean handleIncompleteString(@NotNull Editor editor, @NotNull PsiElement element) {
+  private static boolean handleIncompleteString(@Nonnull Editor editor, @Nonnull PsiElement element) {
     if (!(element instanceof LeafPsiElement)) return false;
     if (((LeafPsiElement) element).getElementType() != TokenType.WHITE_SPACE) return false;
 
@@ -893,11 +893,11 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   public static InsertHandler<LookupElement> createPropertyInsertHandler(@Nullable JsonSchemaType finalType,
                                                                           @Nullable String defaultValueAsString,
                                                                           @Nullable List<Object> values,
-                                                                          @NotNull JsonLikePsiWalker walker,
+                                                                          @Nonnull JsonLikePsiWalker walker,
                                                                           boolean insideStringLiteral,
                                                                           @Nullable SchemaPath completionPath) {
     return (context, item) -> {
@@ -1025,9 +1025,9 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
   }
 
   @Nullable
-  private static PsiElement findLeafAtCaret(@NotNull InsertionContext context,
-                                            @NotNull Editor editor,
-                                            @NotNull JsonLikePsiWalker walker) {
+  private static PsiElement findLeafAtCaret(@Nonnull InsertionContext context,
+                                            @Nonnull Editor editor,
+                                            @Nonnull JsonLikePsiWalker walker) {
     PsiElement element = context.getFile().findElementAt(editor.getCaretModel().getOffset());
     if (element != null) {
       return rewindToMeaningfulLeaf(element);
@@ -1035,13 +1035,13 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
     return null;
   }
 
-  private static void insertPropertyWithEnum(@NotNull InsertionContext context,
-                                             @NotNull Editor editor,
+  private static void insertPropertyWithEnum(@Nonnull InsertionContext context,
+                                             @Nonnull Editor editor,
                                              @Nullable String defaultValue,
                                              @Nullable List<Object> values,
                                              @Nullable JsonSchemaType type,
-                                             @NotNull String comma,
-                                             @NotNull JsonLikePsiWalker walker,
+                                             @Nonnull String comma,
+                                             @Nonnull JsonLikePsiWalker walker,
                                              boolean insertColon) {
     String value = defaultValue;
     String propertyValueSeparator = walker.getPropertyValueSeparator(type);
@@ -1088,21 +1088,21 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
     }
   }
 
-  public static void formatInsertedString(@NotNull InsertionContext context, int offset) {
+  public static void formatInsertedString(@Nonnull InsertionContext context, int offset) {
     Project project = context.getProject();
     PsiDocumentManager.getInstance(project).commitDocument(context.getDocument());
     CodeStyleManager codeStyleManager = CodeStyleManager.getInstance(project);
     codeStyleManager.reformatText(context.getFile(), context.getStartOffset(), context.getTailOffset() + offset);
   }
 
-  private static void expandMissingPropertiesAndMoveCaret(@NotNull InsertionContext context, @Nullable SchemaPath completionPath) {
+  private static void expandMissingPropertiesAndMoveCaret(@Nonnull InsertionContext context, @Nullable SchemaPath completionPath) {
     if (completionPath != null) {
       NestedCompletionsNode.expandPropertiesAndMoveCaret(context, completionPath);
     }
   }
 
-  @NotNull
-  private static List<PsiElement> getParents(@NotNull PsiElement element, boolean includeSelf) {
+  @Nonnull
+  private static List<PsiElement> getParents(@Nonnull PsiElement element, boolean includeSelf) {
     List<PsiElement> result = new ArrayList<>();
     PsiElement current = includeSelf ? element : element.getParent();
     while (current != null) {

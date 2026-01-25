@@ -4,8 +4,8 @@ package com.jetbrains.jsonSchema.extension;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
 import com.jetbrains.jsonSchema.extension.adapters.JsonValueAdapter;
 import consulo.language.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Map;
 import java.util.regex.MatchResult;
@@ -18,7 +18,7 @@ public interface JsonValidationHost {
              JsonValidationError.IssueData data,
              JsonErrorPriority priority);
 
-  void typeError(final @NotNull PsiElement value, @Nullable JsonSchemaType currentType, final JsonSchemaType @NotNull ... allowedTypes);
+  void typeError(final @Nonnull PsiElement value, @Nullable JsonSchemaType currentType, final JsonSchemaType @Nonnull ... allowedTypes);
 
   MatchResult resolve(JsonSchemaObject schemaObject, @Nullable JsonValueAdapter inspectedElementAdapter);
 
@@ -27,11 +27,12 @@ public interface JsonValidationHost {
 
   boolean isValid();
 
-  void checkObjectBySchemaRecordErrors(@NotNull JsonSchemaObject schema, @NotNull JsonValueAdapter object);
+  void checkObjectBySchemaRecordErrors(@Nonnull JsonSchemaObject schema, @Nonnull JsonValueAdapter object);
 
   void addErrorsFrom(JsonValidationHost otherHost);
 
-  boolean hasRecordedErrorsFor(@NotNull JsonValueAdapter inspectedValueAdapter);
+  boolean hasRecordedErrorsFor(@Nonnull JsonValueAdapter inspectedValueAdapter);
 
-  @NotNull Map<PsiElement, JsonValidationError> getErrors();
+  @Nonnull
+  Map<PsiElement, JsonValidationError> getErrors();
 }

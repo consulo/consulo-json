@@ -11,9 +11,9 @@ import consulo.project.Project;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public final class JsonUtil {
    * @return expression casted to appropriate type (if could be casted). Null otherwise.
    */
   @SuppressWarnings("unchecked")
-  public static @Nullable <T> T as(final @Nullable Object expression, final @NotNull Class<T> cls) {
+  public static @Nullable <T> T as(final @Nullable Object expression, final @Nonnull Class<T> cls) {
     if (expression == null) {
       return null;
     }
@@ -48,18 +48,18 @@ public final class JsonUtil {
     return null;
   }
 
-  public static @Nullable <T extends JsonElement> T getPropertyValueOfType(final @NotNull JsonObject object, final @NotNull String name,
-                                                                           final @NotNull Class<T> clazz) {
+  public static @Nullable <T extends JsonElement> T getPropertyValueOfType(final @Nonnull JsonObject object, final @Nonnull String name,
+                                                                                              final @Nonnull Class<T> clazz) {
     final JsonProperty property = object.findProperty(name);
     if (property == null) return null;
     return ObjectUtil.tryCast(property.getValue(), clazz);
   }
 
-  public static boolean isArrayElement(@NotNull PsiElement element) {
+  public static boolean isArrayElement(@Nonnull PsiElement element) {
     return element instanceof JsonValue && element.getParent() instanceof JsonArray;
   }
 
-  public static int getArrayIndexOfItem(@NotNull PsiElement e) {
+  public static int getArrayIndexOfItem(@Nonnull PsiElement e) {
     PsiElement parent = e.getParent();
     if (!(parent instanceof JsonArray)) return -1;
     List<JsonValue> elements = ((JsonArray)parent).getValueList();
@@ -76,7 +76,7 @@ public final class JsonUtil {
     return jsonFile != null ? ObjectUtil.tryCast(jsonFile.getTopLevelValue(), JsonObject.class) : null;
   }
 
-  public static boolean isJsonFile(@NotNull VirtualFile file, @Nullable Project project) {
+  public static boolean isJsonFile(@Nonnull VirtualFile file, @Nullable Project project) {
     FileType type = file.getFileType();
     if (type instanceof LanguageFileType && ((LanguageFileType)type).getLanguage() instanceof JsonLanguage) return true;
     if (project == null || !ScratchUtil.isScratch(file)) return false;

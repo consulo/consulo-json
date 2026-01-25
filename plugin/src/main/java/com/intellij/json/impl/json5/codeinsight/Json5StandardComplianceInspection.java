@@ -11,12 +11,12 @@ import consulo.language.editor.inspection.ProblemsHolder;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 public final class Json5StandardComplianceInspection extends JsonStandardComplianceInspection {
 
   @Override
-  public @NotNull PsiElementVisitor buildVisitor(final @NotNull ProblemsHolder holder, boolean isOnTheFly) {
+  public @Nonnull PsiElementVisitor buildVisitor(final @Nonnull ProblemsHolder holder, boolean isOnTheFly) {
     if (!(JsonDialectUtil.getLanguageOrDefaultJson(holder.getFile()) instanceof Json5Language)) return PsiElementVisitor.EMPTY_VISITOR;
     return new StandardJson5ValidatingElementVisitor(holder);
   }
@@ -57,7 +57,7 @@ public final class Json5StandardComplianceInspection extends JsonStandardComplia
     }
 
     @Override
-    protected boolean isValidPropertyName(@NotNull PsiElement literal) {
+    protected boolean isValidPropertyName(@Nonnull PsiElement literal) {
       if (literal instanceof JsonLiteral) {
         String textWithoutHostEscaping = JsonPsiUtil.getElementTextWithoutHostEscaping(literal);
         return textWithoutHostEscaping.startsWith("\"") || textWithoutHostEscaping.startsWith("'");

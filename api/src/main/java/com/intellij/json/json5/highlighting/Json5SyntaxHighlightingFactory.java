@@ -8,12 +8,11 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.Language;
 import consulo.language.lexer.Lexer;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 @ExtensionImpl
 public final class Json5SyntaxHighlightingFactory extends JsonSyntaxHighlighterFactory {
     @Override
-    protected @NotNull Lexer getLexer() {
+    protected @Nonnull Lexer getLexer() {
         return new Json5Lexer();
     }
 

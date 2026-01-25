@@ -8,8 +8,8 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.Tag;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public final class JsonSchemaCatalogProjectConfiguration implements PersistentSt
     myChangeHandlers.add(runnable);
   }
 
-  public static JsonSchemaCatalogProjectConfiguration getInstance(final @NotNull Project project) {
+  public static JsonSchemaCatalogProjectConfiguration getInstance(final @Nonnull Project project) {
     return project.getService(JsonSchemaCatalogProjectConfiguration.class);
   }
 
@@ -58,7 +58,7 @@ public final class JsonSchemaCatalogProjectConfiguration implements PersistentSt
   }
 
   @Override
-  public void loadState(@NotNull MyState state) {
+  public void loadState(@Nonnull MyState state) {
     myState = state;
     for (Runnable handler : myChangeHandlers) {
       handler.run();

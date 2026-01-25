@@ -7,7 +7,7 @@ import consulo.language.Language;
 import consulo.language.file.LanguageFileType;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Mikhail Golubev
@@ -29,17 +29,17 @@ public class JsonFileType extends LanguageFileType {
   }
 
   @Override
-  public @NotNull String getId() {
+  public @Nonnull String getId() {
     return "JSON";
   }
 
   @Override
-  public @NotNull LocalizeValue getDescription() {
+  public @Nonnull LocalizeValue getDescription() {
     return JsonLocalize.filetypeJsonDescription();
   }
 
   @Override
-  public @NotNull String getDefaultExtension() {
+  public @Nonnull String getDefaultExtension() {
     return DEFAULT_EXTENSION;
   }
 
