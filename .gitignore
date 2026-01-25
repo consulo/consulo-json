@@ -1,0 +1,9 @@
+/.consulo
+!/.consulo/codeStyleSettings.xml
+!/.consulo/copyright
+!/.consulo/runConfigurations
+/out
+/target
+.consulo/
+target/
+groovy-impl/sandbox
