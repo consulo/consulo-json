@@ -1,7 +1,7 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.intellij.json.impl.editor;
 
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.json.JsonUtil;
 import com.intellij.json.impl.navigation.JsonQualifiedNameKind;
 import com.intellij.json.impl.navigation.JsonQualifiedNameProvider;
@@ -26,7 +26,7 @@ public final class JsonCopyPointerAction extends CopyReferenceAction {
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    e.getPresentation().setText(JsonBundle.message("action.JsonCopyPointer.text"));
+    e.getPresentation().setText(JsonLocalize.actionJsoncopypointerText().get());
     DataContext dataContext = e.getDataContext();
     Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
     VirtualFile file = editor == null ? null : FileDocumentManager.getInstance().getFile(editor.getDocument());

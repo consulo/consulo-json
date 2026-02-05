@@ -110,7 +110,8 @@ public class JsonSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
         }
 
         @Override
-        public TextAttributesKey @Nonnull [] getTokenHighlights(IElementType type) {
+        @Nonnull
+        public TextAttributesKey[] getTokenHighlights(IElementType type) {
             return pack(ourAttributes.get(type));
         }
     }

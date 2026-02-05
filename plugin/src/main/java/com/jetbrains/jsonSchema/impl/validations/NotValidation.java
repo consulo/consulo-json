@@ -1,7 +1,7 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.jetbrains.jsonSchema.impl.validations;
 
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.jetbrains.jsonSchema.extension.JsonAnnotationsCollectionMode;
 import com.jetbrains.jsonSchema.extension.JsonErrorPriority;
 import com.jetbrains.jsonSchema.extension.JsonSchemaValidation;
@@ -41,7 +41,7 @@ public final class NotValidation implements JsonSchemaValidation {
                                   new JsonComplianceCheckerOptions(options.isCaseInsensitiveEnumCheck(), true, false,
                                                                    JsonAnnotationsCollectionMode.FIND_FIRST));
     if (checker == null || checker.isValid()) {
-      consumer.error(JsonBundle.message("schema.validation.against.not"), propValue.getDelegate(), JsonErrorPriority.NOT_SCHEMA);
+      consumer.error(JsonLocalize.schemaValidationAgainstNot().get(), propValue.getDelegate(), JsonErrorPriority.NOT_SCHEMA);
       return false;
     }
 

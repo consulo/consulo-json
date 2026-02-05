@@ -1,7 +1,7 @@
 // Copyright 2000-2025 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.jetbrains.jsonSchema.impl.fixes;
 
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.json.psi.JsonObject;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
@@ -32,13 +32,13 @@ public class AddOptionalPropertiesIntention extends PsiElementBaseIntentionActio
   @Nonnull
   @Override
   public String getFamilyName() {
-    return JsonBundle.message("intention.add.not.required.properties.family.name");
+    return JsonLocalize.intentionAddNotRequiredPropertiesFamilyName().get();
   }
 
   @Nonnull
   @Override
   public String getText() {
-    return JsonBundle.message("intention.add.not.required.properties.text");
+    return JsonLocalize.intentionAddNotRequiredPropertiesText().get();
   }
 
   @Override

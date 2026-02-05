@@ -3,7 +3,7 @@ package com.jetbrains.jsonSchema.widget;
 
 import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.icons.AllIcons;
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.json.JsonLanguage;
 import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -190,10 +190,9 @@ final class JsonSchemaStatusWidget extends EditorBasedStatusBarPopup {
 
         // show 'loading' only when switching between files and previous state was not hidden, otherwise the widget will "jump"
         if (!Comparing.equal(lastFile, file) && lastWidgetState != null && lastWidgetState != WidgetState.HIDDEN) {
-          return new WidgetState(JsonBundle.message("schema.widget.checking.state.tooltip"),
-                                 JsonBundle.message("schema.widget.checking.state.text",
-                                                    isJsonFile ? JsonBundle.message("schema.widget.prefix.json.files")
-                                                               : JsonBundle.message("schema.widget.prefix.other.files")),
+          return new WidgetState(JsonLocalize.schemaWidgetCheckingStateTooltip().get(),
+                                 JsonLocalize.schemaWidgetCheckingStateText(isJsonFile ? JsonBundle.message("schema.widget.prefix.json.files").get()
+                                                               : JsonLocalize.schemaWidgetPrefixOtherFiles().get()),
                                  false);
         }
         else {
@@ -223,9 +222,9 @@ final class JsonSchemaStatusWidget extends EditorBasedStatusBarPopup {
       final List<VirtualFile> userSchemas = new ArrayList<>();
       if (hasConflicts(userSchemas, service, file)) {
         MyWidgetState state = new MyWidgetState(createMessage(schemaFiles, service,
-                                                              "<br/>", JsonBundle.message("schema.widget.conflict.message.prefix"),
+                                                              "<br/>", JsonLocalize.schemaWidgetConflictMessagePrefix().get(),
                                                               ""),
-                                                schemaFiles.size() + " " + JsonBundle.message("schema.widget.conflict.message.postfix"),
+                                                schemaFiles.size() + " " + JsonLocalize.schemaWidgetConflictMessagePostfix().get(),
                                                 true);
         state.setWarning(true);
         state.setConflict();
@@ -241,9 +240,9 @@ final class JsonSchemaStatusWidget extends EditorBasedStatusBarPopup {
     schemaFile = ((JsonSchemaServiceImpl)service).replaceHttpFileWithBuiltinIfNeeded(schemaFile);
 
     String tooltip =
-      isJsonFile ? JsonBundle.message("schema.widget.tooltip.json.files") : JsonBundle.message("schema.widget.tooltip.other.files");
+      isJsonFile ? JsonLocalize.schemaWidgetTooltipJsonFiles().get() : JsonLocalize.schemaWidgetTooltipOtherFiles().get();
     String bar =
-      isJsonFile ? JsonBundle.message("schema.widget.prefix.json.files") : JsonBundle.message("schema.widget.prefix.other.files");
+      isJsonFile ? JsonLocalize.schemaWidgetPrefixJsonFiles().get() : JsonLocalize.schemaWidgetPrefixOtherFiles().get();
 
     if (schemaFile instanceof HttpVirtualFile httpSchemaFile) {
       RemoteFileInfo info = httpSchemaFile.getFileInfo();
@@ -261,8 +260,8 @@ final class JsonSchemaStatusWidget extends EditorBasedStatusBarPopup {
         }
         case DOWNLOADING_IN_PROGRESS -> {
           addDownloadingUpdateListener(info);
-          return new MyWidgetState(JsonBundle.message("schema.widget.download.in.progress.tooltip"),
-                                   JsonBundle.message("schema.widget.download.in.progress.label"), false);
+          return new MyWidgetState(JsonLocalize.schemaWidgetDownloadInProgressTooltip().get(),
+                                   JsonLocalize.schemaWidgetDownloadInProgressLabel().get(), false);
         }
         case ERROR_OCCURRED -> {
           logSchemaDownloadFailureDiagnostics(httpSchemaFile, getProject());
@@ -273,7 +272,7 @@ final class JsonSchemaStatusWidget extends EditorBasedStatusBarPopup {
 
     if (!isValidSchemaFile(schemaFile)) {
       MyWidgetState state =
-        new MyWidgetState(JsonBundle.message("schema.widget.error.not.a.schema"), JsonBundle.message("schema.widget.error.label"), true);
+        new MyWidgetState(JsonLocalize.schemaWidgetErrorNotASchema().get(), JsonLocalize.schemaWidgetErrorLabel().get(), true);
       state.setWarning(true);
       return state;
     }
@@ -289,10 +288,10 @@ final class JsonSchemaStatusWidget extends EditorBasedStatusBarPopup {
       String shortName = StringUtil.trimEnd(StringUtil.trimEnd(providerName, ".json"), "-schema");
       String name = useRemoteSource
                     ? provider.getPresentableName()
-                    : (shortName.contains(JsonBundle.message("schema.of.version", "")) ? shortName : (bar + shortName));
+                    : (shortName.contains(JsonLocalize.schemaOfVersion("").get()) ? shortName : (bar + shortName));
       String kind =
         !useRemoteSource && (provider.getSchemaType() == SchemaType.embeddedSchema || provider.getSchemaType() == SchemaType.schema)
-        ? JsonBundle.message("schema.widget.bundled.postfix")
+        ? JsonLocalize.schemaWidgetBundledPostfix().get()
         : "";
       return new MyWidgetState(tooltip + providerName + kind, name, true);
     }
@@ -330,9 +329,9 @@ final class JsonSchemaStatusWidget extends EditorBasedStatusBarPopup {
   }
 
   private static WidgetState getDumbModeState(boolean isJsonFile) {
-    return WidgetState.getDumbModeState(JsonBundle.message("schema.widget.service"),
-                                        isJsonFile ? JsonBundle.message("schema.widget.prefix.json.files")
-                                                   : JsonBundle.message("schema.widget.prefix.other.files"));
+    return WidgetState.getDumbModeState(JsonLocalize.schemaWidgetService().get(),
+                                        isJsonFile ? JsonLocalize.schemaWidgetPrefixJsonFiles().get()
+                                                   : JsonLocalize.schemaWidgetPrefixOtherFiles().get());
   }
 
   private void addDownloadingUpdateListener(@Nonnull RemoteFileInfo info) {
@@ -400,14 +399,14 @@ final class JsonSchemaStatusWidget extends EditorBasedStatusBarPopup {
 
   private static @Nonnull WidgetState getDownloadErrorState(@Nullable @Nls String message) {
     String s = message == null ? "" : (": " + HtmlChunk.br() + message);
-    MyWidgetState state = new MyWidgetState(JsonBundle.message("schema.widget.error.cant.download") + s,
-                                            JsonBundle.message("schema.widget.error.label"), true);
+    MyWidgetState state = new MyWidgetState(JsonLocalize.schemaWidgetErrorCantDownload().get() + s,
+                                            JsonLocalize.schemaWidgetErrorLabel().get(), true);
     state.setWarning(true);
     return state;
   }
 
   private static @Nonnull WidgetState getNoSchemaState() {
-    return new MyWidgetState(JsonBundle.message("schema.widget.no.schema.tooltip"), JsonBundle.message("schema.widget.no.schema.label"),
+    return new MyWidgetState(JsonLocalize.schemaWidgetNoSchemaTooltip().get(), JsonLocalize.schemaWidgetNoSchemaLabel().get(),
                              true);
   }
 
@@ -418,7 +417,7 @@ final class JsonSchemaStatusWidget extends EditorBasedStatusBarPopup {
 
     String npmPackageName = extractNpmPackageName(schemaFile.getPath());
     return schemaFile.getName() +
-           (npmPackageName == null ? "" : (" " + JsonBundle.message("schema.widget.package.postfix", npmPackageName)));
+           (npmPackageName == null ? "" : (" " + JsonLocalize.schemaWidgetPackagePostfix(npmPackageName).get()));
   }
 
   @Override
@@ -538,7 +537,7 @@ final class JsonSchemaStatusWidget extends EditorBasedStatusBarPopup {
     Alarm alarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, this);
     alarm.addRequest(() -> {
       String message = new HtmlBuilder()
-        .append(HtmlChunk.tag("b").addText(JsonBundle.message("schema.widget.conflict.popup.title")))
+        .append(HtmlChunk.tag("b").addText(JsonLocalize.schemaWidgetConflictPopupTitle().get()))
         .append(HtmlChunk.br()).append(HtmlChunk.br())
         .appendRaw(state.getToolTip()).toString();
       JComponent label = HintUtil.createErrorLabel(message);

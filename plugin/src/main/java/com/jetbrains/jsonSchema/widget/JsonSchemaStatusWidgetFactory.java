@@ -1,7 +1,7 @@
 // Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.jetbrains.jsonSchema.widget;
 
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.StatusBar;
@@ -18,7 +18,7 @@ public final class JsonSchemaStatusWidgetFactory extends StatusBarEditorBasedWid
 
   @Override
   public @Nonnull String getDisplayName() {
-    return JsonBundle.message("schema.widget.display.name");
+    return JsonLocalize.schemaWidgetDisplayName().get();
   }
 
   @Override

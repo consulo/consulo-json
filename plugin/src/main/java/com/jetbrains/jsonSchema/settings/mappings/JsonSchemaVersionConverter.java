@@ -1,7 +1,7 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.jetbrains.jsonSchema.settings.mappings;
 
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.util.xmlb.Converter;
 import com.jetbrains.jsonSchema.impl.JsonSchemaVersion;
 import jakarta.annotation.Nullable;
@@ -61,8 +61,8 @@ public class JsonSchemaVersionConverter extends Converter<JsonSchemaVersion> {
     }
 
     return Stream.of(
-      JsonBundle.message("schema.of.version", versionNumber),
-      JsonBundle.message("schema.of.version.deprecated", versionNumber)
+      JsonLocalize.schemaOfVersion(versionNumber).get(),
+      JsonLocalize.schemaOfVersionDeprecated(versionNumber).get()
     );
   }
 }

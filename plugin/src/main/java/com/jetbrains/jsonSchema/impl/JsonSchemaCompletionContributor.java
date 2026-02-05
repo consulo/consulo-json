@@ -1,7 +1,7 @@
 // Copyright 2000-2025 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.jetbrains.jsonSchema.impl;
 
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.json.impl.pointer.JsonPointerPosition;
 import com.intellij.json.psi.*;
 import com.jetbrains.jsonSchema.*;
@@ -563,7 +563,7 @@ public class JsonSchemaCompletionContributor extends CompletionContributor {
     @Nonnull
     private LookupElementBuilder withDeprecation(@Nonnull LookupElementBuilder builder, boolean deprecated) {
       if (!deprecated) return builder;
-      return builder.withTailText(JsonBundle.message("schema.documentation.deprecated.postfix"), true).withStrikeoutness(true);
+      return builder.withTailText(JsonLocalize.schemaDocumentationDeprecatedPostfix().get(), true).withStrikeoutness(true);
     }
 
     @Nonnull

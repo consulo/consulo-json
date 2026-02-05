@@ -9,12 +9,13 @@ import jakarta.annotation.Nonnull;
 
 public class JsonReferenceLiteralMixin extends JsonValueImpl implements ContributedReferenceHost {
 
-  public JsonReferenceLiteralMixin(@Nonnull ASTNode node) {
-    super(node);
-  }
+    public JsonReferenceLiteralMixin(@Nonnull ASTNode node) {
+        super(node);
+    }
 
-  @Override
-  public PsiReference @Nonnull [] getReferences() {
-    return ReferenceProvidersRegistry.getReferencesFromProviders(this);
-  }
+    @Override
+    @Nonnull
+    public PsiReference[] getReferences() {
+        return ReferenceProvidersRegistry.getReferencesFromProviders(this);
+    }
 }

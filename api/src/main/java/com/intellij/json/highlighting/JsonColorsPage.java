@@ -23,82 +23,84 @@ import static com.intellij.json.highlighting.JsonSyntaxHighlighterFactory.*;
  */
 @ExtensionImpl
 public final class JsonColorsPage implements RainbowColorSettingsPage {
-  private static final Map<String, TextAttributesKey> ourAdditionalHighlighting = Map.of("propertyKey", JSON_PROPERTY_KEY);
+    private static final Map<String, TextAttributesKey> ourAdditionalHighlighting = Map.of("propertyKey", JSON_PROPERTY_KEY);
 
-  private static final AttributesDescriptor[] ourAttributeDescriptors = new AttributesDescriptor[]{
-    new AttributesDescriptor(JsonLocalize.colorPageAttributePropertyKey(), JSON_PROPERTY_KEY),
+    private static final AttributesDescriptor[] ourAttributeDescriptors = new AttributesDescriptor[]{
+        new AttributesDescriptor(JsonLocalize.colorPageAttributePropertyKey(), JSON_PROPERTY_KEY),
 
-    new AttributesDescriptor(JsonLocalize.colorPageAttributeBraces(), JSON_BRACES),
-    new AttributesDescriptor(JsonLocalize.colorPageAttributeBrackets(), JSON_BRACKETS),
-    new AttributesDescriptor(JsonLocalize.colorPageAttributeComma(), JSON_COMMA),
-    new AttributesDescriptor(JsonLocalize.colorPageAttributeColon(), JSON_COLON),
-    new AttributesDescriptor(JsonLocalize.colorPageAttributeNumber(), JSON_NUMBER),
-    new AttributesDescriptor(JsonLocalize.colorPageAttributeString(), JSON_STRING),
-    new AttributesDescriptor(JsonLocalize.colorPageAttributeKeyword(), JSON_KEYWORD),
-    new AttributesDescriptor(JsonLocalize.colorPageAttributeLineComment(), JSON_LINE_COMMENT),
-    new AttributesDescriptor(JsonLocalize.colorPageAttributeBlockComment(), JSON_BLOCK_COMMENT),
-    new AttributesDescriptor(JsonLocalize.colorPageAttributeValidEscapeSequence(), JSON_VALID_ESCAPE),
-    new AttributesDescriptor(JsonLocalize.colorPageAttributeInvalidEscapeSequence(), JSON_INVALID_ESCAPE),
-    new AttributesDescriptor(JsonLocalize.colorPageAttributeParameter(), JSON_PARAMETER)
-  };
+        new AttributesDescriptor(JsonLocalize.colorPageAttributeBraces(), JSON_BRACES),
+        new AttributesDescriptor(JsonLocalize.colorPageAttributeBrackets(), JSON_BRACKETS),
+        new AttributesDescriptor(JsonLocalize.colorPageAttributeComma(), JSON_COMMA),
+        new AttributesDescriptor(JsonLocalize.colorPageAttributeColon(), JSON_COLON),
+        new AttributesDescriptor(JsonLocalize.colorPageAttributeNumber(), JSON_NUMBER),
+        new AttributesDescriptor(JsonLocalize.colorPageAttributeString(), JSON_STRING),
+        new AttributesDescriptor(JsonLocalize.colorPageAttributeKeyword(), JSON_KEYWORD),
+        new AttributesDescriptor(JsonLocalize.colorPageAttributeLineComment(), JSON_LINE_COMMENT),
+        new AttributesDescriptor(JsonLocalize.colorPageAttributeBlockComment(), JSON_BLOCK_COMMENT),
+        new AttributesDescriptor(JsonLocalize.colorPageAttributeValidEscapeSequence(), JSON_VALID_ESCAPE),
+        new AttributesDescriptor(JsonLocalize.colorPageAttributeInvalidEscapeSequence(), JSON_INVALID_ESCAPE),
+        new AttributesDescriptor(JsonLocalize.colorPageAttributeParameter(), JSON_PARAMETER)
+    };
 
-  @Override
-  public @Nonnull SyntaxHighlighter getHighlighter() {
-    return SyntaxHighlighterFactory.getSyntaxHighlighter(JsonLanguage.INSTANCE, null, null);
-  }
+    @Override
+    public @Nonnull SyntaxHighlighter getHighlighter() {
+        return SyntaxHighlighterFactory.getSyntaxHighlighter(JsonLanguage.INSTANCE, null, null);
+    }
 
-  @Override
-  public @Nonnull String getDemoText() {
-    return """
-      {
-        // Line comments are not included in standard but nonetheless allowed.
-        /* As well as block comments. */
-        <propertyKey>"the only keywords are"</propertyKey>: [true, false, null],
-        <propertyKey>"strings with"</propertyKey>: {
-          <propertyKey>"no escapes"</propertyKey>: "pseudopolinomiality"
-          <propertyKey>"valid escapes"</propertyKey>: "C-style\\r\\n and unicode\\u0021",
-          <propertyKey>"illegal escapes"</propertyKey>: "\\0377\\x\\"
-        },
-        <propertyKey>"some numbers"</propertyKey>: [
-          42,
-          -0.0e-0,
-          6.626e-34
-        ]\s
-      }""";
-  }
+    @Override
+    public @Nonnull String getDemoText() {
+        return """
+            {
+              // Line comments are not included in standard but nonetheless allowed.
+              /* As well as block comments. */
+              <propertyKey>"the only keywords are"</propertyKey>: [true, false, null],
+              <propertyKey>"strings with"</propertyKey>: {
+                <propertyKey>"no escapes"</propertyKey>: "pseudopolinomiality"
+                <propertyKey>"valid escapes"</propertyKey>: "C-style\\r\\n and unicode\\u0021",
+                <propertyKey>"illegal escapes"</propertyKey>: "\\0377\\x\\"
+              },
+              <propertyKey>"some numbers"</propertyKey>: [
+                42,
+                -0.0e-0,
+                6.626e-34
+              ]\s
+            }""";
+    }
 
-  @Override
-  public @Nonnull Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
-    return ourAdditionalHighlighting;
-  }
+    @Override
+    public @Nonnull Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
+        return ourAdditionalHighlighting;
+    }
 
-  @Override
-  public AttributesDescriptor @Nonnull [] getAttributeDescriptors() {
-    return ourAttributeDescriptors;
-  }
+    @Override
+    @Nonnull
+    public AttributesDescriptor[] getAttributeDescriptors() {
+        return ourAttributeDescriptors;
+    }
 
-  @Override
-  public ColorDescriptor @Nonnull [] getColorDescriptors() {
-    return ColorDescriptor.EMPTY_ARRAY;
-  }
+    @Override
+    @Nonnull
+    public ColorDescriptor[] getColorDescriptors() {
+        return ColorDescriptor.EMPTY_ARRAY;
+    }
 
-  @Override
-  public @Nonnull LocalizeValue getDisplayName() {
-    return JsonLocalize.settingsDisplayNameJson();
-  }
+    @Override
+    public @Nonnull LocalizeValue getDisplayName() {
+        return JsonLocalize.settingsDisplayNameJson();
+    }
 
-  @Override
-  public boolean isRainbowType(TextAttributesKey type) {
-    return JSON_PROPERTY_KEY.equals(type)
-      || JSON_BRACES.equals(type)
-      || JSON_BRACKETS.equals(type)
-      || JSON_STRING.equals(type)
-      || JSON_NUMBER.equals(type)
-      || JSON_KEYWORD.equals(type);
-  }
+    @Override
+    public boolean isRainbowType(TextAttributesKey type) {
+        return JSON_PROPERTY_KEY.equals(type)
+            || JSON_BRACES.equals(type)
+            || JSON_BRACKETS.equals(type)
+            || JSON_STRING.equals(type)
+            || JSON_NUMBER.equals(type)
+            || JSON_KEYWORD.equals(type);
+    }
 
-  @Override
-  public @Nonnull Language getLanguage() {
-    return JsonLanguage.INSTANCE;
-  }
+    @Override
+    public @Nonnull Language getLanguage() {
+        return JsonLanguage.INSTANCE;
+    }
 }

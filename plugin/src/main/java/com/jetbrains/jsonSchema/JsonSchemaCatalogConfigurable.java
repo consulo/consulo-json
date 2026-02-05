@@ -1,7 +1,7 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.jetbrains.jsonSchema;
 
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.openapi.options.BoundConfigurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogPanel;
@@ -16,7 +16,7 @@ public class JsonSchemaCatalogConfigurable extends BoundConfigurable {
   private JBCheckBox preferRemoteCheckBox;
 
   public JsonSchemaCatalogConfigurable(Project project) {
-    super(JsonBundle.message("configurable.JsonSchemaCatalogConfigurable.display.name"), "settings.json.schema.catalog");
+    super(JsonLocalize.configurableJsonschemacatalogconfigurableDisplayName().get(), "settings.json.schema.catalog");
     this.project = project;
   }
 
@@ -25,7 +25,7 @@ public class JsonSchemaCatalogConfigurable extends BoundConfigurable {
   protected DialogPanel createPanel() {
     return Panel.panel(panel -> {
       panel.row(row -> {
-        remoteCheckBox = row.checkBox(JsonBundle.message("checkbox.allow.downloading.json.schemas.from.remote.sources"))
+        remoteCheckBox = row.checkBox(JsonLocalize.checkboxAllowDownloadingJsonSchemasFromRemoteSources().get())
           .onChanged(checkbox -> {
             if (!checkbox.isSelected()) {
               catalogCheckBox.setSelected(false);
@@ -39,15 +39,15 @@ public class JsonSchemaCatalogConfigurable extends BoundConfigurable {
 
       panel.indent(indent -> {
         indent.row(row -> {
-          catalogCheckBox = row.checkBox(JsonBundle.message("checkbox.use.schemastore.org.json.schema.catalog"))
-            .comment(JsonBundle.message("schema.catalog.hint"))
+          catalogCheckBox = row.checkBox(JsonLocalize.checkboxUseSchemastoreOrgJsonSchemaCatalog().get())
+            .comment(JsonLocalize.schemaCatalogHint().get())
             .getComponent();
           return null;
         });
 
         indent.row(row -> {
-          preferRemoteCheckBox = row.checkBox(JsonBundle.message("checkbox.always.download.the.most.recent.version.of.schemas"))
-            .comment(JsonBundle.message("schema.catalog.remote.hint"))
+          preferRemoteCheckBox = row.checkBox(JsonLocalize.checkboxAlwaysDownloadTheMostRecentVersionOfSchemas().get())
+            .comment(JsonLocalize.schemaCatalogRemoteHint().get())
             .getComponent();
           return null;
         });

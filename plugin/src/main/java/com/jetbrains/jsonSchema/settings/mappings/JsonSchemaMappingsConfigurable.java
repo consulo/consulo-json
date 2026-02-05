@@ -2,7 +2,7 @@
 package com.jetbrains.jsonSchema.settings.mappings;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -44,7 +44,7 @@ public final class JsonSchemaMappingsConfigurable extends MasterDetailsComponent
     }
     return o1.getName().compareToIgnoreCase(o2.getName());
   };
-  static final @Nls String STUB_SCHEMA_NAME = JsonBundle.message("new.schema");
+  static final @Nls String STUB_SCHEMA_NAME = JsonLocalize.newSchema().get();
   private @Nls String myError;
 
   private final @Nonnull Project myProject;
@@ -63,8 +63,8 @@ public final class JsonSchemaMappingsConfigurable extends MasterDetailsComponent
   @Override
   protected @Nullable String getEmptySelectionString() {
     return myRoot.children().hasMoreElements()
-           ? JsonBundle.message("schema.configuration.mapping.empty.area.string")
-           : JsonBundle.message("schema.configuration.mapping.empty.area.alt.string");
+           ? JsonLocalize.schemaConfigurationMappingEmptyAreaString().get()
+           : JsonLocalize.schemaConfigurationMappingEmptyAreaAltString().get();
   }
 
   @Override
@@ -188,7 +188,7 @@ public final class JsonSchemaMappingsConfigurable extends MasterDetailsComponent
     final Set<String> set = new HashSet<>();
     for (UserDefinedJsonSchemaConfiguration info : list) {
       if (set.contains(info.getName())) {
-        throw new ConfigurationException(JsonBundle.message("schema.configuration.error.duplicate.name", info.getName()));
+        throw new ConfigurationException(JsonLocalize.schemaConfigurationErrorDuplicateName(info.getName().get()));
       }
       set.add(info.getName());
     }
@@ -230,8 +230,7 @@ public final class JsonSchemaMappingsConfigurable extends MasterDetailsComponent
             if (ThreeState.NO.equals(similar)) continue;
 
             if (!sb.isEmpty()) sb.append('\n');
-            sb.append(JsonBundle.message("schema.configuration.error.conflicting.mappings.desc",
-                                         pattern.getPresentation(),
+            sb.append(JsonLocalize.schemaConfigurationErrorConflictingMappingsDesc(pattern.getPresentation().get(),
                                          info.getName(),
                                          item.getPresentation(),
                                          entry.getKey()));
@@ -241,7 +240,7 @@ public final class JsonSchemaMappingsConfigurable extends MasterDetailsComponent
       patternsMap.put(info.getName(), patterns);
     }
     if (!sb.isEmpty()) {
-      myError = JsonBundle.message("schema.configuration.error.conflicting.mappings.title", sb.toString());
+      myError = JsonLocalize.schemaConfigurationErrorConflictingMappingsTitle(sb.toString().get());
     } else {
       myError = null;
     }
@@ -312,7 +311,7 @@ public final class JsonSchemaMappingsConfigurable extends MasterDetailsComponent
 
   @Override
   public @Nls String getDisplayName() {
-    return JsonBundle.message("configurable.JsonSchemaMappingsConfigurable.display.name");
+    return JsonLocalize.configurableJsonschemamappingsconfigurableDisplayName().get();
   }
 
 

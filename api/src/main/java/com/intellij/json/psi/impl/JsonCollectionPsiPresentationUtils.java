@@ -1,8 +1,8 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.intellij.json.psi.impl;
 
-import com.intellij.json.JsonBundle;
 import com.intellij.json.psi.JsonArray;
+import consulo.json.localize.JsonLocalize;
 
 import jakarta.annotation.Nonnull;
 
@@ -16,7 +16,7 @@ public class JsonCollectionPsiPresentationUtils {
 
   @Nonnull
   public static String getCollectionPsiPresentationText(int childrenCount) {
-    return JsonBundle.message("folding.collapsed.array.text", childrenCount);
+    return JsonLocalize.foldingCollapsedArrayText(childrenCount).get();
   }
 
   private JsonCollectionPsiPresentationUtils() {

@@ -1,9 +1,10 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
-package com.jetbrains.jsonSchema.internal;
+package com.jetbrains.jsonSchema.impl;
 
 import com.jetbrains.jsonSchema.*;
 import com.jetbrains.jsonSchema.extension.JsonSchemaValidation;
 import com.jetbrains.jsonSchema.extension.adapters.JsonValueAdapter;
+import com.jetbrains.jsonSchema.internal.PatternProperties;
 import com.jetbrains.jsonSchema.remote.JsonFileResolver;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.CachedValuesManager;
@@ -131,7 +132,7 @@ public class JsonSchemaObjectImpl extends JsonSchemaObject {
   }
 
   @Override
-  public boolean hasChildFieldsExcept(@Nonnull List<@Nonnull String> namesToSkip) {
+  public boolean hasChildFieldsExcept(@Nonnull List<String> namesToSkip) {
     return false;
   }
 

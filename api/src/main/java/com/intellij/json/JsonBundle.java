@@ -16,7 +16,7 @@ public final class JsonBundle {
   private JsonBundle() {
   }
 
-  public static @Nonnull @Nls String message(@Nonnull @PropertyKey(resourceBundle = BUNDLE) String key, Object @Nonnull ... params) {
+  public static @Nonnull @Nls String message(@Nonnull @PropertyKey(resourceBundle = BUNDLE) String key, Object ... params) {
     return key;
   }
 }

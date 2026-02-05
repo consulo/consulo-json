@@ -5,7 +5,6 @@ import com.jetbrains.jsonSchema.JsonPointerUtil;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
 import com.jetbrains.jsonSchema.JsonSchemaService;
 import com.jetbrains.jsonSchema.JsonSchemaType;
-import com.jetbrains.jsonSchema.internal.JsonSchemaObjectImpl;
 import com.jetbrains.jsonSchema.remote.JsonFileResolver;
 import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;

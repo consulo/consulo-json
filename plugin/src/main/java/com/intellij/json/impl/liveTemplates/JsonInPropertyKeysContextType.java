@@ -2,7 +2,7 @@
 package com.intellij.json.impl.liveTemplates;
 
 import com.intellij.codeInsight.template.TemplateContextType;
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.json.JsonElementTypes;
 import com.intellij.json.psi.JsonFile;
 import com.intellij.json.psi.JsonPsiUtil;
@@ -17,7 +17,7 @@ import static com.intellij.patterns.PlatformPatterns.psiElement;
 
 public final class JsonInPropertyKeysContextType extends TemplateContextType {
   private JsonInPropertyKeysContextType() {
-    super(JsonBundle.message("json.property.keys"));
+    super(JsonLocalize.jsonPropertyKeys().get());
   }
 
   @Override

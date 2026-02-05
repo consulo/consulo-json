@@ -1,10 +1,13 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
-package com.jetbrains.jsonSchema.remote;
+package com.jetbrains.jsonSchema.impl.remote;
 
 import com.jetbrains.jsonSchema.JsonSchemaCatalogEntry;
 import com.jetbrains.jsonSchema.JsonSchemaCatalogProjectConfiguration;
 import com.jetbrains.jsonSchema.JsonSchemaService;
 import com.jetbrains.jsonSchema.impl.JsonCachedValues;
+import com.jetbrains.jsonSchema.remote.JsonFileResolver;
+import com.jetbrains.jsonSchema.remote.JsonSchemaCatalogExclusion;
+import com.jetbrains.jsonSchema.remote.JsonSchemaRemoteContentProvider;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;

@@ -1,7 +1,7 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.jetbrains.jsonSchema;
 
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.jetbrains.jsonSchema.extension.JsonSchemaInfo;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -149,7 +149,7 @@ public class JsonSchemaMappingsProjectConfiguration implements PersistentStateCo
 
   private static UserDefinedJsonSchemaConfiguration createIgnoreSchema(String ignoredFileUrl) {
     UserDefinedJsonSchemaConfiguration schemaConfiguration = new UserDefinedJsonSchemaConfiguration(
-      JsonBundle.message("schema.widget.no.schema.label"),
+      JsonLocalize.schemaWidgetNoSchemaLabel().get(),
       JsonSchemaVersion.SCHEMA_4,
       "",
       true,

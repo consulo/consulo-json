@@ -12,7 +12,7 @@ import com.intellij.codeInsight.template.impl.EmptyNode;
 import com.intellij.codeInsight.template.impl.MacroCallNode;
 import com.intellij.codeInsight.template.macro.CompleteMacro;
 import com.intellij.codeInspection.*;
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.json.JsonLanguage;
 import com.intellij.lang.Language;
 import com.intellij.modcommand.ActionContext;
@@ -58,12 +58,12 @@ public final class AddMissingPropertyFix extends ModCommandBatchQuickFix {
 
   @Override
   public @Nls(capitalization = Nls.Capitalization.Sentence) @Nonnull String getFamilyName() {
-    return JsonBundle.message("add.missing.properties");
+    return JsonLocalize.addMissingProperties().get();
   }
 
   @Override
   public @Nls(capitalization = Nls.Capitalization.Sentence) @Nonnull String getName() {
-    return JsonBundle.message("add.missing.0", myData.getMessage(true));
+    return JsonLocalize.addMissing0(myData.getMessage(true).get());
   }
 
   @Override

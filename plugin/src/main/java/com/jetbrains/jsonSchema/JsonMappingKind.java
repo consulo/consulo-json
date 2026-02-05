@@ -2,7 +2,7 @@
 package com.jetbrains.jsonSchema;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.Nls;
 
@@ -15,9 +15,9 @@ public enum JsonMappingKind {
 
   public @Nls String getDescription() {
     return switch (this) {
-      case File -> JsonBundle.message("schema.mapping.file");
-      case Pattern -> JsonBundle.message("schema.mapping.pattern");
-      case Directory -> JsonBundle.message("schema.mapping.directory");
+      case File -> JsonLocalize.schemaMappingFile().get();
+      case Pattern -> JsonLocalize.schemaMappingPattern().get();
+      case Directory -> JsonLocalize.schemaMappingDirectory().get();
     };
   }
 

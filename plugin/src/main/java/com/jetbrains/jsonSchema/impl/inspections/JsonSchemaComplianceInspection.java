@@ -4,7 +4,7 @@ package com.jetbrains.jsonSchema.impl.inspections;
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.options.OptPane;
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.json.psi.JsonElementVisitor;
 import com.intellij.json.psi.JsonValue;
 import com.intellij.psi.PsiElement;
@@ -45,7 +45,7 @@ public final class JsonSchemaComplianceInspection extends JsonSchemaBasedInspect
   @Override
   public @Nonnull OptPane getOptionsPane() {
     return pane(
-      checkbox("myCaseInsensitiveEnum", JsonBundle.message("json.schema.inspection.case.insensitive.enum")));
+      checkbox("myCaseInsensitiveEnum", JsonLocalize.jsonSchemaInspectionCaseInsensitiveEnum().get()));
   }
 
   private static void annotate(@Nonnull PsiElement element,

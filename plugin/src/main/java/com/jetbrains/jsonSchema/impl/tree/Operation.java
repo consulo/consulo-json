@@ -6,7 +6,7 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.SmartList;
 import com.jetbrains.jsonSchema.JsonSchemaService;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
-import com.jetbrains.jsonSchema.internal.JsonSchemaObjectImpl;
+import com.jetbrains.jsonSchema.impl.JsonSchemaObjectImpl;
 import com.jetbrains.jsonSchema.impl.SchemaResolveState;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

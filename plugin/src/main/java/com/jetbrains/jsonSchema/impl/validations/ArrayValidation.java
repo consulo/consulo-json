@@ -1,7 +1,7 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.jetbrains.jsonSchema.impl.validations;
 
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.util.containers.MultiMap;
 import com.jetbrains.jsonSchema.extension.JsonErrorPriority;
 import com.jetbrains.jsonSchema.extension.JsonLikePsiWalker;
@@ -88,7 +88,7 @@ public class ArrayValidation implements JsonSchemaValidation {
         }
         else {
           if (!Boolean.TRUE.equals(schema.getAdditionalItemsAllowed())) {
-            consumer.error(JsonBundle.message("schema.validation.array.no.extra"), arrayValue.getDelegate(), JsonErrorPriority.LOW_PRIORITY);
+            consumer.error(JsonLocalize.schemaValidationArrayNoExtra().get(), arrayValue.getDelegate(), JsonErrorPriority.LOW_PRIORITY);
             isValid = false;
             if (options.shouldStopValidationAfterAnyErrorFound()) return false;
           }
@@ -111,11 +111,11 @@ public class ArrayValidation implements JsonSchemaValidation {
                                                          JsonComplianceCheckerOptions options) {
     // these two are not correct by the schema spec, but are used in some schemas
     if (schema.getMinLength() != null && list.size() < schema.getMinLength()) {
-      consumer.error(JsonBundle.message("schema.validation.array.shorter.than", schema.getMinLength()), array.getDelegate(), JsonErrorPriority.LOW_PRIORITY);
+      consumer.error(JsonLocalize.schemaValidationArrayShorterThan(schema.getMinLength().get()), array.getDelegate(), JsonErrorPriority.LOW_PRIORITY);
       return false;
     }
     if (schema.getMaxLength() != null && list.size() > schema.getMaxLength()) {
-      consumer.error(JsonBundle.message("schema.validation.array.longer.than", schema.getMaxLength()), array.getDelegate(), JsonErrorPriority.LOW_PRIORITY);
+      consumer.error(JsonLocalize.schemaValidationArrayLongerThan(schema.getMaxLength().get()), array.getDelegate(), JsonErrorPriority.LOW_PRIORITY);
       return false;
     }
     return true;
@@ -126,11 +126,11 @@ public class ArrayValidation implements JsonSchemaValidation {
                                             JsonSchemaObject schema,
                                             JsonValidationHost consumer, JsonComplianceCheckerOptions options) {
     if (schema.getMinItems() != null && list.size() < schema.getMinItems()) {
-      consumer.error(JsonBundle.message("schema.validation.array.shorter.than", schema.getMinItems()), array.getDelegate(), JsonErrorPriority.LOW_PRIORITY);
+      consumer.error(JsonLocalize.schemaValidationArrayShorterThan(schema.getMinItems().get()), array.getDelegate(), JsonErrorPriority.LOW_PRIORITY);
       return false;
     }
     if (schema.getMaxItems() != null && list.size() > schema.getMaxItems()) {
-      consumer.error(JsonBundle.message("schema.validation.array.longer.than", schema.getMaxItems()), array.getDelegate(), JsonErrorPriority.LOW_PRIORITY);
+      consumer.error(JsonLocalize.schemaValidationArrayLongerThan(schema.getMaxItems().get()), array.getDelegate(), JsonErrorPriority.LOW_PRIORITY);
       return false;
     }
     return true;
@@ -151,7 +151,7 @@ public class ArrayValidation implements JsonSchemaValidation {
         }
       }
       if (!match) {
-        consumer.error(JsonBundle.message("schema.validation.array.not.contains"), array.getDelegate(), JsonErrorPriority.MEDIUM_PRIORITY);
+        consumer.error(JsonLocalize.schemaValidationArrayNotContains().get(), array.getDelegate(), JsonErrorPriority.MEDIUM_PRIORITY);
         return false;
       }
     }
@@ -175,7 +175,7 @@ public class ArrayValidation implements JsonSchemaValidation {
         if (entry.getValue().size() > 1) {
           for (JsonValueAdapter item: entry.getValue()) {
             if (!item.shouldCheckAsValue()) continue;
-            consumer.error(JsonBundle.message("schema.validation.not.unique"), item.getDelegate(),
+            consumer.error(JsonLocalize.schemaValidationNotUnique().get(), item.getDelegate(),
                            JsonValidationError.FixableIssueKind.DuplicateArrayItem,
                            new JsonValidationError.DuplicateArrayItemIssueData(
                              entry.getValue().stream().mapToInt(v -> list.indexOf(v)).toArray()

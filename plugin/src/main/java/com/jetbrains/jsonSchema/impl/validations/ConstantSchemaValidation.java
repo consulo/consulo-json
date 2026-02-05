@@ -1,7 +1,7 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.jetbrains.jsonSchema.impl.validations;
 
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.jetbrains.jsonSchema.extension.JsonErrorPriority;
 import com.jetbrains.jsonSchema.extension.JsonSchemaValidation;
 import com.jetbrains.jsonSchema.extension.JsonValidationHost;
@@ -25,7 +25,7 @@ public class ConstantSchemaValidation implements JsonSchemaValidation {
     JsonSchemaHighlightingSessionStatisticsCollector.getInstance().reportSchemaUsageFeature(JsonSchemaFusCountedFeature.ConstantNodeValidation);
     Boolean constantSchema = schema.getConstantSchema();
     if (Boolean.FALSE.equals(constantSchema)) {
-      consumer.error(JsonBundle.message("schema.validation.constant.schema"), propValue.getDelegate().getParent(), JsonErrorPriority.LOW_PRIORITY);
+      consumer.error(JsonLocalize.schemaValidationConstantSchema().get(), propValue.getDelegate().getParent(), JsonErrorPriority.LOW_PRIORITY);
       return false;
     }
     return true;

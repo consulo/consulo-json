@@ -10,30 +10,31 @@ import consulo.language.psi.ReferenceProvidersRegistry;
 import consulo.language.util.IncorrectOperationException;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NonNls;
 
 public abstract class JsonPropertyMixin extends JsonElementImpl implements JsonProperty {
-  JsonPropertyMixin(@Nonnull ASTNode node) {
-    super(node);
-  }
+    JsonPropertyMixin(@Nonnull ASTNode node) {
+        super(node);
+    }
 
-  @Override
-  public PsiElement setName(@NonNls @Nonnull String name) throws IncorrectOperationException {
-    final JsonElementGenerator generator = new JsonElementGenerator(getProject());
-    // Strip only both quotes in case user wants some exotic name like key'
-    getNameElement().replace(generator.createStringLiteral(StringUtil.unquoteString(name)));
-    return this;
-  }
+    @Override
+    public PsiElement setName(@NonNls @Nonnull String name) throws IncorrectOperationException {
+        final JsonElementGenerator generator = new JsonElementGenerator(getProject());
+        // Strip only both quotes in case user wants some exotic name like key'
+        getNameElement().replace(generator.createStringLiteral(StringUtil.unquoteString(name)));
+        return this;
+    }
 
-  @Override
-  public PsiReference getReference() {
-    return new JsonPropertyNameReference(this);
-  }
+    @Override
+    public PsiReference getReference() {
+        return new JsonPropertyNameReference(this);
+    }
 
-  @Override
-  public PsiReference @Nonnull [] getReferences() {
-    final PsiReference[] fromProviders = ReferenceProvidersRegistry.getReferencesFromProviders(this);
-    return ArrayUtil.prepend(new JsonPropertyNameReference(this), fromProviders);
-  }
+    @Override
+    @Nonnull
+    public PsiReference[] getReferences() {
+        final PsiReference[] fromProviders = ReferenceProvidersRegistry.getReferencesFromProviders(this);
+        return ArrayUtil.prepend(new JsonPropertyNameReference(this), fromProviders);
+    }
 }

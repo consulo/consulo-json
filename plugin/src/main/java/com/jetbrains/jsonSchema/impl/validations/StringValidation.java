@@ -1,7 +1,7 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.jetbrains.jsonSchema.impl.validations;
 
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.jetbrains.jsonSchema.extension.JsonErrorPriority;
@@ -39,24 +39,24 @@ public final class StringValidation implements JsonSchemaValidation {
     final String value = StringUtil.unquoteString(v);
     if (schema.getMinLength() != null) {
       if (value.length() < schema.getMinLength()) {
-        consumer.error(JsonBundle.message("schema.validation.string.shorter.than", schema.getMinLength()), propValue, JsonErrorPriority.LOW_PRIORITY);
+        consumer.error(JsonLocalize.schemaValidationStringShorterThan(schema.getMinLength().get()), propValue, JsonErrorPriority.LOW_PRIORITY);
         return false;
       }
     }
     if (schema.getMaxLength() != null) {
       if (value.length() > schema.getMaxLength()) {
-        consumer.error(JsonBundle.message("schema.validation.string.longer.than", schema.getMaxLength()), propValue, JsonErrorPriority.LOW_PRIORITY);
+        consumer.error(JsonLocalize.schemaValidationStringLongerThan(schema.getMaxLength().get()), propValue, JsonErrorPriority.LOW_PRIORITY);
         return false;
       }
     }
     if (schema.getPattern() != null) {
       if (schema.getPatternError() != null) {
-        consumer.error(JsonBundle.message("schema.validation.invalid.string.pattern", StringUtil.convertLineSeparators(schema.getPatternError())),
+        consumer.error(JsonLocalize.schemaValidationInvalidStringPattern(StringUtil.convertLineSeparators(schema.getPatternError().get())),
               propValue, JsonErrorPriority.LOW_PRIORITY);
         return false;
       }
       if (!schema.checkByPattern(value)) {
-        consumer.error(JsonBundle.message("schema.validation.string.violates.pattern", StringUtil.convertLineSeparators(schema.getPattern())), propValue, JsonErrorPriority.LOW_PRIORITY);
+        consumer.error(JsonLocalize.schemaValidationStringViolatesPattern(StringUtil.convertLineSeparators(schema.getPattern().get())), propValue, JsonErrorPriority.LOW_PRIORITY);
         return false;
       }
     }

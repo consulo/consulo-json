@@ -1,7 +1,7 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.jetbrains.jsonSchema;
 
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.jetbrains.jsonSchema.impl.JsonSchemaObjectReadingUtils;
 import com.jetbrains.jsonSchema.remote.JsonFileResolver;
 import com.jetbrains.jsonSchema.settings.mappings.JsonSchemaVersionConverter;
@@ -252,8 +252,8 @@ public final class UserDefinedJsonSchemaConfiguration {
 
     public @Tooltip String getError() {
       return switch (mappingKind) {
-        case File -> !StringUtil.isEmpty(path) ? null : JsonBundle.message("schema.configuration.error.empty.file.path");
-        case Pattern -> !StringUtil.isEmpty(path) ? null : JsonBundle.message("schema.configuration.error.empty.pattern");
+        case File -> !StringUtil.isEmpty(path) ? null : JsonLocalize.schemaConfigurationErrorEmptyFilePath().get();
+        case Pattern -> !StringUtil.isEmpty(path) ? null : JsonLocalize.schemaConfigurationErrorEmptyPattern().get();
         case Directory -> null;
       };
     }
@@ -276,7 +276,7 @@ public final class UserDefinedJsonSchemaConfiguration {
 
     public String getPresentation() {
       if (mappingKind == JsonMappingKind.Directory && StringUtil.isEmpty(path)) {
-        return JsonBundle.message("schema.configuration.project.directory", mappingKind.getPrefix());
+        return JsonLocalize.schemaConfigurationProjectDirectory(mappingKind.getPrefix().get());
       }
       return mappingKind.getPrefix() + getPath();
     }

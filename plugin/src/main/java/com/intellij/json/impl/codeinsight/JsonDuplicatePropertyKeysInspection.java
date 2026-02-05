@@ -1,7 +1,7 @@
 // Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.intellij.json.impl.codeinsight;
 
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.json.psi.JsonElementVisitor;
 import com.intellij.json.psi.JsonObject;
 import com.intellij.json.psi.JsonProperty;

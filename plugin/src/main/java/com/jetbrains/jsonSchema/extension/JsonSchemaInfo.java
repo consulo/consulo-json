@@ -2,6 +2,7 @@
 package com.jetbrains.jsonSchema.extension;
 
 import com.jetbrains.jsonSchema.JsonSchemaType;
+import com.jetbrains.jsonSchema.JsonSchemaVersion;
 import com.jetbrains.jsonSchema.impl.JsonSchemaVersion;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
@@ -9,7 +10,9 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Nls;
 import jakarta.annotation.Nullable;
@@ -72,7 +75,7 @@ public class JsonSchemaInfo {
         return schemaFile.getUrl();
       }
 
-      if (schemaFile.getFileSystem() instanceof JarFileSystem) {
+      if (schemaFile.getFileSystem() instanceof ArchiveFileSystem) {
         return schemaFile.getUrl();
       }
 
@@ -129,7 +132,7 @@ public class JsonSchemaInfo {
     return StringUtil.split(possibleName, ".").stream().allMatch(s -> JsonSchemaType.isInteger(s));
   }
 
-  private static @Nonnull @NlsSafe String sanitizeName(@Nonnull String providerName) {
+  private static @Nonnull String sanitizeName(@Nonnull String providerName) {
     return StringUtil.trimEnd(StringUtil.trimEnd(StringUtil.trimEnd(providerName, ".json"), "-schema"), ".schema");
   }
 
@@ -139,7 +142,7 @@ public class JsonSchemaInfo {
 
   public static @Nonnull String getRelativePath(@Nonnull Project project, @Nonnull String text) {
     text = text.trim();
-    if (project.isDefault() || project.getBasePath() == null || Strings.isEmptyOrSpaces(text)) {
+    if (project.isDefault() || project.getBasePath() == null || StringUtil.isEmptyOrSpaces(text)) {
       return text;
     }
 
@@ -163,8 +166,8 @@ public class JsonSchemaInfo {
       return text;
     }
 
-    if (isMeaningfulAncestor(VfsUtilCore.getCommonAncestor(virtualFile, projectBaseDir))) {
-      String path = VfsUtilCore.findRelativePath(projectBaseDir, virtualFile, File.separatorChar);
+    if (isMeaningfulAncestor(VirtualFileUtil.getCommonAncestor(virtualFile, projectBaseDir))) {
+      String path = VirtualFileUtil.findRelativePath(projectBaseDir, virtualFile, File.separatorChar);
       if (path != null) {
         return path;
       }
@@ -174,7 +177,7 @@ public class JsonSchemaInfo {
 
   private static boolean isMeaningfulAncestor(@Nullable VirtualFile ancestor) {
     if (ancestor == null) return false;
-    VirtualFile homeDir = VfsUtil.getUserHomeDir();
-    return homeDir != null && VfsUtilCore.isAncestor(homeDir, ancestor, true);
+    VirtualFile homeDir = VirtualFileUtil.getUserHomeDir();
+    return homeDir != null && VirtualFileUtil.isAncestor(homeDir, ancestor, true);
   }
 }

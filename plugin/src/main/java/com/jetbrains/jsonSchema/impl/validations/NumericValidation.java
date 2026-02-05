@@ -1,7 +1,7 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.jetbrains.jsonSchema.impl.validations;
 
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.psi.PsiElement;
 import com.jetbrains.jsonSchema.JsonComplianceCheckerOptions;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
@@ -30,7 +30,7 @@ public final class NumericValidation implements JsonSchemaValidation {
     if (JsonSchemaType._integer.equals(schemaType)) {
       value = JsonSchemaType.getIntegerValue(valueText);
       if (value == null) {
-        consumer.error(JsonBundle.message("schema.validation.integer.expected"), propValue,
+        consumer.error(JsonLocalize.schemaValidationIntegerExpected().get(), propValue,
                        JsonValidationError.FixableIssueKind.TypeMismatch,
                        new JsonValidationError.TypeMismatchIssueData(new JsonSchemaType[]{schemaType}), JsonErrorPriority.TYPE_MISMATCH);
         return false;
@@ -42,7 +42,7 @@ public final class NumericValidation implements JsonSchemaValidation {
       }
       catch (NumberFormatException e) {
         if (!JsonSchemaType._string_number.equals(schemaType)) {
-          consumer.error(JsonBundle.message("schema.validation.number.expected"), propValue,
+          consumer.error(JsonLocalize.schemaValidationNumberExpected().get(), propValue,
                 JsonValidationError.FixableIssueKind.TypeMismatch,
                 new JsonValidationError.TypeMismatchIssueData(new JsonSchemaType[]{schemaType}), JsonErrorPriority.TYPE_MISMATCH);
           return false;
@@ -56,7 +56,7 @@ public final class NumericValidation implements JsonSchemaValidation {
       if (leftOver > 0.000001) {
         final String multipleOfValue = String.valueOf(Math.abs(multipleOf.doubleValue() - multipleOf.intValue()) < 0.000001 ?
                                                       multipleOf.intValue() : multipleOf);
-        consumer.error(JsonBundle.message("schema.validation.not.multiple.of", multipleOfValue), propValue, JsonErrorPriority.LOW_PRIORITY);
+        consumer.error(JsonLocalize.schemaValidationNotMultipleOf(multipleOfValue).get(), propValue, JsonErrorPriority.LOW_PRIORITY);
         return false;
       }
     }
@@ -75,7 +75,7 @@ public final class NumericValidation implements JsonSchemaValidation {
     if (exclusiveMaximumNumber != null) {
       final double doubleValue = exclusiveMaximumNumber.doubleValue();
       if (value.doubleValue() >= doubleValue) {
-        consumer.error(JsonBundle.message("schema.validation.greater.than.exclusive.maximum", exclusiveMaximumNumber), propertyValue, JsonErrorPriority.LOW_PRIORITY);
+        consumer.error(JsonLocalize.schemaValidationGreaterThanExclusiveMaximum(exclusiveMaximumNumber).get(), propertyValue, JsonErrorPriority.LOW_PRIORITY);
         isValid = false;
         if (options.shouldStopValidationAfterAnyErrorFound()) return false;
       }
@@ -86,14 +86,14 @@ public final class NumericValidation implements JsonSchemaValidation {
     final double doubleValue = maximum.doubleValue();
     if (isExclusive) {
       if (value.doubleValue() >= doubleValue) {
-        consumer.error(JsonBundle.message("schema.validation.greater.than.exclusive.maximum", maximum), propertyValue, JsonErrorPriority.LOW_PRIORITY);
+        consumer.error(JsonLocalize.schemaValidationGreaterThanExclusiveMaximum(maximum).get(), propertyValue, JsonErrorPriority.LOW_PRIORITY);
         isValid = false;
         if (options.shouldStopValidationAfterAnyErrorFound()) return false;
       }
     }
     else {
       if (value.doubleValue() > doubleValue) {
-        consumer.error(JsonBundle.message("schema.validation.greater.than.maximum", maximum), propertyValue, JsonErrorPriority.LOW_PRIORITY);
+        consumer.error(JsonLocalize.schemaValidationGreaterThanMaximum(maximum).get(), propertyValue, JsonErrorPriority.LOW_PRIORITY);
         isValid = false;
         if (options.shouldStopValidationAfterAnyErrorFound()) return false;
       }
@@ -112,7 +112,7 @@ public final class NumericValidation implements JsonSchemaValidation {
     if (exclusiveMinimumNumber != null) {
       final double doubleValue = exclusiveMinimumNumber.doubleValue();
       if (value.doubleValue() <= doubleValue) {
-        consumer.error(JsonBundle.message("schema.validation.less.than.exclusive.minimum", exclusiveMinimumNumber), propertyValue, JsonErrorPriority.LOW_PRIORITY);
+        consumer.error(JsonLocalize.schemaValidationLessThanExclusiveMinimum(exclusiveMinimumNumber).get(), propertyValue, JsonErrorPriority.LOW_PRIORITY);
         isValid = false;
         if (options.shouldStopValidationAfterAnyErrorFound()) return false;
       }
@@ -124,14 +124,14 @@ public final class NumericValidation implements JsonSchemaValidation {
     final double doubleValue = minimum.doubleValue();
     if (isExclusive) {
       if (value.doubleValue() <= doubleValue) {
-        consumer.error(JsonBundle.message("schema.validation.less.than.exclusive.minimum", minimum), propertyValue, JsonErrorPriority.LOW_PRIORITY);
+        consumer.error(JsonLocalize.schemaValidationLessThanExclusiveMinimum(minimum).get(), propertyValue, JsonErrorPriority.LOW_PRIORITY);
         isValid = false;
         if (options.shouldStopValidationAfterAnyErrorFound()) return false;
       }
     }
     else {
       if (value.doubleValue() < doubleValue) {
-        consumer.error(JsonBundle.message("schema.validation.less.than.minimum", minimum), propertyValue, JsonErrorPriority.LOW_PRIORITY);
+        consumer.error(JsonLocalize.schemaValidationLessThanMinimum(minimum).get(), propertyValue, JsonErrorPriority.LOW_PRIORITY);
         isValid = false;
         if (options.shouldStopValidationAfterAnyErrorFound()) return false;
       }

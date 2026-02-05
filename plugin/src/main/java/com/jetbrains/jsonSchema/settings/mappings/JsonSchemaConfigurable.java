@@ -2,7 +2,7 @@
 package com.jetbrains.jsonSchema.settings.mappings;
 
 import com.intellij.execution.configurations.RuntimeConfigurationWarning;
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.notification.NotificationGroupManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
@@ -137,7 +137,7 @@ public final class JsonSchemaConfigurable extends NamedConfigurable<UserDefinedJ
     String schemaSubPath = myView.getSchemaSubPath();
 
     if (StringUtil.isEmptyOrSpaces(schemaSubPath)) {
-      throw new ConfigurationException((!StringUtil.isEmptyOrSpaces(myDisplayName) ? (myDisplayName + ": ") : "") + JsonBundle.message("schema.configuration.error.empty.path"));
+      throw new ConfigurationException((!StringUtil.isEmptyOrSpaces(myDisplayName) ? (myDisplayName + ": ") : "") + JsonLocalize.schemaConfigurationErrorEmptyPath().get());
     }
 
     VirtualFile vFile;
@@ -148,13 +148,13 @@ public final class JsonSchemaConfigurable extends NamedConfigurable<UserDefinedJ
 
       if (!isValidURL(schemaSubPath)) {
         throw new ConfigurationException(
-          (!StringUtil.isEmptyOrSpaces(myDisplayName) ? (myDisplayName + ": ") : "") + JsonBundle.message("schema.configuration.error.invalid.url"));
+          (!StringUtil.isEmptyOrSpaces(myDisplayName) ? (myDisplayName + ": ") : "") + JsonLocalize.schemaConfigurationErrorInvalidUrl().get());
       }
 
       vFile = JsonFileResolver.urlToFile(schemaSubPath);
       if (vFile == null) {
         throw new ConfigurationException(
-          (!StringUtil.isEmptyOrSpaces(myDisplayName) ? (myDisplayName + ": ") : "") + JsonBundle.message("schema.configuration.error.invalid.url.resource"));
+          (!StringUtil.isEmptyOrSpaces(myDisplayName) ? (myDisplayName + ": ") : "") + JsonLocalize.schemaConfigurationErrorInvalidUrlResource().get());
       }
     }
     else {
@@ -162,12 +162,12 @@ public final class JsonSchemaConfigurable extends NamedConfigurable<UserDefinedJ
       final File file = subPath.isAbsolute() ? subPath : new File(myProject.getBasePath(), schemaSubPath);
       if (!file.exists() || (vFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file)) == null) {
         throw new ConfigurationException(
-          (!StringUtil.isEmptyOrSpaces(myDisplayName) ? (myDisplayName + ": ") : "") + JsonBundle.message("schema.configuration.error.file.does.not.exist"));
+          (!StringUtil.isEmptyOrSpaces(myDisplayName) ? (myDisplayName + ": ") : "") + JsonLocalize.schemaConfigurationErrorFileDoesNotExist().get());
       }
       filename = file.getName();
     }
 
-    if (StringUtil.isEmptyOrSpaces(myDisplayName)) throw new ConfigurationException(filename + ": " + JsonBundle.message("schema.configuration.error.empty.name"));
+    if (StringUtil.isEmptyOrSpaces(myDisplayName)) throw new ConfigurationException(filename + ": " + JsonLocalize.schemaConfigurationErrorEmptyName().get());
 
     // we don't validate remote schemas while in options dialog
     if (vFile instanceof HttpVirtualFile) return;

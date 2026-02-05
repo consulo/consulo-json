@@ -1,7 +1,7 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.jetbrains.jsonSchema.extension;
 
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -128,7 +128,7 @@ public class JsonSchemaProjectSelfProviderFactory implements JsonSchemaProviderF
     @Nonnull
     @Override
     public String getPresentableName() {
-      return JsonBundle.message("schema.of.version", myBundledSchema.presentableSchemaId);
+      return JsonLocalize.schemaOfVersion(myBundledSchema.presentableSchemaId).get();
     }
 
     @Nonnull

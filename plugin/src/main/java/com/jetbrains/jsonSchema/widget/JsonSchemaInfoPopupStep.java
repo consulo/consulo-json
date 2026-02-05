@@ -1,7 +1,7 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.jetbrains.jsonSchema.widget;
 
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.jetbrains.jsonSchema.JsonSchemaMappingsProjectConfiguration;
 import com.jetbrains.jsonSchema.JsonSchemaService;
 import com.jetbrains.jsonSchema.UserDefinedJsonSchemaConfiguration;
@@ -82,10 +82,10 @@ public class JsonSchemaInfoPopupStep extends BaseListPopupStep<JsonSchemaInfo> i
     if (index - 1 >= 0) {
       JsonSchemaInfo info = values.get(index - 1);
       if (info == EDIT_MAPPINGS || info == ADD_MAPPING) {
-        return new ListSeparator(JsonBundle.message("schema.widget.registered.schemas"));
+        return new ListSeparator(JsonLocalize.schemaWidgetRegisteredSchemas().get());
       }
       if (value.getProvider() == null && info.getProvider() != null) {
-        return new ListSeparator(JsonBundle.message("schema.widget.store.schemas"));
+        return new ListSeparator(JsonLocalize.schemaWidgetStoreSchemas().get());
       }
     }
     return null;

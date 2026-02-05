@@ -3,7 +3,7 @@ package com.jetbrains.jsonSchema.impl;
 
 import com.intellij.codeInspection.util.InspectionMessage;
 import com.intellij.ide.nls.NlsMessages;
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.json.impl.pointer.JsonPointerPosition;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
@@ -144,10 +144,10 @@ public final class JsonSchemaAnnotatorChecker implements JsonValidationHost {
   @Override
   public void typeError(final @Nonnull PsiElement value, @Nullable JsonSchemaType currentType, final JsonSchemaType @Nonnull ... allowedTypes) {
     if (allowedTypes.length == 0) return;
-    String currentTypeDesc = currentType == null ? "" : (" " + JsonBundle.message("schema.validation.actual") + currentType.getName() + ".");
-    String prefix = JsonBundle.message("schema.validation.incompatible.types") + "\n";
+    String currentTypeDesc = currentType == null ? "" : (" " + JsonLocalize.schemaValidationActual().get() + currentType.getName() + ".");
+    String prefix = JsonLocalize.schemaValidationIncompatibleTypes().get() + "\n";
     if (allowedTypes.length == 1) {
-      error(prefix + " " + JsonBundle.message("schema.validation.required.one", allowedTypes[0].getName(), currentTypeDesc), value,
+      error(prefix + " " + JsonLocalize.schemaValidationRequiredOne(allowedTypes[0].getName().get(), currentTypeDesc), value,
             JsonValidationError.FixableIssueKind.ProhibitedType,
             new JsonValidationError.TypeMismatchIssueData(allowedTypes),
             JsonErrorPriority.TYPE_MISMATCH);
@@ -157,7 +157,7 @@ public final class JsonSchemaAnnotatorChecker implements JsonValidationHost {
                                      .distinct()
                                      .sorted(Comparator.naturalOrder())
                                      .collect(Collectors.joining(", "));
-      error(prefix + " " + JsonBundle.message("schema.validation.required.one.of", typesText, currentTypeDesc), value,
+      error(prefix + " " + JsonLocalize.schemaValidationRequiredOneOf(typesText, currentTypeDesc).get(), value,
             JsonValidationError.FixableIssueKind.ProhibitedType,
             new JsonValidationError.TypeMismatchIssueData(allowedTypes),
             JsonErrorPriority.TYPE_MISMATCH);
@@ -354,7 +354,7 @@ public final class JsonSchemaAnnotatorChecker implements JsonValidationHost {
         // todo note that JsonSchemaObject#equals is broken by design, so normally it shouldn't be used until rewritten
         //  but for now we use it here to avoid similar schemas being marked as duplicates
         if (new HashSet<>(correct).size() > 1 && !schemesDifferWithNotCheckedProperties(correct)) {
-          error(JsonBundle.message("schema.validation.to.more.than.one"), value.getDelegate(), JsonErrorPriority.MEDIUM_PRIORITY);
+          error(JsonLocalize.schemaValidationToMoreThanOne().get(), value.getDelegate(), JsonErrorPriority.MEDIUM_PRIORITY);
         }
       }
       return ContainerUtil.getLastItem(correct);
@@ -507,7 +507,7 @@ public final class JsonSchemaAnnotatorChecker implements JsonValidationHost {
     }
 
     if (commonIssueKind == JsonValidationError.FixableIssueKind.NonEnumValue) {
-      String prefix = JsonBundle.message("schema.validation.enum.mismatch", "");
+      String prefix = JsonLocalize.schemaValidationEnumMismatch("").get();
       @NlsSafe String text = errors.stream()
         // todo remove this ugly textual cutting
         .map(e -> StringUtil.trimEnd(StringUtil.trimStart(e.getMessage(), prefix), prefix) /*ltr and rtl*/)
@@ -536,10 +536,9 @@ public final class JsonSchemaAnnotatorChecker implements JsonValidationHost {
       if (allTypes.size() == 1) return errors.iterator().next();
 
       List<String> actualInfos = errors.stream().map(e -> e.getMessage()).map(JsonSchemaAnnotatorChecker::fetchActual).distinct().toList();
-      String actualInfo = actualInfos.size() == 1 ? (" " + JsonBundle.message("schema.validation.actual") + actualInfos.get(0) + ".") : "";
-      String commonTypeMessage = JsonBundle.message("schema.validation.incompatible.types") + "\n" +
-                                 JsonBundle.message("schema.validation.required.one.of",
-                                                    allTypes.stream().map(t -> t.getDescription()).sorted().collect(Collectors.joining(", ")),
+      String actualInfo = actualInfos.size() == 1 ? (" " + JsonLocalize.schemaValidationActual().get() + actualInfos.get(0) + ".") : "";
+      String commonTypeMessage = JsonLocalize.schemaValidationIncompatibleTypes().get() + "\n" +
+                                 JsonLocalize.schemaValidationRequiredOneOf(allTypes.stream().get().map(t -> t.getDescription()).sorted().collect(Collectors.joining(", ")),
                                                     actualInfo);
       return new JsonValidationError(commonTypeMessage, JsonValidationError.FixableIssueKind.TypeMismatch,
                                      new JsonValidationError.TypeMismatchIssueData(ContainerUtil.toArray(allTypes, JsonSchemaType[]::new)),
@@ -550,7 +549,7 @@ public final class JsonSchemaAnnotatorChecker implements JsonValidationHost {
   }
 
   private static String fetchActual(String message) {
-    String actualMessage = JsonBundle.message("schema.validation.actual");
+    String actualMessage = JsonLocalize.schemaValidationActual().get();
     int actual = message.indexOf(actualMessage);
     if (actual == -1) return null;
     String substring = message.endsWith(actualMessage) ? message.substring(0, actual) : message.substring(actual + actualMessage.length());

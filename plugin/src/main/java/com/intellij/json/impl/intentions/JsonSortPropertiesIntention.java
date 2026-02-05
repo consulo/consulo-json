@@ -4,7 +4,7 @@ package com.intellij.json.intentions;
 import com.intellij.codeInsight.intention.LowPriorityAction;
 import com.intellij.codeInsight.intention.PriorityAction;
 import com.intellij.ide.lightEdit.LightEditCompatible;
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.json.psi.JsonFile;
 import com.intellij.json.psi.JsonObject;
 import com.intellij.json.psi.JsonProperty;
@@ -40,7 +40,7 @@ public class JsonSortPropertiesIntention extends PsiUpdateModCommandAction<PsiFi
   @Nonnull
   @Override
   public String getFamilyName() {
-    return JsonBundle.message("json.intention.sort.properties");
+    return JsonLocalize.jsonIntentionSortProperties().get();
   }
 
   @Nullable

@@ -3,7 +3,7 @@ package com.jetbrains.jsonSchema.impl.light.legacy;
 
 import com.jetbrains.jsonSchema.JsonSchemaObject;
 import com.jetbrains.jsonSchema.JsonSchemaType;
-import com.jetbrains.jsonSchema.internal.JsonSchemaObjectImpl;
+import com.jetbrains.jsonSchema.impl.JsonSchemaObjectImpl;
 import com.jetbrains.jsonSchema.internal.PatternProperties;
 import consulo.application.progress.ProgressManager;
 import consulo.util.lang.StringUtil;

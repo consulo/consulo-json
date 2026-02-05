@@ -7,7 +7,7 @@ import com.jetbrains.jsonSchema.JsonSchemaService;
 import com.jetbrains.jsonSchema.impl.light.nodes.JsonSchemaObjectStorage;
 import com.jetbrains.jsonSchema.remote.JsonFileResolver;
 import com.jetbrains.jsonSchema.remote.JsonSchemaCatalogExclusion;
-import com.jetbrains.jsonSchema.remote.JsonSchemaCatalogManager;
+import com.jetbrains.jsonSchema.impl.remote.JsonSchemaCatalogManager;
 import consulo.application.ApplicationManager;
 import consulo.application.util.SynchronizedClearableLazy;
 import consulo.application.util.registry.Registry;

@@ -1,7 +1,7 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.jetbrains.jsonSchema.impl.fixes;
 
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.modcommand.ModPsiUpdater;
 import com.intellij.modcommand.PsiUpdateModCommandQuickFix;
 import com.intellij.openapi.project.Project;
@@ -24,7 +24,7 @@ public class FixPropertyNameTypoFix extends PsiUpdateModCommandQuickFix {
 
   @Override
   public @Nls(capitalization = Nls.Capitalization.Sentence) @Nonnull String getFamilyName() {
-    return JsonBundle.message("fix.property.name.spelling", myAltName);
+    return JsonLocalize.fixPropertyNameSpelling(myAltName).get();
   }
 
   @Override

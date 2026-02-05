@@ -14,7 +14,6 @@ import com.jetbrains.jsonSchema.extension.adapters.JsonObjectValueAdapter;
 import com.jetbrains.jsonSchema.extension.adapters.JsonPropertyAdapter;
 import com.jetbrains.jsonSchema.extension.adapters.JsonValueAdapter;
 import com.jetbrains.jsonSchema.impl.light.nodes.JsonSchemaObjectStorage;
-import com.jetbrains.jsonSchema.internal.JsonSchemaObjectImpl;
 import consulo.application.util.registry.Registry;
 import consulo.json.localize.JsonLocalize;
 import consulo.language.impl.internal.psi.AstLoadingFilter;

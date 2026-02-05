@@ -5,7 +5,7 @@ import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.util.InspectionMessage;
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.json.psi.*;
 import com.intellij.openapi.paths.WebReference;
 import com.intellij.psi.PsiElement;
@@ -65,23 +65,23 @@ public final class JsonSchemaRefReferenceInspection extends JsonSchemaBasedInspe
         final String text = reference.getCanonicalText();
         if (reference instanceof FileReference) {
           final int hash = text.indexOf('#');
-          return JsonBundle.message("json.schema.ref.file.not.found", hash == -1 ? text : text.substring(0, hash));
+          return JsonLocalize.jsonSchemaRefFileNotFound(hash == -1 ? text : text.substring(0, hash).get());
         }
         if (reference instanceof JsonPointerReferenceProvider.JsonSchemaIdReference) {
-          return JsonBundle.message("json.schema.ref.cannot.resolve.id", text);
+          return JsonLocalize.jsonSchemaRefCannotResolveId(text).get();
         }
         final int lastSlash = text.lastIndexOf('/');
         if (lastSlash == -1) {
-          return JsonBundle.message("json.schema.ref.cannot.resolve.path", text);
+          return JsonLocalize.jsonSchemaRefCannotResolvePath(text).get();
         }
         final String substring = text.substring(text.lastIndexOf('/') + 1);
 
         try {
           Integer.parseInt(substring);
-          return JsonBundle.message("json.schema.ref.no.array.element", substring);
+          return JsonLocalize.jsonSchemaRefNoArrayElement(substring).get();
         }
         catch (Exception e) {
-          return JsonBundle.message("json.schema.ref.no.property", substring);
+          return JsonLocalize.jsonSchemaRefNoProperty(substring).get();
         }
       }
     };

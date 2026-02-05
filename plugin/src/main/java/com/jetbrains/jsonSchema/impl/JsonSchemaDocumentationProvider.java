@@ -3,7 +3,7 @@ package com.jetbrains.jsonSchema.impl;
 
 import com.intellij.ide.trustedProjects.TrustedProjects;
 import com.intellij.ide.projectView.PresentationData;
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.json.impl.pointer.JsonPointerPosition;
 import com.intellij.json.psi.JsonObject;
 import com.intellij.json.psi.JsonProperty;
@@ -158,7 +158,7 @@ public class JsonSchemaDocumentationProvider implements DocumentationProvider {
       type = ": " + schemaType;
     }
 
-    String deprecationComment = deprecated ? JsonBundle.message("schema.documentation.deprecated.postfix") : "";
+    String deprecationComment = deprecated ? JsonLocalize.schemaDocumentationDeprecatedPostfix().get() : "";
     if (preferShort) {
       htmlDescription = "<b>" + name + "</b>" + type + apiInfo + deprecationComment + (htmlDescription == null ? "" : ("<br/>" + htmlDescription));
     }

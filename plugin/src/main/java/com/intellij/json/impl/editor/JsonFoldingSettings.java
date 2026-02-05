@@ -2,7 +2,7 @@
 package com.intellij.json.editor.folding;
 
 import com.intellij.application.options.editor.CodeFoldingOptionsProvider;
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.SettingsCategory;
@@ -44,21 +44,21 @@ public class JsonFoldingSettings implements PersistentStateComponent<JsonFolding
 class JsonFoldingOptionsProvider extends BeanConfigurable<JsonFoldingSettings> implements CodeFoldingOptionsProvider {
 
   public JsonFoldingOptionsProvider() {
-    super(JsonFoldingSettings.getInstance(), JsonBundle.message("JsonFoldingSettings.title"));
+    super(JsonFoldingSettings.getInstance(), JsonLocalize.jsonfoldingsettingsTitle().get());
   }
 
   @Override
   protected void createContent(@Nonnull Panel panel) {
-    panel.group(JsonBundle.message("JsonFoldingSettings.title"), group -> {
+    panel.group(JsonLocalize.jsonfoldingsettingsTitle().get(), group -> {
       group.row(row -> {
-        row.checkBox(JsonBundle.message("JsonFoldingSettings.show.key.count"))
+        row.checkBox(JsonLocalize.jsonfoldingsettingsShowKeyCount().get())
           .bindSelected(() -> getInstance().showKeyCount, value -> getInstance().showKeyCount = value);
         return null;
       });
       group.row(row -> {
-        row.checkBox(JsonBundle.message("JsonFoldingSettings.show.first.key"))
+        row.checkBox(JsonLocalize.jsonfoldingsettingsShowFirstKey().get())
           .bindSelected(() -> getInstance().showFirstKey, value -> getInstance().showFirstKey = value)
-          .comment(JsonBundle.message("JsonFoldingSettings.show.first.key.description"));
+          .comment(JsonLocalize.jsonfoldingsettingsShowFirstKeyDescription().get());
         return null;
       });
       return null;

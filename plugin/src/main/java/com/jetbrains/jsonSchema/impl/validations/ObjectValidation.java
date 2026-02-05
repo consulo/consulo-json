@@ -23,11 +23,12 @@ import com.jetbrains.jsonSchema.extension.adapters.JsonPropertyAdapter;
 import com.jetbrains.jsonSchema.extension.adapters.JsonValueAdapter;
 import com.jetbrains.jsonSchema.fus.JsonSchemaFusCountedFeature;
 import com.jetbrains.jsonSchema.fus.JsonSchemaHighlightingSessionStatisticsCollector;
-import com.jetbrains.jsonSchema.impl.*;
+import com.jetbrains.jsonSchema.impl.MatchResult;
+import consulo.json.localize.JsonLocalize;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import kotlin.collections.CollectionsKt;
 import one.util.streamex.StreamEx;
-import jakarta.annotation.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -116,7 +117,7 @@ public final class ObjectValidation implements JsonSchemaValidation {
         requiredNames.removeAll(set);
         if (!requiredNames.isEmpty()) {
           JsonValidationError.MissingMultiplePropsIssueData data = createMissingPropertiesData(schema, requiredNames, consumer, value);
-          consumer.error(JsonBundle.message("schema.validation.missing.required.property.or.properties", data.getMessage(false)),
+          consumer.error(JsonLocalize.schemaValidationMissingRequiredPropertyOrProperties(data.getMessage(false).get()),
                          value.getDelegate(), JsonValidationError.FixableIssueKind.MissingProperty, data,
                          JsonErrorPriority.MISSING_PROPS);
           isValid = false;
@@ -124,13 +125,13 @@ public final class ObjectValidation implements JsonSchemaValidation {
         }
       }
       if (schema.getMinProperties() != null && propertyList.size() < schema.getMinProperties()) {
-        consumer.error(JsonBundle.message("schema.validation.number.of.props.less.than", schema.getMinProperties()), value.getDelegate(),
+        consumer.error(JsonLocalize.schemaValidationNumberOfPropsLessThan(schema.getMinProperties().get()), value.getDelegate(),
                        JsonErrorPriority.LOW_PRIORITY);
         isValid = false;
         if (options.shouldStopValidationAfterAnyErrorFound()) return false;
       }
       if (schema.getMaxProperties() != null && propertyList.size() > schema.getMaxProperties()) {
-        consumer.error(JsonBundle.message("schema.validation.number.of.props.greater.than", schema.getMaxProperties()), value.getDelegate(),
+        consumer.error(JsonLocalize.schemaValidationNumberOfPropsGreaterThan(schema.getMaxProperties().get()), value.getDelegate(),
                        JsonErrorPriority.LOW_PRIORITY);
         isValid = false;
         if (options.shouldStopValidationAfterAnyErrorFound()) return false;
@@ -145,7 +146,7 @@ public final class ObjectValidation implements JsonSchemaValidation {
             if (!deps.isEmpty()) {
               JsonValidationError.MissingMultiplePropsIssueData data = createMissingPropertiesData(schema, deps, consumer, value);
               consumer.error(
-                JsonBundle.message("schema.validation.violated.dependency", data.getMessage(false), entry.getKey()),
+                JsonLocalize.schemaValidationViolatedDependency(data.getMessage(false).get(), entry.getKey()),
                 value.getDelegate(),
                 JsonValidationError.FixableIssueKind.MissingProperty,
                 data, JsonErrorPriority.MISSING_PROPS);
@@ -332,7 +333,7 @@ public final class ObjectValidation implements JsonSchemaValidation {
       StreamSupport.stream(iter.spliterator(), false).filter(it -> !existingProperties.contains(it)).collect(Collectors.toSet());
     var missingPropertiesData = createMissingPropertiesData(schema, missingProperties, validationHost, objectValueAdapter);
     validationHost.error(
-      JsonBundle.message("schema.validation.missing.not.required.property.or.properties", missingPropertiesData.getMessage(false)),
+      JsonLocalize.schemaValidationMissingNotRequiredPropertyOrProperties(missingPropertiesData.getMessage(false).get()),
       inspectedValue.getDelegate(),
       JsonValidationError.FixableIssueKind.MissingOptionalProperty,
       missingPropertiesData,

@@ -1,7 +1,7 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.jetbrains.jsonSchema.impl.validations;
 
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.openapi.util.text.StringUtil;
 import com.jetbrains.jsonSchema.JsonComplianceCheckerOptions;
 import com.jetbrains.jsonSchema.JsonSchemaObject;
@@ -48,7 +48,7 @@ public final class EnumValidation implements JsonSchemaValidation {
     for (Object object : enumItems) {
       if (checkEnumValue(object, walker, propValue, text, eq)) return true;
     }
-    consumer.error(JsonBundle.message("schema.validation.enum.mismatch", StringUtil.join(enumItems, o -> o.toString(), ", ")), propValue.getDelegate(),
+    consumer.error(JsonLocalize.schemaValidationEnumMismatch(StringUtil.join(enumItems, o -> o.toString().get(), ", ")), propValue.getDelegate(),
                    JsonValidationError.FixableIssueKind.NonEnumValue, null, JsonErrorPriority.MEDIUM_PRIORITY);
     return false;
   }

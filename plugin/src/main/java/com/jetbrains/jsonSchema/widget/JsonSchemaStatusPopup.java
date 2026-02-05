@@ -2,17 +2,18 @@
 package com.jetbrains.jsonSchema.widget;
 
 import com.intellij.json.JsonBundle;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.ListPopup;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.SmartList;
-import com.intellij.util.containers.ContainerUtil;
 import com.jetbrains.jsonSchema.JsonSchemaCatalogProjectConfiguration;
 import com.jetbrains.jsonSchema.JsonSchemaMappingsProjectConfiguration;
+import com.jetbrains.jsonSchema.JsonSchemaService;
 import com.jetbrains.jsonSchema.UserDefinedJsonSchemaConfiguration;
 import com.jetbrains.jsonSchema.extension.JsonSchemaInfo;
-import com.jetbrains.jsonSchema.JsonSchemaService;
+import consulo.json.localize.JsonLocalize;
+import consulo.project.Project;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.SmartList;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Nls;
 
@@ -25,7 +26,7 @@ public final class JsonSchemaStatusPopup {
   static final JsonSchemaInfo ADD_MAPPING = new JsonSchemaInfo("") {
     @Override
     public @Nonnull String getDescription() {
-      return JsonBundle.message("schema.widget.add.mapping");
+      return JsonLocalize.schemaWidgetAddMapping().get();
     }
   };
 
@@ -33,7 +34,7 @@ public final class JsonSchemaStatusPopup {
 
     @Override
     public @Nls @Nonnull String getDescription() {
-      return JsonBundle.message("schema.widget.no.mapping");
+      return JsonLocalize.schemaWidgetNoMapping().get();
     }
   };
 
@@ -41,21 +42,21 @@ public final class JsonSchemaStatusPopup {
 
     @Override
     public @Nls @Nonnull String getDescription() {
-      return JsonBundle.message("schema.widget.stop.ignore.file");
+      return JsonLocalize.schemaWidgetStopIgnoreFile().get();
     }
   };
 
   static final JsonSchemaInfo EDIT_MAPPINGS = new JsonSchemaInfo("") {
     @Override
     public @Nonnull String getDescription() {
-      return JsonBundle.message("schema.widget.edit.mappings");
+      return JsonLocalize.schemaWidgetEditMappings().get();
     }
   };
 
   public static final JsonSchemaInfo LOAD_REMOTE = new JsonSchemaInfo("") {
     @Override
     public @Nonnull String getDescription() {
-      return JsonBundle.message("schema.widget.load.mappings");
+      return JsonLocalize.schemaWidgetLoadMappings().get();
     }
   };
 
@@ -78,7 +79,7 @@ public final class JsonSchemaStatusPopup {
       List<JsonSchemaInfo> infos = service.getAllUserVisibleSchemas();
       Comparator<JsonSchemaInfo> comparator = Comparator.comparing(JsonSchemaInfo::getDescription, String::compareToIgnoreCase);
       Stream<JsonSchemaInfo> registered = infos.stream().filter(i -> i.getProvider() != null).sorted(comparator);
-      List<JsonSchemaInfo> otherList = ContainerUtil.emptyList();
+      List<JsonSchemaInfo> otherList = List.of();
 
       if (JsonSchemaCatalogProjectConfiguration.getInstance(project).isRemoteActivityEnabled()) {
         otherList = infos.stream().filter(i -> i.getProvider() == null).sorted(comparator).collect(Collectors.toList());

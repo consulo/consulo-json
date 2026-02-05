@@ -1,7 +1,7 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.jetbrains.jsonSchema.impl.fixes;
 
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
@@ -25,7 +25,7 @@ public class RemoveDuplicateArrayItemsFix implements LocalQuickFix {
   @Nonnull
   @Override
   public String getFamilyName() {
-    return JsonBundle.message("remove.duplicated.items");
+    return JsonLocalize.removeDuplicatedItems().get();
   }
 
   @Override

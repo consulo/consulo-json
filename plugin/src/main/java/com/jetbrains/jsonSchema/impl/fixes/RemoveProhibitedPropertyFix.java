@@ -1,7 +1,7 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.jetbrains.jsonSchema.impl.fixes;
 
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.modcommand.ModPsiUpdater;
 import com.intellij.modcommand.PsiUpdateModCommandQuickFix;
 import com.intellij.openapi.project.Project;
@@ -27,7 +27,7 @@ public final class RemoveProhibitedPropertyFix extends PsiUpdateModCommandQuickF
 
   @Override
   public @Nls(capitalization = Nls.Capitalization.Sentence) @Nonnull String getFamilyName() {
-    return JsonBundle.message("remove.prohibited.property");
+    return JsonLocalize.removeProhibitedProperty().get();
   }
 
   @Override

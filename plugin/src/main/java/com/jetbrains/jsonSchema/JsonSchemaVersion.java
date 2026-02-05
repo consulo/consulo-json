@@ -1,7 +1,7 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.jetbrains.jsonSchema;
 
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.openapi.util.text.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -22,13 +22,13 @@ public enum JsonSchemaVersion {
 
   @Override
   public String toString() {
-    return JsonBundle.message("schema.of.version", switch (this) {
+    return JsonLocalize.schemaOfVersion(switch (this) {
       case SCHEMA_4 -> 4;
       case SCHEMA_6 -> 6;
       case SCHEMA_7 -> 7;
       case SCHEMA_2019_09 -> 201909;
       case SCHEMA_2020_12 -> 202012;
-    });
+    }).get();
   }
 
 

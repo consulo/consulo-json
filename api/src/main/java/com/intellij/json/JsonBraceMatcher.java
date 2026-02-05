@@ -21,7 +21,8 @@ public class JsonBraceMatcher implements PairedBraceMatcher {
     };
 
     @Override
-    public BracePair @Nonnull [] getPairs() {
+    @Nonnull
+    public BracePair[] getPairs() {
         return PAIRS;
     }
 

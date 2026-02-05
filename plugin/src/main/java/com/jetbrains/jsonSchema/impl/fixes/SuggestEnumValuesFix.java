@@ -4,7 +4,7 @@ package com.jetbrains.jsonSchema.impl.fixes;
 import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.template.impl.ConstantNode;
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.modcommand.ModPsiUpdater;
 import com.intellij.modcommand.PsiUpdateModCommandQuickFix;
 import com.intellij.openapi.project.Project;
@@ -28,7 +28,7 @@ public final class SuggestEnumValuesFix extends PsiUpdateModCommandQuickFix {
 
   @Override
   public @Nls(capitalization = Nls.Capitalization.Sentence) @Nonnull String getFamilyName() {
-    return JsonBundle.message("replace.with.allowed.value");
+    return JsonLocalize.replaceWithAllowedValue().get();
   }
 
   @Override

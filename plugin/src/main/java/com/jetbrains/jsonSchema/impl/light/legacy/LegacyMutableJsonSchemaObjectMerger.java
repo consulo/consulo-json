@@ -2,7 +2,7 @@
 package com.jetbrains.jsonSchema.impl.light.legacy;
 
 import com.jetbrains.jsonSchema.JsonSchemaObject;
-import com.jetbrains.jsonSchema.internal.JsonSchemaObjectImpl;
+import com.jetbrains.jsonSchema.impl.JsonSchemaObjectImpl;
 import jakarta.annotation.Nonnull;
 
 @Deprecated

@@ -3,7 +3,7 @@ package com.jetbrains.jsonSchema.settings.mappings;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.PsiNavigationSupport;
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.CommonShortcuts;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
@@ -106,7 +106,7 @@ public final class JsonSchemaMappingsView implements Disposable {
       final JsonSchemaService service = JsonSchemaService.Impl.get(myProject);
       List<JsonSchemaInfo> schemas = service.getAllUserVisibleSchemas();
       JBPopupFactory.getInstance().createListPopup(new JsonSchemaInfoPopupStep(schemas,
-                                                                               myProject, null, service, JsonBundle.message("schema.configuration.mapping.remote")) {
+                                                                               myProject, null, service, JsonLocalize.schemaConfigurationMappingRemote().get()) {
         @Override
         protected void setMapping(@Nullable JsonSchemaInfo selectedValue, @Nullable VirtualFile virtualFile, @Nonnull Project project) {
           if (selectedValue != null) {
@@ -116,7 +116,7 @@ public final class JsonSchemaMappingsView implements Disposable {
         }
       }).showInCenterOf(urlButton);
     });
-    var descriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor().withTitle(JsonBundle.message("json.schema.add.schema.chooser.title"));
+    var descriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor().withTitle(JsonLocalize.jsonSchemaAddSchemaChooserTitle().get());
     SwingHelper.installFileCompletionAndBrowseDialog(myProject, mySchemaField, descriptor);
     mySchemaField.getTextField().getDocument().addDocumentListener(new DocumentAdapter() {
       @Override
@@ -125,7 +125,7 @@ public final class JsonSchemaMappingsView implements Disposable {
       }
     });
     attachNavigateToSchema();
-    myError = SwingHelper.createHtmlLabel(JsonBundle.message("json.schema.conflicting.mappings"), null, s -> {
+    myError = SwingHelper.createHtmlLabel(JsonLocalize.jsonSchemaConflictingMappings().get(), null, s -> {
       final BalloonBuilder builder = JBPopupFactory.getInstance().
         createHtmlTextBalloonBuilder(myErrorText, UIUtil.getBalloonWarningIcon(), MessageType.WARNING.getPopupBackground(), null);
       builder.setDisposable(this);
@@ -139,12 +139,12 @@ public final class JsonSchemaMappingsView implements Disposable {
     schemaSelector.add(urlButton, BorderLayout.EAST);
 
     final FormBuilder builder = FormBuilder.createFormBuilder();
-    final JBLabel label = new JBLabel(JsonBundle.message("json.schema.file.selector.title"));
+    final JBLabel label = new JBLabel(JsonLocalize.jsonSchemaFileSelectorTitle().get());
     builder.addLabeledComponent(label, schemaSelector);
     label.setLabelFor(schemaSelector);
     label.setBorder(JBUI.Borders.empty(0, 10));
     schemaSelector.setBorder(JBUI.Borders.emptyRight(10));
-    JBLabel versionLabel = new JBLabel(JsonBundle.message("json.schema.version.selector.title"));
+    JBLabel versionLabel = new JBLabel(JsonLocalize.jsonSchemaVersionSelectorTitle().get());
     mySchemaVersionComboBox = new ComboBox<>(new DefaultComboBoxModel<>(JsonSchemaVersion.values()));
     mySchemaVersionComboBox.setRenderer(
       SimpleListCellRenderer.create((presentation, value, index) -> { presentation.setText(getPresentableSchemaName(value)); })
@@ -162,7 +162,7 @@ public final class JsonSchemaMappingsView implements Disposable {
     panel.setBorder(BorderFactory.createCompoundBorder(JBUI.Borders.empty(0, 8), panel.getBorder()));
     builder.addComponentFillVertically(panel, 5);
     JLabel commentComponent = ComponentPanelBuilder.createCommentComponent(
-      JsonBundle.message("path.to.file.or.directory.relative.to.project.root.or.file.name"), false);
+      JsonLocalize.pathToFileOrDirectoryRelativeToProjectRootOrFileName().get(), false);
     commentComponent.setBorder(JBUI.Borders.empty(0, 8, 5, 0));
     builder.addComponent(commentComponent);
 
@@ -186,7 +186,7 @@ public final class JsonSchemaMappingsView implements Disposable {
       VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(pathToSchema));
       if (virtualFile == null) {
         BalloonBuilder balloonBuilder = JBPopupFactory.getInstance()
-          .createHtmlTextBalloonBuilder(JsonBundle.message("json.schema.file.not.found"), UIUtil.getBalloonErrorIcon(), MessageType.ERROR.getPopupBackground(), null);
+          .createHtmlTextBalloonBuilder(JsonLocalize.jsonSchemaFileNotFound().get(), UIUtil.getBalloonErrorIcon(), MessageType.ERROR.getPopupBackground(), null);
         Balloon balloon = balloonBuilder.setFadeoutTime(TimeUnit.SECONDS.toMillis(3)).createBalloon();
         balloon.showInCenterOf(mySchemaField);
         return;
@@ -293,7 +293,7 @@ public final class JsonSchemaMappingsView implements Disposable {
                                                                            JsonMappingKind.values()) {
         @Override
         public @Nonnull String getTextFor(JsonMappingKind value) {
-          return JsonBundle.message("schema.add.mapping.kind.text", StringUtil.capitalizeWords(value.getDescription(), true));
+          return JsonLocalize.schemaAddMappingKindText(StringUtil.capitalizeWords(value.getDescription().get(), true));
         }
 
         @Override
@@ -363,6 +363,6 @@ public final class JsonSchemaMappingsView implements Disposable {
       case SCHEMA_2020_12 -> "2020.12";
     };
 
-    return JsonBundle.message("schema.of.version", versionSuffix);
+    return JsonLocalize.schemaOfVersion(versionSuffix).get();
   }
 }

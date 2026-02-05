@@ -1,7 +1,7 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.intellij.json.impl.formatter;
 
-import com.intellij.json.JsonBundle;
+import consulo.json.localize.JsonLocalize;
 import com.intellij.json.JsonLanguage;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleSettings;
@@ -51,9 +51,9 @@ public final class JsonLanguageCodeStyleSettingsProvider extends LanguageCodeSty
                                    "SPACE_WITHIN_BRACES",
                                    "SPACE_AFTER_COMMA",
                                    "SPACE_BEFORE_COMMA");
-      consumer.renameStandardOption("SPACE_WITHIN_BRACES", JsonBundle.message("formatter.space_within_braces.label"));
-      consumer.showCustomOption(JsonCodeStyleSettings.class, "SPACE_BEFORE_COLON", JsonBundle.message("formatter.space_before_colon.label"), getInstance().SPACES_OTHER);
-      consumer.showCustomOption(JsonCodeStyleSettings.class, "SPACE_AFTER_COLON", JsonBundle.message("formatter.space_after_colon.label"), getInstance().SPACES_OTHER);
+      consumer.renameStandardOption("SPACE_WITHIN_BRACES", JsonLocalize.formatterSpace_within_bracesLabel().get());
+      consumer.showCustomOption(JsonCodeStyleSettings.class, "SPACE_BEFORE_COLON", JsonLocalize.formatterSpace_before_colonLabel().get(), getInstance().SPACES_OTHER);
+      consumer.showCustomOption(JsonCodeStyleSettings.class, "SPACE_AFTER_COLON", JsonLocalize.formatterSpace_after_colonLabel().get(), getInstance().SPACES_OTHER);
     }
     else if (settingsType == SettingsType.BLANK_LINES_SETTINGS) {
       consumer.showStandardOptions("KEEP_BLANK_LINES_IN_CODE");
@@ -66,27 +66,27 @@ public final class JsonLanguageCodeStyleSettingsProvider extends LanguageCodeSty
 
       consumer.showCustomOption(JsonCodeStyleSettings.class,
                                 "KEEP_TRAILING_COMMA",
-                                JsonBundle.message("formatter.trailing_comma.label"),
+                                JsonLocalize.formatterTrailing_commaLabel().get(),
                                 getInstance().WRAPPING_KEEP);
 
       consumer.showCustomOption(JsonCodeStyleSettings.class,
                                 "ARRAY_WRAPPING",
-                                JsonBundle.message("formatter.wrapping_arrays.label"),
+                                JsonLocalize.formatterWrapping_arraysLabel().get(),
                                 null,
                                 getInstance().WRAP_OPTIONS,
                                 CodeStyleSettingsCustomizable.WRAP_VALUES);
 
       consumer.showCustomOption(JsonCodeStyleSettings.class,
                                 "OBJECT_WRAPPING",
-                                JsonBundle.message("formatter.objects.label"),
+                                JsonLocalize.formatterObjectsLabel().get(),
                                 null,
                                 getInstance().WRAP_OPTIONS,
                                 CodeStyleSettingsCustomizable.WRAP_VALUES);
 
       consumer.showCustomOption(JsonCodeStyleSettings.class,
                                 "PROPERTY_ALIGNMENT",
-                                JsonBundle.message("formatter.align.properties.caption"),
-                                JsonBundle.message("formatter.objects.label"),
+                                JsonLocalize.formatterAlignPropertiesCaption().get(),
+                                JsonLocalize.formatterObjectsLabel().get(),
                                 Holder.ALIGN_OPTIONS,
                                 Holder.ALIGN_VALUES);
 
