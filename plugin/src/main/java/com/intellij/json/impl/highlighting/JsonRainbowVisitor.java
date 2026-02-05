@@ -1,9 +1,9 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.intellij.json.impl.highlighting;
 
+import com.intellij.json.highlighting.JsonSyntaxHighlighterFactory;
 import com.intellij.json.impl.pointer.JsonPointerPosition;
 import com.intellij.json.psi.*;
-import com.jetbrains.jsonSchema.impl.JsonOriginalPsiWalker;
 import consulo.language.editor.rawHighlight.HighlightVisitor;
 import consulo.language.editor.rawHighlight.RainbowVisitor;
 import consulo.language.psi.PsiElement;

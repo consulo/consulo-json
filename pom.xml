@@ -43,7 +43,6 @@
 
     <modules>
         <module>api</module>
-        <module>scheme-api</module>
         <module>plugin</module>
     </modules>
 </project>

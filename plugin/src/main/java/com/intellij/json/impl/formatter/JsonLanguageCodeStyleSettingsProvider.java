@@ -19,7 +19,7 @@ import jakarta.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
-import static com.intellij.psi.codeStyle.CodeStyleSettingsCustomizableOptions.getInstance;
+import static CodeStyleSettingsCustomizableOptions.getInstance;
 
 /**
  * @author Mikhail Golubev
