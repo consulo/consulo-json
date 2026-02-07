@@ -3,7 +3,7 @@
  * @since 2026-02-07
  */
 module consulo.json.api {
-    requires consulo.ide.api;
+    requires transitive consulo.ide.api;
     
     exports com.intellij.json;
     exports com.intellij.json.codeinsight;
