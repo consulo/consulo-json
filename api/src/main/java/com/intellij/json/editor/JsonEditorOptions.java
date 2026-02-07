@@ -1,6 +1,9 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.intellij.json.editor;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -8,11 +11,15 @@ import consulo.component.persist.Storage;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
 
 @State(
     name = "JsonEditorOptions",
     storages = @Storage("editor.xml")
 )
+@ServiceAPI(ComponentScope.APPLICATION)
+@ServiceImpl
+@Singleton
 public final class JsonEditorOptions implements PersistentStateComponent<JsonEditorOptions> {
     public boolean COMMA_ON_ENTER = true;
     public boolean COMMA_ON_MATCHING_BRACES = true;

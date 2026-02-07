@@ -1,28 +1,26 @@
 // Copyright 2000-2025 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
-package com.intellij.json.intentions;
+package com.intellij.json.impl.intentions;
 
-import com.intellij.modcommand.ActionContext;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.ApiStatus;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
-@ApiStatus.Internal
 public abstract class AbstractSortPropertiesSession<TObj extends PsiElement, TProp extends PsiElement> {
 
-  protected final ActionContext context;
   protected final PsiFile file;
   protected final TextRange selection;
   protected final TObj rootObj;
   protected final Set<TObj> objects;
 
-  public AbstractSortPropertiesSession(ActionContext context, PsiFile file) {
-    this.context = context;
+  public AbstractSortPropertiesSession(TextRange selection, PsiFile file) {
     this.file = file;
-    this.selection = context.getSelection();
+    this.selection = selection;
     this.rootObj = findRootObject();
     this.objects = rootObj != null ? collectObjects(rootObj) : Collections.emptySet();
   }

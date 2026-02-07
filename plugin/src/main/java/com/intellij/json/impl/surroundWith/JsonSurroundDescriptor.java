@@ -30,7 +30,8 @@ public final class JsonSurroundDescriptor implements SurroundDescriptor {
     };
 
     @Override
-    public PsiElement @Nonnull [] getElementsToSurround(PsiFile file, int startOffset, int endOffset) {
+    @Nonnull
+    public PsiElement[] getElementsToSurround(PsiFile file, int startOffset, int endOffset) {
         PsiElement firstElement = file.findElementAt(startOffset);
         PsiElement lastElement = file.findElementAt(endOffset - 1);
 
@@ -62,7 +63,8 @@ public final class JsonSurroundDescriptor implements SurroundDescriptor {
         return PsiElement.EMPTY_ARRAY;
     }
 
-    private static <T extends PsiElement> PsiElement @Nonnull [] collectElements(int endOffset, @Nonnull T property, @Nonnull Class<T> kind) {
+    @Nonnull
+    private static <T extends PsiElement> PsiElement[] collectElements(int endOffset, @Nonnull T property, @Nonnull Class<T> kind) {
         final List<T> properties = new SmartList<>(property);
         PsiElement nextSibling = property.getNextSibling();
         while (nextSibling != null && nextSibling.getTextRange().getEndOffset() <= endOffset) {
@@ -75,7 +77,8 @@ public final class JsonSurroundDescriptor implements SurroundDescriptor {
     }
 
     @Override
-    public Surrounder @Nonnull [] getSurrounders() {
+    @Nonnull
+    public Surrounder[] getSurrounders() {
         return ourSurrounders;
     }
 

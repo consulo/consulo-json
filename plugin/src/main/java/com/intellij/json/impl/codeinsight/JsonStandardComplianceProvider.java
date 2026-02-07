@@ -2,17 +2,20 @@
 package com.intellij.json.impl.codeinsight;
 
 import com.intellij.json.psi.JsonElement;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.psi.PsiComment;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.ExtensionPointName;
+import consulo.language.psi.PsiComment;
 import jakarta.annotation.Nonnull;
 
 /**
  * Allows to configure a compliance level for JSON.
  * For example, some tools ignore comments in JSON silently when parsing, so there is no need to warn users about it.
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class JsonStandardComplianceProvider {
   public static final ExtensionPointName<JsonStandardComplianceProvider> EP_NAME =
-    ExtensionPointName.create("com.intellij.json.jsonStandardComplianceProvider");
+    ExtensionPointName.create(JsonStandardComplianceProvider.class);
 
   public static boolean shouldWarnAboutComment(@Nonnull PsiComment comment) {
     return EP_NAME.findFirstSafe(provider -> provider.isCommentAllowed(comment)) == null;

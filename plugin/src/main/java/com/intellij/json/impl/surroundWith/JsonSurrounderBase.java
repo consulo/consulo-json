@@ -13,40 +13,40 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public abstract class JsonSurrounderBase implements Surrounder {
-  @Override
-  public boolean isApplicable(PsiElement @Nonnull [] elements) {
-    return elements.length >= 1 && elements[0] instanceof JsonValue && !JsonPsiUtil.isPropertyKey(elements[0]);
-  }
-
-  @Override
-  public @Nullable TextRange surroundElements(@Nonnull Project project, @Nonnull Editor editor, PsiElement @Nonnull [] elements) {
-    if (!isApplicable(elements)) {
-      return null;
+    @Override
+    public boolean isApplicable(@Nonnull PsiElement[] elements) {
+        return elements.length >= 1 && elements[0] instanceof JsonValue && !JsonPsiUtil.isPropertyKey(elements[0]);
     }
 
-    final JsonElementGenerator generator = new JsonElementGenerator(project);
+    @Override
+    public @Nullable TextRange surroundElements(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiElement[] elements) {
+        if (!isApplicable(elements)) {
+            return null;
+        }
 
-    if (elements.length == 1) {
-      JsonValue replacement = generator.createValue(createReplacementText(elements[0].getText()));
-      elements[0].replace(replacement);
-    }
-    else {
-      final String propertiesText = getTextAndRemoveMisc(elements[0], elements[elements.length - 1]);
-      JsonValue replacement = generator.createValue(createReplacementText(propertiesText));
-      elements[0].replace(replacement);
-    }
-    return null;
-  }
+        final JsonElementGenerator generator = new JsonElementGenerator(project);
 
-  protected static @Nonnull String getTextAndRemoveMisc(@Nonnull PsiElement firstProperty, @Nonnull PsiElement lastProperty) {
-    final TextRange replacedRange = new TextRange(firstProperty.getTextOffset(), lastProperty.getTextRange().getEndOffset());
-    final String propertiesText = replacedRange.substring(firstProperty.getContainingFile().getText());
-    if (firstProperty != lastProperty) {
-      final PsiElement parent = firstProperty.getParent();
-      parent.deleteChildRange(firstProperty.getNextSibling(), lastProperty);
+        if (elements.length == 1) {
+            JsonValue replacement = generator.createValue(createReplacementText(elements[0].getText()));
+            elements[0].replace(replacement);
+        }
+        else {
+            final String propertiesText = getTextAndRemoveMisc(elements[0], elements[elements.length - 1]);
+            JsonValue replacement = generator.createValue(createReplacementText(propertiesText));
+            elements[0].replace(replacement);
+        }
+        return null;
     }
-    return propertiesText;
-  }
 
-  protected abstract @Nonnull String createReplacementText(@Nonnull String textInRange);
+    protected static @Nonnull String getTextAndRemoveMisc(@Nonnull PsiElement firstProperty, @Nonnull PsiElement lastProperty) {
+        final TextRange replacedRange = new TextRange(firstProperty.getTextOffset(), lastProperty.getTextRange().getEndOffset());
+        final String propertiesText = replacedRange.substring(firstProperty.getContainingFile().getText());
+        if (firstProperty != lastProperty) {
+            final PsiElement parent = firstProperty.getParent();
+            parent.deleteChildRange(firstProperty.getNextSibling(), lastProperty);
+        }
+        return propertiesText;
+    }
+
+    protected abstract @Nonnull String createReplacementText(@Nonnull String textInRange);
 }

@@ -36,49 +36,49 @@ import jakarta.annotation.Nullable;
  * @author Mikhail Golubev
  */
 public final class JsonWithObjectLiteralSurrounder extends JsonSurrounderBase {
-  @Override
-  public LocalizeValue getTemplateDescription() {
-    return JsonLocalize.surroundWithObjectLiteralDesc();
-  }
-
-  @Override
-  public boolean isApplicable(PsiElement @Nonnull [] elements) {
-    return !JsonPsiUtil.isPropertyKey(elements[0]) && (elements[0] instanceof JsonProperty || elements.length == 1);
-  }
-
-  @Override
-  public @Nullable TextRange surroundElements(@Nonnull Project project,
-                                              @Nonnull Editor editor,
-                                              PsiElement @Nonnull [] elements) {
-
-    if (!isApplicable(elements)) {
-      return null;
+    @Override
+    public LocalizeValue getTemplateDescription() {
+        return JsonLocalize.surroundWithObjectLiteralDesc();
     }
 
-    final JsonElementGenerator generator = new JsonElementGenerator(project);
-
-    final PsiElement firstElement = elements[0];
-    final JsonElement newNameElement;
-    if (firstElement instanceof JsonValue) {
-      assert elements.length == 1 : "Only single JSON value can be wrapped in object literal";
-      JsonObject replacement = generator.createValue(createReplacementText(firstElement.getText()));
-      replacement = (JsonObject)firstElement.replace(replacement);
-      newNameElement = replacement.getPropertyList().get(0).getNameElement();
+    @Override
+    public boolean isApplicable(@Nonnull PsiElement[] elements) {
+        return !JsonPsiUtil.isPropertyKey(elements[0]) && (elements[0] instanceof JsonProperty || elements.length == 1);
     }
-    else {
-      assert firstElement instanceof JsonProperty;
-      final String propertiesText = getTextAndRemoveMisc(firstElement, elements[elements.length - 1]);
-      final JsonObject tempJsonObject = generator.createValue(createReplacementText("{\n" + propertiesText) + "\n}");
-      JsonProperty replacement = tempJsonObject.getPropertyList().get(0);
-      replacement = (JsonProperty)firstElement.replace(replacement);
-      newNameElement = replacement.getNameElement();
-    }
-    final TextRange rangeWithQuotes = newNameElement.getTextRange();
-    return new TextRange(rangeWithQuotes.getStartOffset() + 1, rangeWithQuotes.getEndOffset() - 1);
-  }
 
-  @Override
-  protected @Nonnull String createReplacementText(@Nonnull String textInRange) {
-    return "{\n\"property\": " + textInRange + "\n}";
-  }
+    @Override
+    public @Nullable TextRange surroundElements(@Nonnull Project project,
+                                                @Nonnull Editor editor,
+                                                @Nonnull PsiElement[] elements) {
+
+        if (!isApplicable(elements)) {
+            return null;
+        }
+
+        final JsonElementGenerator generator = new JsonElementGenerator(project);
+
+        final PsiElement firstElement = elements[0];
+        final JsonElement newNameElement;
+        if (firstElement instanceof JsonValue) {
+            assert elements.length == 1 : "Only single JSON value can be wrapped in object literal";
+            JsonObject replacement = generator.createValue(createReplacementText(firstElement.getText()));
+            replacement = (JsonObject) firstElement.replace(replacement);
+            newNameElement = replacement.getPropertyList().get(0).getNameElement();
+        }
+        else {
+            assert firstElement instanceof JsonProperty;
+            final String propertiesText = getTextAndRemoveMisc(firstElement, elements[elements.length - 1]);
+            final JsonObject tempJsonObject = generator.createValue(createReplacementText("{\n" + propertiesText) + "\n}");
+            JsonProperty replacement = tempJsonObject.getPropertyList().get(0);
+            replacement = (JsonProperty) firstElement.replace(replacement);
+            newNameElement = replacement.getNameElement();
+        }
+        final TextRange rangeWithQuotes = newNameElement.getTextRange();
+        return new TextRange(rangeWithQuotes.getStartOffset() + 1, rangeWithQuotes.getEndOffset() - 1);
+    }
+
+    @Override
+    protected @Nonnull String createReplacementText(@Nonnull String textInRange) {
+        return "{\n\"property\": " + textInRange + "\n}";
+    }
 }

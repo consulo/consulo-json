@@ -15,67 +15,68 @@ import java.util.List;
  * @author Mikhail Golubev
  */
 public final class JsonStructureViewElement implements StructureViewTreeElement {
-  private final JsonElement myElement;
+    private final JsonElement myElement;
 
-  public JsonStructureViewElement(@Nonnull JsonElement element) {
-    assert PsiTreeUtil.instanceOf(element, JsonFile.class, JsonProperty.class, JsonObject.class, JsonArray.class);
-    myElement = element;
-  }
-
-  @Override
-  public JsonElement getValue() {
-    return myElement;
-  }
-
-  @Override
-  public void navigate(boolean requestFocus) {
-    myElement.navigate(requestFocus);
-  }
-
-  @Override
-  public boolean canNavigate() {
-    return myElement.canNavigate();
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return myElement.canNavigateToSource();
-  }
-
-  @Override
-  public @Nonnull ItemPresentation getPresentation() {
-    final ItemPresentation presentation = myElement.getPresentation();
-    assert presentation != null;
-    return presentation;
-  }
-
-  @Override
-  public TreeElement @Nonnull [] getChildren() {
-    JsonElement value = null;
-    if (myElement instanceof JsonFile) {
-      value = ((JsonFile)myElement).getTopLevelValue();
+    public JsonStructureViewElement(@Nonnull JsonElement element) {
+        assert PsiTreeUtil.instanceOf(element, JsonFile.class, JsonProperty.class, JsonObject.class, JsonArray.class);
+        myElement = element;
     }
-    else if (myElement instanceof JsonProperty) {
-      value = ((JsonProperty)myElement).getValue();
+
+    @Override
+    public JsonElement getValue() {
+        return myElement;
     }
-    else if (PsiTreeUtil.instanceOf(myElement, JsonObject.class, JsonArray.class)) {
-      value = myElement;
+
+    @Override
+    public void navigate(boolean requestFocus) {
+        myElement.navigate(requestFocus);
     }
-    if (value instanceof JsonObject object) {
-      return ContainerUtil.map2Array(object.getPropertyList(), TreeElement.class, property -> new JsonStructureViewElement(property));
+
+    @Override
+    public boolean canNavigate() {
+        return myElement.canNavigate();
     }
-    else if (value instanceof JsonArray array) {
-      final List<TreeElement> childObjects = ContainerUtil.mapNotNull(array.getValueList(), value1 -> {
-        if (value1 instanceof JsonObject && !((JsonObject)value1).getPropertyList().isEmpty()) {
-          return new JsonStructureViewElement(value1);
+
+    @Override
+    public boolean canNavigateToSource() {
+        return myElement.canNavigateToSource();
+    }
+
+    @Override
+    public @Nonnull ItemPresentation getPresentation() {
+        final ItemPresentation presentation = myElement.getPresentation();
+        assert presentation != null;
+        return presentation;
+    }
+
+    @Override
+    @Nonnull
+    public TreeElement[] getChildren() {
+        JsonElement value = null;
+        if (myElement instanceof JsonFile) {
+            value = ((JsonFile) myElement).getTopLevelValue();
         }
-        else if (value1 instanceof JsonArray && PsiTreeUtil.findChildOfType(value1, JsonProperty.class) != null) {
-          return new JsonStructureViewElement(value1);
+        else if (myElement instanceof JsonProperty) {
+            value = ((JsonProperty) myElement).getValue();
         }
-        return null;
-      });
-      return childObjects.toArray(TreeElement.EMPTY_ARRAY);
+        else if (PsiTreeUtil.instanceOf(myElement, JsonObject.class, JsonArray.class)) {
+            value = myElement;
+        }
+        if (value instanceof JsonObject object) {
+            return ContainerUtil.map2Array(object.getPropertyList(), TreeElement.class, property -> new JsonStructureViewElement(property));
+        }
+        else if (value instanceof JsonArray array) {
+            final List<TreeElement> childObjects = ContainerUtil.mapNotNull(array.getValueList(), value1 -> {
+                if (value1 instanceof JsonObject && !((JsonObject) value1).getPropertyList().isEmpty()) {
+                    return new JsonStructureViewElement(value1);
+                }
+                else if (value1 instanceof JsonArray && PsiTreeUtil.findChildOfType(value1, JsonProperty.class) != null) {
+                    return new JsonStructureViewElement(value1);
+                }
+                return null;
+            });
+            return childObjects.toArray(TreeElement.EMPTY_ARRAY);
+        }
+        return EMPTY_ARRAY;
     }
-    return EMPTY_ARRAY;
-  }
 }

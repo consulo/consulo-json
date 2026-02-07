@@ -1,0 +1,43 @@
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+package com.jetbrains.jsonSchema.extension;
+
+import com.jetbrains.jsonSchema.JsonComplianceCheckerOptions;
+import com.jetbrains.jsonSchema.JsonSchemaObject;
+import com.jetbrains.jsonSchema.JsonSchemaType;
+import com.jetbrains.jsonSchema.JsonValidationError;
+import com.jetbrains.jsonSchema.extension.adapter.JsonValueAdapter;
+import consulo.language.psi.PsiElement;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
+import java.util.Map;
+import java.util.regex.MatchResult;
+
+public interface JsonValidationHost {
+    void error(final String error, final PsiElement holder, JsonErrorPriority priority);
+
+    void error(final PsiElement newHolder, JsonValidationError error);
+
+    void error(final String error, final PsiElement holder,
+               JsonValidationError.FixableIssueKind fixableIssueKind,
+               JsonValidationError.IssueData data,
+               JsonErrorPriority priority);
+
+    void typeError(final @Nonnull PsiElement value, @Nullable JsonSchemaType currentType, final JsonSchemaType... allowedTypes);
+
+    MatchResult resolve(JsonSchemaObject schemaObject, @Nullable JsonValueAdapter inspectedElementAdapter);
+
+    @Nullable
+    JsonValidationHost checkByMatchResult(JsonValueAdapter adapter, MatchResult result, JsonComplianceCheckerOptions options);
+
+    boolean isValid();
+
+    void checkObjectBySchemaRecordErrors(@Nonnull JsonSchemaObject schema, @Nonnull JsonValueAdapter object);
+
+    void addErrorsFrom(JsonValidationHost otherHost);
+
+    boolean hasRecordedErrorsFor(@Nonnull JsonValueAdapter inspectedValueAdapter);
+
+    @Nonnull
+    Map<PsiElement, JsonValidationError> getErrors();
+}

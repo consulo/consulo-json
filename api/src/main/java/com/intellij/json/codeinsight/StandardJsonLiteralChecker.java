@@ -10,6 +10,7 @@ import consulo.json.localize.JsonLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.Pair;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.regex.Pattern;
@@ -23,14 +24,14 @@ public class StandardJsonLiteralChecker implements JsonLiteralChecker {
   public static final String NAN = "NaN";
 
   @Override
-  public @Nullable LocalizeValue getErrorForNumericLiteral(String literalText) {
+  public @Nonnull LocalizeValue getErrorForNumericLiteral(String literalText) {
     if (!INF.equals(literalText) &&
         !MINUS_INF.equals(literalText) &&
         !NAN.equals(literalText) &&
         !VALID_NUMBER_LITERAL.matcher(literalText).matches()) {
       return JsonLocalize.syntaxErrorIllegalFloatingPointLiteral();
     }
-    return null;
+    return LocalizeValue.empty();
   }
 
   @Override
