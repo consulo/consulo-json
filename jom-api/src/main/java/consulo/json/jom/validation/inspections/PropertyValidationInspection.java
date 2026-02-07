@@ -52,6 +52,10 @@ public class PropertyValidationInspection extends LocalInspectionTool {
         return new JsonElementVisitor() {
             @Override
             public void visitLiteral(@Nonnull JsonLiteral o) {
+                if (o.getParent() instanceof JsonProperty jsonProperty && jsonProperty.getNameElement() == o) {
+                    return;
+                }
+
                 validateValue(o, holder);
             }
 
