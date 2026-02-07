@@ -2,7 +2,7 @@
     <id>consulo.json</id>
     <name>JSON</name>
     <tags>
-        <tag>meta.language</tag>
+        <tag>markup.language</tag>
     </tags>
     <version>SNAPSHOT</version>
 </consulo-plugin>
