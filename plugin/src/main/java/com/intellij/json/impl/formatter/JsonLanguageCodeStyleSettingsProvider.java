@@ -61,33 +61,38 @@ public final class JsonLanguageCodeStyleSettingsProvider extends LanguageCodeSty
             consumer.showStandardOptions("RIGHT_MARGIN",
                 "WRAP_ON_TYPING",
                 "KEEP_LINE_BREAKS",
-                "WRAP_LONG_LINES");
+                "WRAP_LONG_LINES"
+            );
 
             consumer.showCustomOption(JsonCodeStyleSettings.class,
                 "KEEP_TRAILING_COMMA",
                 JsonLocalize.formatterTrailing_commaLabel().get(),
-                "WRAPPING_KEEP");
+                null
+            );
 
             consumer.showCustomOption(JsonCodeStyleSettings.class,
                 "ARRAY_WRAPPING",
                 JsonLocalize.formatterWrapping_arraysLabel().get(),
                 null,
-                "WRAP_OPTIONS",
-                CodeStyleSettingsCustomizable.WRAP_VALUES);
+                CodeStyleSettingsCustomizable.WRAP_OPTIONS,
+                CodeStyleSettingsCustomizable.WRAP_VALUES
+            );
 
             consumer.showCustomOption(JsonCodeStyleSettings.class,
                 "OBJECT_WRAPPING",
                 JsonLocalize.formatterObjectsLabel().get(),
                 null,
-                "WRAP_OPTIONS",
-                CodeStyleSettingsCustomizable.WRAP_VALUES);
+                CodeStyleSettingsCustomizable.WRAP_OPTIONS,
+                CodeStyleSettingsCustomizable.WRAP_VALUES
+            );
 
             consumer.showCustomOption(JsonCodeStyleSettings.class,
                 "PROPERTY_ALIGNMENT",
                 JsonLocalize.formatterAlignPropertiesCaption().get(),
                 JsonLocalize.formatterObjectsLabel().get(),
                 Holder.ALIGN_OPTIONS,
-                Holder.ALIGN_VALUES);
+                Holder.ALIGN_VALUES
+            );
 
         }
     }
@@ -98,7 +103,8 @@ public final class JsonLanguageCodeStyleSettingsProvider extends LanguageCodeSty
     }
 
     @Override
-    public @Nullable IndentOptionsEditor getIndentOptionsEditor() {
+    @Nullable
+    public IndentOptionsEditor getIndentOptionsEditor() {
         return new SmartIndentOptionsEditor();
     }
 
