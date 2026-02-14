@@ -1,6 +1,7 @@
 // Copyright 2000-2025 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.intellij.json;
 
+import com.intellij.json.psi.impl.JsonElementTypesFactory;
 import com.intellij.json.psi.impl.JsonFileImpl;
 import com.intellij.json.syntax.JsonSyntaxParser;
 import consulo.annotation.component.ExtensionImpl;
@@ -60,7 +61,7 @@ public class JsonParserDefinition implements ParserDefinition {
     @Override
     @Nonnull
     public PsiElement createElement(@Nonnull ASTNode astNode) {
-        return JsonElementTypes.Factory.createElement(astNode);
+        return JsonElementTypesFactory.createElement(astNode);
     }
 
     @Override
