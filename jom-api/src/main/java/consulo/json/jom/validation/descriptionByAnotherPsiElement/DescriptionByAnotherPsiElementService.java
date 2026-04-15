@@ -27,7 +27,6 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.ServiceManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
@@ -170,7 +169,7 @@ public class DescriptionByAnotherPsiElementService implements PersistentStateCom
 
     @Nonnull
     public static DescriptionByAnotherPsiElementService getInstance(@Nonnull Project project) {
-        return ServiceManager.getService(project, DescriptionByAnotherPsiElementService.class);
+        return project.getInstance(DescriptionByAnotherPsiElementService.class);
     }
 
     private final Project myProject;

@@ -25,7 +25,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.CachedValuesManager;
-import consulo.ide.ServiceManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.project.Project;
@@ -46,7 +45,7 @@ import jakarta.inject.Singleton;
 public class JomManager {
     @Nonnull
     public static JomManager getInstance(@Nonnull Project project) {
-        return ServiceManager.getService(project, JomManager.class);
+        return project.getInstance(JomManager.class);
     }
 
     private static final Key<CachedValue<JomFileElement<?>>> JOM_FILE_ELEMENT = Key.create("jom.file.lement");

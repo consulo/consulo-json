@@ -3,8 +3,12 @@
  * @since 2026-02-07
  */
 module consulo.json.api {
-    requires transitive consulo.ide.api;
-    
+    requires transitive consulo.language.api;
+    requires transitive consulo.language.editor.api;
+    requires consulo.language.impl;
+    requires consulo.configurable.api;
+    requires consulo.navigation.api;
+
     exports com.intellij.json;
     exports com.intellij.json.codeinsight;
     exports com.intellij.json.editor;
