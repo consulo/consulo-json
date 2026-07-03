@@ -13,21 +13,21 @@ import consulo.ide.action.CopyReferenceActionBase;
 import consulo.json.localize.JsonLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
 
-public final class JsonCopyPointerAction extends CopyReferenceActionBase {
+public final class JsonCopyPointerAction extends CopyReferenceActionBase implements AnActionWithSyncUpdate {
     public JsonCopyPointerAction() {
         super(JsonLocalize.actionJsoncopypointerText(), JsonLocalize.actionJsoncopypointerText(), null);
     }
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-        super.update(e);
-        e.getPresentation().setText(JsonLocalize.actionJsoncopypointerText().get());
+        e.getPresentation().setText(JsonLocalize.actionJsoncopypointerText());
         DataContext dataContext = e.getDataContext();
         Editor editor = dataContext.getData(Editor.KEY);
         VirtualFile file = editor == null ? null : FileDocumentManager.getInstance().getFile(editor.getDocument());

@@ -19,6 +19,7 @@ import consulo.language.psi.PsiManager;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.undoRedo.util.UndoUtil;
 import consulo.util.dataholder.Key;
@@ -29,7 +30,7 @@ import jakarta.annotation.Nonnull;
 
 import java.lang.ref.WeakReference;
 
-final class ShowAsJsonAction extends DumbAwareAction {
+final class ShowAsJsonAction extends DumbAwareAction implements AnActionWithSyncUpdate {
     private static final class Holder {
         private static final CharMatcher JSON_START_MATCHER = CharMatcher.is('{');
     }
@@ -120,11 +121,6 @@ final class ShowAsJsonAction extends DumbAwareAction {
             }
             return CharMatcher.whitespace().trimFrom(chars.subSequence(lineStart, end));
         }
-    }
-
-    @Override
-    public @Nonnull ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
     }
 
     @Override
