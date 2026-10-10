@@ -4,6 +4,7 @@ package com.intellij.json.psi.impl;
 import com.intellij.json.JsonDialectUtil;
 import com.intellij.json.JsonLanguage;
 import com.intellij.json.psi.*;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.json.icon.JsonIconGroup;
 import consulo.json.localize.JsonLocalize;
@@ -12,6 +13,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
@@ -52,11 +54,12 @@ public final class JsonPsiImplUtils {
      * @see JsonStandardComplianceInspection
      */
     public static @Nonnull JsonValue getNameElement(@Nonnull JsonProperty property) {
-        final PsiElement firstChild = property.getFirstChild();
+        PsiElement firstChild = property.getFirstChild();
         assert firstChild instanceof JsonLiteral || firstChild instanceof JsonReferenceExpression;
         return (JsonValue) firstChild;
     }
 
+    @RequiredReadAction
     public static @Nullable JsonValue getValue(@Nonnull JsonProperty property) {
         return PsiTreeUtil.getNextSiblingOfType(getNameElement(property), JsonValue.class);
     }
@@ -68,13 +71,13 @@ public final class JsonPsiImplUtils {
     public static @Nullable ItemPresentation getPresentation(final @Nonnull JsonProperty property) {
         return new ItemPresentation() {
             @Override
-            public @Nullable String getPresentableText() {
-                return property.getName();
+            public LocalizeValue getPresentableText() {
+                return LocalizeValue.of(property.getName());
             }
 
             @Override
             public @Nullable String getLocationString() {
-                final JsonValue value = property.getValue();
+                JsonValue value = property.getValue();
                 return value instanceof JsonLiteral ? value.getText() : null;
             }
 
@@ -91,11 +94,11 @@ public final class JsonPsiImplUtils {
         };
     }
 
-    public static @Nullable ItemPresentation getPresentation(final @Nonnull JsonArray array) {
+    public static @Nullable ItemPresentation getPresentation(@Nonnull JsonArray array) {
         return new ItemPresentation() {
             @Override
-            public @Nullable String getPresentableText() {
-                return JsonLocalize.jsonArray().get();
+            public LocalizeValue getPresentableText() {
+                return JsonLocalize.jsonArray();
             }
 
             @jakarta.annotation.Nullable
@@ -111,11 +114,11 @@ public final class JsonPsiImplUtils {
         };
     }
 
-    public static @Nullable ItemPresentation getPresentation(final @Nonnull JsonObject object) {
+    public static @Nullable ItemPresentation getPresentation(@Nonnull JsonObject object) {
         return new ItemPresentation() {
             @Override
-            public @Nullable String getPresentableText() {
-                return JsonLocalize.jsonObject().get();
+            public LocalizeValue getPresentableText() {
+                return JsonLocalize.jsonObject();
             }
 
             @jakarta.annotation.Nullable
@@ -137,8 +140,8 @@ public final class JsonPsiImplUtils {
         List<JsonStringLiteralTextFragment> result = literal.getUserData(STRING_FRAGMENTS);
         if (result == null) {
             result = new ArrayList<>();
-            final String text = literal.getText();
-            final int length = text.length();
+            String text = literal.getText();
+            int length = text.length();
             int pos = 1, unescapedSequenceStart = 1;
             while (pos < length) {
                 if (text.charAt(pos) == '\\') {
@@ -149,7 +152,7 @@ public final class JsonPsiImplUtils {
                         result.add(new JsonStringLiteralTextFragment(new TextRange(pos, pos + 1), "\\"));
                         break;
                     }
-                    final char next = text.charAt(pos + 1);
+                    char next = text.charAt(pos + 1);
                     switch (next) {
                         case '"':
                         case '\\':
@@ -159,7 +162,7 @@ public final class JsonPsiImplUtils {
                         case 'n':
                         case 'r':
                         case 't':
-                            final int idx = ourEscapesTable.indexOf(next);
+                            int idx = ourEscapesTable.indexOf(next);
                             result.add(new JsonStringLiteralTextFragment(new TextRange(pos, pos + 2), ourEscapesTable.substring(idx + 1, idx + 2)));
                             pos += 2;
                             break;
@@ -175,7 +178,7 @@ public final class JsonPsiImplUtils {
                             break;
                         case 'x':
                             Language language = JsonDialectUtil.getLanguageOrDefaultJson(literal);
-                            if (language instanceof JsonLanguage && ((JsonLanguage) language).hasPermissiveStrings()) {
+                            if (language instanceof JsonLanguage jsonLang && jsonLang.hasPermissiveStrings()) {
                                 int i2 = pos + 2;
                                 for (; i2 < pos + 4; i2++) {
                                     if (i2 == length || !StringUtil.isHexDigit(text.charAt(i2))) {
@@ -207,7 +210,7 @@ public final class JsonPsiImplUtils {
     }
 
     public static void delete(@Nonnull JsonProperty property) {
-        final ASTNode myNode = property.getNode();
+        ASTNode myNode = property.getNode();
         JsonPsiChangeUtils.removeCommaSeparatedFromList(myNode, myNode.getTreeParent());
     }
 
@@ -216,8 +219,8 @@ public final class JsonPsiImplUtils {
     }
 
     public static boolean isPropertyName(@Nonnull JsonStringLiteral literal) {
-        final PsiElement parent = literal.getParent();
-        return parent instanceof JsonProperty && ((JsonProperty) parent).getNameElement() == literal;
+        PsiElement parent = literal.getParent();
+        return parent instanceof JsonProperty jsonProp && jsonProp.getNameElement() == literal;
     }
 
     public static boolean getValue(@Nonnull JsonBooleanLiteral literal) {
