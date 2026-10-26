@@ -149,6 +149,7 @@
         <dependency>
             <groupId>tools.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>tools.jackson.dataformat</groupId>
@@ -158,6 +159,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.snakeyaml</groupId>
