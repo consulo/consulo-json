@@ -29,8 +29,8 @@ import java.util.stream.Stream;
 
 import static com.jetbrains.jsonSchema.impl.light.SchemaKeywords.VOCABULARY;
 
-public final class JsonSchemaVocabularyResolverKt {
-    private JsonSchemaVocabularyResolverKt() {
+public final class JsonSchemaVocabularyResolver {
+    private JsonSchemaVocabularyResolver() {
     }
 
     public static @Nullable JsonSchemaObject resolveVocabulary(String searchedVocabularyId,

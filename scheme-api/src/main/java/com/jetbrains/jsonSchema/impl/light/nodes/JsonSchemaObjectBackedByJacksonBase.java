@@ -28,7 +28,6 @@ import com.jetbrains.jsonSchema.extension.JsonSchemaValidation;
 import com.jetbrains.jsonSchema.extension.adapter.JsonValueAdapter;
 import com.jetbrains.jsonSchema.impl.light.JsonSchemaNodePointer;
 import com.jetbrains.jsonSchema.impl.light.JsonSchemaRefLoader;
-import com.jetbrains.jsonSchema.impl.light.JsonSchemaRefLoaderKt;
 import com.jetbrains.jsonSchema.impl.light.legacy.SchemaImplOldHacks;
 import com.jetbrains.jsonSchema.impl.light.versions.JsonSchemaInterpretationStrategy;
 import com.jetbrains.jsonSchema.internal.JsonSchemaReader;
@@ -314,7 +313,7 @@ public abstract class JsonSchemaObjectBackedByJacksonBase extends JsonSchemaObje
 
     @Override
     public @Nullable JsonSchemaObject findRelativeDefinition(String ref) {
-        return JsonSchemaRefLoaderKt.resolveLocalSchemaNode(ref, this);
+        return JsonSchemaRefLoader.resolveLocalSchemaNode(ref, this);
     }
 
     @Override

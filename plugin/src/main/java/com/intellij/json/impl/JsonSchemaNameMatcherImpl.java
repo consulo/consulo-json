@@ -16,6 +16,7 @@
  */
 package com.intellij.json.impl;
 
+import com.jetbrains.jsonSchema.JsonSchemaSpellcheckerClient;
 import com.intellij.json.JsonSchemaNameMatcher;
 import com.intellij.json.psi.JsonStringLiteral;
 import consulo.annotation.component.ExtensionImpl;

@@ -35,11 +35,38 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
+import tools.jackson.core.json.JsonFactory;
+import tools.jackson.core.StreamReadFeature;
+import tools.jackson.core.json.JsonReadFeature;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.dataformat.yaml.YAMLFactory;
+import tools.jackson.dataformat.yaml.YAMLWriteFeature;
+import tools.jackson.dataformat.yaml.YAMLMapper;
 
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 @Singleton
 public class JsonSchemaObjectStorage {
+    public static final JsonMapper json5ObjectMapper = JsonMapper.builder(
+        JsonFactory.builder()
+            .enable(JsonReadFeature.ALLOW_JAVA_COMMENTS)
+            .enable(JsonReadFeature.ALLOW_SINGLE_QUOTES)
+            .enable(JsonReadFeature.ALLOW_UNQUOTED_PROPERTY_NAMES)
+            .enable(JsonReadFeature.ALLOW_MISSING_VALUES)
+            .enable(JsonReadFeature.ALLOW_TRAILING_COMMA)
+            .enable(JsonReadFeature.ALLOW_LEADING_DECIMAL_POINT_FOR_NUMBERS)
+            .enable(JsonReadFeature.ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER)
+            .enable(JsonReadFeature.ALLOW_NON_NUMERIC_NUMBERS)
+            .enable(StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION)
+            .build()
+    ).build();
+
+    public static final YAMLMapper yamlObjectMapper = YAMLMapper.builder(
+        YAMLFactory.builder()
+            .disable(YAMLWriteFeature.WRITE_DOC_START_MARKER)
+            .build()
+    ).build();
+
     public static JsonSchemaObjectStorage getInstance(Project project) {
         return project.getInstance(JsonSchemaObjectStorage.class);
     }
@@ -97,8 +124,8 @@ public class JsonSchemaObjectStorage {
     private static @Nullable JsonNode parseSchemaFileSafe(VirtualFile schemaFile) {
         String providedFileTypeId = schemaFile.getFileType().getId();
         ObjectMapper suitableReader = switch (providedFileTypeId) {
-            case "JSON", "JSON5" -> JsonSchemaObjectStorageKt.json5ObjectMapper;
-            case "YAML" -> JsonSchemaObjectStorageKt.yamlObjectMapper;
+            case "JSON", "JSON5" -> JsonSchemaObjectStorage.json5ObjectMapper;
+            case "YAML" -> JsonSchemaObjectStorage.yamlObjectMapper;
             default -> null;
         };
         if (suitableReader == null) {

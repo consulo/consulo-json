@@ -14,16 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.json.impl;
+package com.jetbrains.jsonSchema;
 
 import com.intellij.json.pointer.JsonPointerPosition;
 import com.intellij.json.psi.JsonObject;
 import com.intellij.json.psi.JsonProperty;
-import com.jetbrains.jsonSchema.JsonSchemaObject;
-import com.jetbrains.jsonSchema.JsonSchemaService;
 import com.jetbrains.jsonSchema.internal.JsonSchemaResolver;
 import com.jetbrains.jsonSchema.walker.JsonLikePsiWalker;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.util.LanguageCachedValueUtil;
 import consulo.project.Project;
@@ -65,7 +64,11 @@ public abstract class JsonSchemaSpellcheckerClient {
         if (!service.isApplicableToFile(file)) {
             return false;
         }
-        JsonSchemaObject rootSchema = service.getSchemaObject(element.getContainingFile());
+        PsiFile containingFile = element.getContainingFile();
+        if (containingFile == null) {
+            return false;
+        }
+        JsonSchemaObject rootSchema = service.getSchemaObject(containingFile);
         if (rootSchema == null) {
             return false;
         }

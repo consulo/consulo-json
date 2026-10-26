@@ -39,7 +39,7 @@ public final class ExternalSchemaRefLoader implements JsonSchemaRefLoader {
             return null;
         }
 
-        return JsonSchemaRefLoaderKt.resolveRemoteSchemaByUrl(reference, referenceOwner, service);
+        return JsonSchemaRefLoader.resolveRemoteSchemaByUrl(reference, referenceOwner, service);
     }
 
     @Override

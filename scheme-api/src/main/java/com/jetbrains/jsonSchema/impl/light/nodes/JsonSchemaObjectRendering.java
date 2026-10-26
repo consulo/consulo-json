@@ -36,8 +36,8 @@ public final class JsonSchemaObjectRendering {
         JsonNode mappedNode = jacksonSchemaNode.getRawSchemaNode();
 
         ObjectMapper mapper = switch (language) {
-            case JSON -> JsonSchemaObjectStorageKt.json5ObjectMapper;
-            case YAML -> JsonSchemaObjectStorageKt.yamlObjectMapper;
+            case JSON -> JsonSchemaObjectStorage.json5ObjectMapper;
+            case YAML -> JsonSchemaObjectStorage.yamlObjectMapper;
         };
 
         return serializeJsonNodeSafe(mappedNode, mapper);

@@ -31,7 +31,7 @@ public final class InFileSchemaRefLoader implements JsonSchemaRefLoader {
     public @Nullable JsonSchemaObject load(String reference,
                                            JsonSchemaObjectBackedByJacksonBase referenceOwner,
                                            JsonSchemaService service) {
-        return JsonSchemaRefLoaderKt.resolveLocalSchemaNode(reference, referenceOwner);
+        return JsonSchemaRefLoader.resolveLocalSchemaNode(reference, referenceOwner);
     }
 
     @Override

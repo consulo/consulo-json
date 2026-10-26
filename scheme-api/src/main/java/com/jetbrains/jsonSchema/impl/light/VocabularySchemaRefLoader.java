@@ -37,6 +37,6 @@ public abstract class VocabularySchemaRefLoader implements JsonSchemaRefLoader {
         if (reference.startsWith("http") || reference.startsWith("#") || reference.startsWith("/")) {
             return null;
         }
-        return JsonSchemaVocabularyResolverKt.resolveVocabulary(reference, referenceOwner, service, myBundledVocabularies);
+        return JsonSchemaVocabularyResolver.resolveVocabulary(reference, referenceOwner, service, myBundledVocabularies);
     }
 }
