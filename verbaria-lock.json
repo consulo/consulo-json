@@ -3,12 +3,11 @@
   "project" : "consulo-json",
   "projectVersion" : "master",
   "sourceLocale" : "en-US",
-  "generatedAt" : "2026-06-28T18:51:53.819443620Z",
+  "generatedAt" : "2026-10-26T10:08:42.465479276Z",
   "documents" : {
     "consulo.json.JsonLocalize" : {
       "source" : {
-        "revision" : 1,
-        "sig" : "12d4ed1a191a127e2ea849a2f1337212"
+        "sig" : "7c0e9abf401e26dfef898016f50504a6"
       }
     }
   }
