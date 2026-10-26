@@ -2,10 +2,10 @@
 package com.intellij.json.impl.codeinsight;
 
 import com.intellij.json.JsonLanguage;
-import com.intellij.json.jsonScheme.JsonSchemaService;
 import com.intellij.json.psi.JsonElementVisitor;
 import com.intellij.json.psi.JsonObject;
 import com.intellij.json.psi.JsonProperty;
+import com.jetbrains.jsonSchema.JsonSchemaService;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;

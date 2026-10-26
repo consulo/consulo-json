@@ -13,6 +13,7 @@ module consulo.json {
     requires consulo.file.editor.api;
     requires consulo.ui.ex.api;
     requires consulo.json.api;
+    requires consulo.json.scheme.api;
 
     opens com.intellij.json.impl.editor to consulo.util.xml.serializer;
     opens com.intellij.json.impl.formatter to consulo.language.code.style.ui.api, consulo.util.xml.serializer;

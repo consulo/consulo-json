@@ -44,6 +44,8 @@
     <modules>
         <module>api</module>
         <module>jom-api</module>
+        <module>scheme-api</module>
+        <module>scheme-impl</module>
         <module>plugin</module>
     </modules>
 </project>

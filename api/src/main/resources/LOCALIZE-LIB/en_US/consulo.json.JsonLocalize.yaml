@@ -353,7 +353,7 @@ schema.validation.violated.dependency:
 schema.widget.add.mapping:
     text: New Schema Mapping…
 schema.widget.bundled.postfix:
-    text: (bundled)
+    text: ' (bundled)'
 schema.widget.checking.state.text:
     text: '{0}Analyzing…'
 schema.widget.checking.state.tooltip:
@@ -389,9 +389,9 @@ schema.widget.no.schema.tooltip:
 schema.widget.package.postfix:
     text: '(Package: ''''{0}'''')'
 schema.widget.prefix.json.files:
-    text: 'JSON:'
+    text: 'JSON: '
 schema.widget.prefix.other.files:
-    text: 'Schema:'
+    text: 'Schema: '
 schema.widget.registered.schemas:
     text: Registered schemas
 schema.widget.service:
@@ -401,9 +401,9 @@ schema.widget.stop.ignore.file:
 schema.widget.store.schemas:
     text: SchemaStore.org schemas
 schema.widget.tooltip.json.files:
-    text: 'JSON Schema:'
+    text: 'JSON Schema: '
 schema.widget.tooltip.other.files:
-    text: 'Validated by JSON Schema:'
+    text: 'Validated by JSON Schema: '
 settings.display.name.json:
     text: JSON
 settings.json.schema.add.mapping:
@@ -448,3 +448,29 @@ syntax.error.missing.closing.quote:
     text: Missing closing quote
 unnamed.desc:
     text: <unnamed>
+checkbox.automatically.apply.schemas.for.known.file.names:
+    text: Automatically apply schemas for known file names
+json.schema.name.title:
+    text: 'Name:'
+json.schema.remote.download.failed:
+    text: Cannot download JSON schema
+json.schema.remote.download.retry:
+    text: Retry downloading JSON schema
+json.schema.remote.download.unavailable:
+    text: 'Cannot download JSON schema: {0}'
+schema.catalog.implicit.hint:
+    text: Popular schemas would be applied automatically for matching file names
+schema.catalog.suggestion.apply:
+    text: Apply schema
+schema.catalog.suggestion.disable:
+    text: Disable suggestions
+schema.catalog.suggestion.text:
+    text: "''{0}'' is suggested by the JSON Schema Store for this file"
+schema.unknown:
+    text: unknown
+schema.widget.download.failed.label:
+    text: JSON schema download failed
+schema.widget.download.failed.tooltip:
+    text: Could not download JSON schema
+schema.widget.service.not.available.in.dumb.mode:
+    text: '''''{0}'''' will be available once project analysis is finished'

@@ -1,72 +1,96 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
+/*
+ * Copyright 2013-2026 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.jetbrains.jsonSchema;
 
 import com.jetbrains.jsonSchema.extension.adapter.JsonValueAdapter;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.math.BigInteger;
 
 public enum JsonSchemaType {
-  _string, _number, _integer, _object, _array, _boolean, _null, _any, _string_number;
+    _string, _number, _integer, _object, _array, _boolean, _null, _any, _string_number;
 
-  public String getName() {
-    return name().substring(1);
-  }
-
-  public String getDefaultValue() {
-    return switch (this) {
-      case _string -> "\"\"";
-      case _number, _integer, _string_number -> "0";
-      case _object -> "{}";
-      case _array -> "[]";
-      case _boolean -> "false";
-      case _null -> "null";
-      case _any -> "";
-    };
-  }
-
-  public boolean isSimple() {
-    return switch (this) {
-      case _string, _number, _integer, _boolean, _null -> true;
-      case _object, _array, _any, _string_number -> false;
-    };
-  }
-
-  static @Nullable JsonSchemaType getType(final @Nonnull JsonValueAdapter value) {
-    if (value.isNull()) return _null;
-    if (value.isBooleanLiteral()) return _boolean;
-    if (value.isStringLiteral()) {
-      return value.isNumberLiteral() ? _string_number : _string;
+    public String getName() {
+        return name().substring(1);
     }
-    if (value.isArray()) return _array;
-    if (value.isObject()) return _object;
-    if (value.isNumberLiteral()) {
-      return isInteger(value.getDelegate().getText()) ? _integer : _number;
-    }
-    return null;
-  }
 
-  public static boolean isInteger(@Nonnull String text) {
-    return getIntegerValue(text) != null;
-  }
-
-  public static @Nullable Number getIntegerValue(@Nonnull String text) {
-    try {
-      return Integer.parseInt(text);
+    public String getDefaultValue() {
+        return switch (this) {
+            case _string -> "\"\"";
+            case _number, _integer, _string_number -> "0";
+            case _object -> "{}";
+            case _array -> "[]";
+            case _boolean -> "false";
+            case _null -> "null";
+            case _any -> "";
+        };
     }
-    catch (NumberFormatException e) {
-      try {
-        return BigInteger.valueOf(Long.parseLong(text));
-      }
-      catch (NumberFormatException e2) {
+
+    public boolean isSimple() {
+        return switch (this) {
+            case _string, _number, _integer, _boolean, _null -> true;
+            case _object, _array, _any, _string_number -> false;
+        };
+    }
+
+    public static @Nullable JsonSchemaType getType(JsonValueAdapter value) {
+        if (value.isNull()) {
+            return _null;
+        }
+        if (value.isBooleanLiteral()) {
+            return _boolean;
+        }
+        if (value.isStringLiteral()) {
+            return value.isNumberLiteral() ? _string_number : _string;
+        }
+        if (value.isArray()) {
+            return _array;
+        }
+        if (value.isObject()) {
+            return _object;
+        }
+        if (value.isNumberLiteral()) {
+            return isInteger(value.getDelegate().getText()) ? _integer : _number;
+        }
         return null;
-      }
     }
-  }
 
-  public String getDescription() {
-    if (this == _any) return "*";
-    return getName();
-  }
+    public static boolean isInteger(String text) {
+        return getIntegerValue(text) != null;
+    }
+
+    public static @Nullable Number getIntegerValue(String text) {
+        try {
+            return Integer.parseInt(text);
+        }
+        catch (NumberFormatException e) {
+            try {
+                return BigInteger.valueOf(Long.parseLong(text));
+            }
+            catch (NumberFormatException e2) {
+                return null;
+            }
+        }
+    }
+
+    public String getDescription() {
+        if (this == _any) {
+            return "*";
+        }
+        return getName();
+    }
 }

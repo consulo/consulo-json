@@ -1,8 +1,24 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
+/*
+ * Copyright 2013-2026 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.jetbrains.jsonSchema;
 
 import com.jetbrains.jsonSchema.extension.JsonErrorPriority;
 import consulo.json.localize.JsonLocalize;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,7 +28,7 @@ import java.util.stream.Collectors;
 
 public final class JsonValidationError {
 
-    public IssueData getIssueData() {
+    public @Nullable IssueData getIssueData() {
         return myIssueData;
     }
 
@@ -63,7 +79,9 @@ public final class JsonValidationError {
         private static String getPropertyNameWithComment(MissingPropertyIssueData prop) {
             String comment = "";
             if (prop.enumItemsCount == 1) {
-                comment = " = " + prop.defaultValue.toString();
+                Object defaultValue = prop.defaultValue;
+                assert defaultValue != null;
+                comment = " = " + defaultValue.toString();
             }
             return "'" + prop.propertyName + "'" + comment;
         }
@@ -102,11 +120,11 @@ public final class JsonValidationError {
 
     public static final class MissingPropertyIssueData implements IssueData {
         public final String propertyName;
-        public final JsonSchemaType propertyType;
-        public final Object defaultValue;
+        public final @Nullable JsonSchemaType propertyType;
+        public final @Nullable Object defaultValue;
         public final int enumItemsCount;
 
-        public MissingPropertyIssueData(String propertyName, JsonSchemaType propertyType, Object defaultValue, int enumItemsCount) {
+        public MissingPropertyIssueData(String propertyName, @Nullable JsonSchemaType propertyType, @Nullable Object defaultValue, int enumItemsCount) {
             this.propertyName = propertyName;
             this.propertyType = propertyType;
             this.defaultValue = defaultValue;
@@ -134,10 +152,10 @@ public final class JsonValidationError {
 
     private final String myMessage;
     private final FixableIssueKind myFixableIssueKind;
-    private final IssueData myIssueData;
+    private final @Nullable IssueData myIssueData;
     private final JsonErrorPriority myPriority;
 
-    public JsonValidationError(String message, FixableIssueKind fixableIssueKind, IssueData issueData,
+    public JsonValidationError(String message, FixableIssueKind fixableIssueKind, @Nullable IssueData issueData,
                                JsonErrorPriority priority) {
         myMessage = message;
         myFixableIssueKind = fixableIssueKind;
@@ -153,38 +171,4 @@ public final class JsonValidationError {
         return myFixableIssueKind;
     }
 
-// TODO !
-//    @Nonnull
-//    public LocalQuickFix[] createFixes(@Nullable JsonLikeSyntaxAdapter quickFixAdapter) {
-//        if (quickFixAdapter == null) {
-//            return LocalQuickFix.EMPTY_ARRAY;
-//        }
-//        return switch (myFixableIssueKind) {
-//            case MissingProperty ->
-//                new AddMissingPropertyFix[]{new AddMissingPropertyFix((MissingMultiplePropsIssueData) myIssueData, quickFixAdapter)};
-//            case MissingOneOfProperty, MissingAnyOfProperty ->
-//                ((MissingOneOfPropsIssueData) myIssueData).myExclusiveOptions.stream().map(d -> new AddMissingPropertyFix(d, quickFixAdapter))
-//                    .toArray(LocalQuickFix[]::new);
-//            case ProhibitedProperty -> getProhibitedPropertyFixes(quickFixAdapter);
-//            case NonEnumValue -> new SuggestEnumValuesFix[]{new SuggestEnumValuesFix(quickFixAdapter)};
-//            case DuplicateArrayItem -> new RemoveDuplicateArrayItemsFix[]{new RemoveDuplicateArrayItemsFix(
-//                ((DuplicateArrayItemIssueData) myIssueData).duplicateIndices
-//            )};
-//            default -> LocalQuickFix.EMPTY_ARRAY;
-//        };
-//    }
-//
-//    @Nonnull
-//    private LocalQuickFix[] getProhibitedPropertyFixes(@Nonnull JsonLikeSyntaxAdapter quickFixAdapter) {
-//        ProhibitedPropertyIssueData data = (ProhibitedPropertyIssueData) myIssueData;
-//        if (data.typoCandidates.isEmpty()) {
-//            return new RemoveProhibitedPropertyFix[]{new RemoveProhibitedPropertyFix(data, quickFixAdapter)};
-//        }
-//        ArrayList<LocalQuickFix> allFixes = new ArrayList<>();
-//        for (@NlsSafe String candidate : data.typoCandidates) {
-//            allFixes.add(new FixPropertyNameTypoFix(candidate, quickFixAdapter));
-//        }
-//        allFixes.add(new RemoveProhibitedPropertyFix(data, quickFixAdapter));
-//        return allFixes.toArray(LocalQuickFix[]::new);
-//    }
 }

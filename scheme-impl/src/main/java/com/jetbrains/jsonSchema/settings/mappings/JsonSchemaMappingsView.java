@@ -1,368 +1,314 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
+/*
+ * Copyright 2013-2026 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.jetbrains.jsonSchema.settings.mappings;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.ide.util.PsiNavigationSupport;
-import consulo.json.localize.JsonLocalize;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.CommonShortcuts;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.FixedSizeButton;
-import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.openapi.ui.panel.ComponentPanelBuilder;
-import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.ui.popup.BalloonBuilder;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.PopupStep;
-import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
-import com.intellij.openapi.util.NlsContexts.PopupContent;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.*;
-import com.intellij.ui.awt.RelativePoint;
-import com.intellij.ui.components.JBLabel;
-import com.intellij.ui.components.JBTextField;
-import com.intellij.ui.table.TableView;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.*;
 import com.jetbrains.jsonSchema.JsonMappingKind;
+import com.jetbrains.jsonSchema.JsonSchemaVersion;
 import com.jetbrains.jsonSchema.UserDefinedJsonSchemaConfiguration;
 import com.jetbrains.jsonSchema.extension.JsonSchemaInfo;
-import com.jetbrains.jsonSchema.JsonSchemaService;
-import com.jetbrains.jsonSchema.JsonSchemaVersion;
-import com.jetbrains.jsonSchema.widget.JsonSchemaInfoPopupStep;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import consulo.application.Application;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.disposer.Disposable;
+import consulo.json.localize.JsonLocalize;
+import consulo.localize.LocalizeValue;
+import consulo.navigation.OpenFileDescriptorFactory;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.ui.Component;
+import consulo.ui.Label;
+import consulo.ui.LightPopup;
+import consulo.ui.PopupOptions;
+import consulo.ui.Table;
+import consulo.ui.TableItemRenderer;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.CommonShortcuts;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.dialog.DialogService;
+import consulo.ui.ex.popup.BaseListPopupStep;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.PopupStep;
+import consulo.ui.ex.toolbar.AddAction;
+import consulo.ui.ex.toolbar.DownMoveAction;
+import consulo.ui.ex.toolbar.EditAction;
+import consulo.ui.ex.toolbar.RemoveAction;
+import consulo.ui.ex.toolbar.ToolbarDecoratorBuilderFactory;
+import consulo.ui.ex.toolbar.UpMoveAction;
+import consulo.ui.image.Image;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.StandardFileSystems;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
-import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
-import static com.jetbrains.jsonSchema.remote.JsonFileResolver.isAbsoluteUrl;
-import static com.jetbrains.jsonSchema.remote.JsonFileResolver.isHttpPath;
+import static com.jetbrains.jsonSchema.internal.JsonFileResolver.isAbsoluteUrl;
+import static com.jetbrains.jsonSchema.internal.JsonFileResolver.isHttpPath;
 
 public final class JsonSchemaMappingsView implements Disposable {
-  private static final String ADD_SCHEMA_MAPPING = "settings.json.schema.add.mapping";
-  private static final String EDIT_SCHEMA_MAPPING = "settings.json.schema.edit.mapping";
-  private static final String REMOVE_SCHEMA_MAPPING = "settings.json.schema.remove.mapping";
-  private final TreeUpdater myTreeUpdater;
-  private final BiConsumer<? super String, ? super Boolean> mySchemaPathChangedCallback;
-  private TableView<UserDefinedJsonSchemaConfiguration.Item> myTableView;
-  private JComponent myComponent;
-  private Project myProject;
-  private TextFieldWithBrowseButton mySchemaField;
-  private ComboBox<JsonSchemaVersion> mySchemaVersionComboBox;
-  private JEditorPane myError;
-  private @PopupContent String myErrorText;
-  private JBLabel myErrorIcon;
-  private boolean myInitialized;
+    private final TreeUpdater myTreeUpdater;
+    private final BiConsumer<String, Boolean> mySchemaPathChangedCallback;
+    private final MutableFlatDataModel<UserDefinedJsonSchemaConfiguration.Item> myModel = FlatDataModel.of(List.of());
+    private final Table<UserDefinedJsonSchemaConfiguration.Item> myTableView;
+    private final JsonSchemaMappingsViewUi myUi;
+    private final Project myProject;
+    private boolean myInitialized;
 
-  public JsonSchemaMappingsView(Project project,
-                                TreeUpdater treeUpdater,
-                                BiConsumer<? super String, ? super Boolean> schemaPathChangedCallback) {
-    myTreeUpdater = treeUpdater;
-    mySchemaPathChangedCallback = schemaPathChangedCallback;
-    createUI(project);
-  }
+    @RequiredUIAccess
+    public JsonSchemaMappingsView(Project project,
+                                  TreeUpdater treeUpdater,
+                                  BiConsumer<String, Boolean> schemaPathChangedCallback) {
+        this(project, treeUpdater, schemaPathChangedCallback, null);
+    }
 
-  private void createUI(final Project project) {
-    myProject = project;
-    MyAddActionButtonRunnable addActionButtonRunnable = new MyAddActionButtonRunnable();
+    @RequiredUIAccess
+    public JsonSchemaMappingsView(Project project,
+                                  TreeUpdater treeUpdater,
+                                  BiConsumer<String, Boolean> schemaPathChangedCallback,
+                                  @Nullable Component nameField) {
+        myProject = project;
+        myTreeUpdater = treeUpdater;
+        mySchemaPathChangedCallback = schemaPathChangedCallback;
 
-    myTableView = new JsonMappingsTableView(addActionButtonRunnable);
-    myTableView.setShowGrid(false);
-    myTableView.getTableHeader().setVisible(false);
-    final ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myTableView);
-    final MyEditActionButtonRunnableImpl editAction = new MyEditActionButtonRunnableImpl();
-    decorator.setRemoveAction(new MyRemoveActionButtonRunnable())
-             .setRemoveActionName(REMOVE_SCHEMA_MAPPING)
-             .setAddAction(addActionButtonRunnable)
-             .setAddActionName(JsonBundle.message(ADD_SCHEMA_MAPPING))
-             .setEditAction(editAction)
-             .setEditActionName(JsonBundle.message(EDIT_SCHEMA_MAPPING))
-             .disableUpDownActions();
+        myTableView = Table.create(myModel);
+        myTableView.setShowHeader(false);
+        myTableView.setAllowMultipleSelect(true);
+        myTableView.addColumn(LocalizeValue.empty(), UserDefinedJsonSchemaConfiguration.Item::getPresentation)
+            .setRenderer((TableItemRenderer<UserDefinedJsonSchemaConfiguration.Item, LocalizeValue>) (presentation, value, item) -> {
+                presentation.withIcon(item.mappingKind.getIcon());
+                presentation.append(item.getPresentation());
 
-    JBTextField schemaFieldBacking = new JBTextField();
-    mySchemaField = new TextFieldWithBrowseButton(schemaFieldBacking);
-    mySchemaField.setButtonIcon(AllIcons.General.OpenDiskHover);
-    FixedSizeButton urlButton = new FixedSizeButton();
-    urlButton.setIcon(AllIcons.General.Web);
-    urlButton.addActionListener(a -> {
-      final JsonSchemaService service = JsonSchemaService.Impl.get(myProject);
-      List<JsonSchemaInfo> schemas = service.getAllUserVisibleSchemas();
-      JBPopupFactory.getInstance().createListPopup(new JsonSchemaInfoPopupStep(schemas,
-                                                                               myProject, null, service, JsonLocalize.schemaConfigurationMappingRemote().get()) {
+                LocalizeValue error = item.getError();
+                if (error.isNotEmpty()) {
+                    presentation.withSuffix(LocalizeValue.empty(), PlatformIconGroup.generalWarning());
+                    presentation.withTooltip(error);
+                }
+            });
+        myTableView.addDoubleClickListener(event -> {
+            UserDefinedJsonSchemaConfiguration.Item item = myTableView.getSelectedItem();
+            if (item != null) {
+                editItem(item);
+            }
+        });
+
+        Component decorator = ToolbarDecoratorBuilderFactory.getInstance()
+            .create(myTableView)
+            .addOrReplaceAction(new MyAddActionButtonRunnable())
+            .addOrReplaceAction(new MyRemoveActionButtonRunnable())
+            .addOrReplaceAction(new MyEditActionButtonRunnableImpl())
+            .disableAction(UpMoveAction.class)
+            .disableAction(DownMoveAction.class)
+            .build();
+
+        myUi = new JsonSchemaMappingsViewUi(project, mySchemaPathChangedCallback, decorator, nameField, this);
+        attachNavigateToSchema();
+    }
+
+    @Override
+    public void dispose() {
+    }
+
+    @RequiredUIAccess
+    public void setError(LocalizeValue text, boolean showWarning) {
+        myUi.setError(text, showWarning);
+    }
+
+    @RequiredUIAccess
+    private void attachNavigateToSchema() {
+        DumbAwareAction.create(e -> {
+            String pathToSchema = myUi.getSchemaField().getValue();
+            if (StringUtil.isEmptyOrSpaces(pathToSchema) || isHttpPath(pathToSchema)) {
+                return;
+            }
+            UIAccess uiAccess = UIAccess.current();
+            String absolutePath = new File(pathToSchema).getAbsolutePath();
+            CompletableFuture.supplyAsync(() -> StandardFileSystems.local().refreshAndFindFileByPath(absolutePath),
+                    AppExecutorUtil.getAppExecutorService())
+                .whenCompleteAsync((virtualFile, error) -> {
+                    if (myProject.isDisposed()) {
+                        return;
+                    }
+                    if (virtualFile == null) {
+                        showFileNotFound();
+                        return;
+                    }
+                    OpenFileDescriptorFactory.getInstance(myProject).newBuilder(virtualFile).build().navigate(true);
+                }, uiAccess);
+        }).registerCustomShortcutSet(CommonShortcuts.getEditSource(), myUi.getSchemaField().getComponent(), this);
+    }
+
+    @RequiredUIAccess
+    private void showFileNotFound() {
+        Label label = Label.create(JsonLocalize.jsonSchemaFileNotFound());
+        label.setImage(PlatformIconGroup.generalBalloonerror());
+
+        LightPopup popup = LightPopup.create(PopupOptions.builder().arrow().disableRequestFocus().build());
+        popup.setContent(label);
+        popup.showBy(myUi.getSchemaField().getComponent());
+    }
+
+    public List<UserDefinedJsonSchemaConfiguration.Item> getData() {
+        List<UserDefinedJsonSchemaConfiguration.Item> result = new ArrayList<>();
+        for (UserDefinedJsonSchemaConfiguration.Item item : myModel) {
+            if (item.mappingKind == JsonMappingKind.Directory || !StringUtil.isEmpty(item.path)) {
+                result.add(new UserDefinedJsonSchemaConfiguration.Item(item.path, item.mappingKind));
+            }
+        }
+        return result;
+    }
+
+    @RequiredUIAccess
+    public void setItems(String schemaFilePath,
+                         JsonSchemaVersion version,
+                         List<UserDefinedJsonSchemaConfiguration.Item> data) {
+        myInitialized = true;
+        myUi.getSchemaField().setValue(schemaFilePath, false);
+        myUi.getSchemaVersionComboBox().setValue(version);
+        List<UserDefinedJsonSchemaConfiguration.Item> items = new ArrayList<>();
+        for (UserDefinedJsonSchemaConfiguration.Item item : data) {
+            items.add(new UserDefinedJsonSchemaConfiguration.Item(item.path, item.mappingKind));
+        }
+        myModel.replaceAll(items);
+    }
+
+    public boolean isInitialized() {
+        return myInitialized;
+    }
+
+    @RequiredUIAccess
+    public JsonSchemaVersion getSchemaVersion() {
+        JsonSchemaVersion version = myUi.getSchemaVersionComboBox().getValue();
+        return version == null ? JsonSchemaVersion.SCHEMA_4 : version;
+    }
+
+    @RequiredUIAccess
+    public String getSchemaSubPath() {
+        String schemaFieldText = myUi.getSchemaField().getValue();
+        if (isAbsoluteUrl(schemaFieldText)) {
+            return schemaFieldText;
+        }
+        return FileUtil.toSystemDependentName(JsonSchemaInfo.getRelativePath(myProject, schemaFieldText));
+    }
+
+    public Component getComponent() {
+        return myUi.getPanel();
+    }
+
+    @RequiredUIAccess
+    private void editItem(UserDefinedJsonSchemaConfiguration.Item item) {
+        showItemDialog(JsonLocalize.settingsJsonSchemaEditMapping(), item, path -> {
+            item.setPath(path);
+            myModel.update(item);
+            myTreeUpdater.updateTree(true);
+        });
+    }
+
+    @RequiredUIAccess
+    private void showItemDialog(LocalizeValue title,
+                                UserDefinedJsonSchemaConfiguration.Item item,
+                                @RequiredUIAccess Consumer<String> onOk) {
+        JsonMappingItemDialogDescriptor descriptor = new JsonMappingItemDialogDescriptor(myProject, title, item);
+        DialogService dialogService = Application.get().getInstance(DialogService.class);
+        UIAccess uiAccess = UIAccess.current();
+        dialogService.build(myTableView, descriptor).showAsync().whenCompleteAsync((value, error) -> {
+            if (error != null || value == null) {
+                return;
+            }
+            onOk.accept(descriptor.getPath());
+        }, uiAccess);
+    }
+
+    private final class MyAddActionButtonRunnable extends AddAction<UserDefinedJsonSchemaConfiguration.Item> {
+        MyAddActionButtonRunnable() {
+            getTemplatePresentation().setText(JsonLocalize.settingsJsonSchemaAddMapping());
+        }
+
+        @RequiredUIAccess
         @Override
-        protected void setMapping(@Nullable JsonSchemaInfo selectedValue, @Nullable VirtualFile virtualFile, @Nonnull Project project) {
-          if (selectedValue != null) {
-            mySchemaField.setText(selectedValue.getUrl(myProject));
-            mySchemaPathChangedCallback.accept(selectedValue.getDescription(), true); // force updating name
-          }
+        protected void doAdd(AnActionEvent e) {
+            JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<>(null, JsonMappingKind.values()) {
+                @Override
+                public String getTextFor(JsonMappingKind value) {
+                    return JsonLocalize.schemaAddMappingKindText(StringUtil.capitalizeWords(value.getDescription().get(), true)).get();
+                }
+
+                @Override
+                public Image getIconFor(JsonMappingKind value) {
+                    return value.getIcon();
+                }
+
+                @Override
+                public @Nullable PopupStep onChosen(JsonMappingKind selectedValue, boolean finalChoice) {
+                    if (finalChoice) {
+                        return doFinalStep(() -> doRun(selectedValue));
+                    }
+                    return FINAL_CHOICE;
+                }
+            }).showUnderneathOf(e);
         }
-      }).showInCenterOf(urlButton);
-    });
-    var descriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor().withTitle(JsonLocalize.jsonSchemaAddSchemaChooserTitle().get());
-    SwingHelper.installFileCompletionAndBrowseDialog(myProject, mySchemaField, descriptor);
-    mySchemaField.getTextField().getDocument().addDocumentListener(new DocumentAdapter() {
-      @Override
-      protected void textChanged(@Nonnull DocumentEvent e) {
-        mySchemaPathChangedCallback.accept(mySchemaField.getText(), false);
-      }
-    });
-    attachNavigateToSchema();
-    myError = SwingHelper.createHtmlLabel(JsonLocalize.jsonSchemaConflictingMappings().get(), null, s -> {
-      final BalloonBuilder builder = JBPopupFactory.getInstance().
-        createHtmlTextBalloonBuilder(myErrorText, UIUtil.getBalloonWarningIcon(), MessageType.WARNING.getPopupBackground(), null);
-      builder.setDisposable(this);
-      builder.setHideOnClickOutside(true);
-      builder.setCloseButtonEnabled(true);
-      builder.createBalloon().showInCenterOf(myError);
-    });
 
-    JPanel schemaSelector = new JPanel(new BorderLayout());
-    schemaSelector.add(mySchemaField, BorderLayout.CENTER);
-    schemaSelector.add(urlButton, BorderLayout.EAST);
+        @RequiredUIAccess
+        private void doRun(JsonMappingKind mappingKind) {
+            UserDefinedJsonSchemaConfiguration.Item currentItem = new UserDefinedJsonSchemaConfiguration.Item("", mappingKind);
+            showItemDialog(JsonLocalize.settingsJsonSchemaAddMapping(), currentItem, path -> {
+                currentItem.setPath(path);
+                myModel.add(currentItem);
+                myTableView.select(currentItem);
 
-    final FormBuilder builder = FormBuilder.createFormBuilder();
-    final JBLabel label = new JBLabel(JsonLocalize.jsonSchemaFileSelectorTitle().get());
-    builder.addLabeledComponent(label, schemaSelector);
-    label.setLabelFor(schemaSelector);
-    label.setBorder(JBUI.Borders.empty(0, 10));
-    schemaSelector.setBorder(JBUI.Borders.emptyRight(10));
-    JBLabel versionLabel = new JBLabel(JsonLocalize.jsonSchemaVersionSelectorTitle().get());
-    mySchemaVersionComboBox = new ComboBox<>(new DefaultComboBoxModel<>(JsonSchemaVersion.values()));
-    mySchemaVersionComboBox.setRenderer(
-      SimpleListCellRenderer.create((presentation, value, index) -> { presentation.setText(getPresentableSchemaName(value)); })
-    );
-    versionLabel.setLabelFor(mySchemaVersionComboBox);
-    versionLabel.setBorder(JBUI.Borders.empty(0, 10));
-    builder.addLabeledComponent(versionLabel, mySchemaVersionComboBox);
-    final JPanel wrapper = new JPanel(new BorderLayout());
-    wrapper.setBorder(JBUI.Borders.empty(0, 10));
-    myErrorIcon = new JBLabel(UIUtil.getBalloonWarningIcon());
-    wrapper.add(myErrorIcon, BorderLayout.WEST);
-    wrapper.add(myError, BorderLayout.CENTER);
-    builder.addComponent(wrapper);
-    JPanel panel = decorator.createPanel();
-    panel.setBorder(BorderFactory.createCompoundBorder(JBUI.Borders.empty(0, 8), panel.getBorder()));
-    builder.addComponentFillVertically(panel, 5);
-    JLabel commentComponent = ComponentPanelBuilder.createCommentComponent(
-      JsonLocalize.pathToFileOrDirectoryRelativeToProjectRootOrFileName().get(), false);
-    commentComponent.setBorder(JBUI.Borders.empty(0, 8, 5, 0));
-    builder.addComponent(commentComponent);
-
-    myComponent = builder.getPanel();
-  }
-
-  @Override
-  public void dispose() {
-  }
-
-  public void setError(@PopupContent String text, boolean showWarning) {
-    myErrorText = text;
-    myError.setVisible(showWarning && text != null);
-    myErrorIcon.setVisible(showWarning && text != null);
-  }
-
-  private void attachNavigateToSchema() {
-    DumbAwareAction.create(e -> {
-      String pathToSchema = mySchemaField.getText();
-      if (StringUtil.isEmptyOrSpaces(pathToSchema) || isHttpPath(pathToSchema)) return;
-      VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(pathToSchema));
-      if (virtualFile == null) {
-        BalloonBuilder balloonBuilder = JBPopupFactory.getInstance()
-          .createHtmlTextBalloonBuilder(JsonLocalize.jsonSchemaFileNotFound().get(), UIUtil.getBalloonErrorIcon(), MessageType.ERROR.getPopupBackground(), null);
-        Balloon balloon = balloonBuilder.setFadeoutTime(TimeUnit.SECONDS.toMillis(3)).createBalloon();
-        balloon.showInCenterOf(mySchemaField);
-        return;
-      }
-      PsiNavigationSupport.getInstance().createNavigatable(myProject, virtualFile, -1).navigate(true);
-    }).registerCustomShortcutSet(CommonShortcuts.getEditSource(), mySchemaField);
-  }
-
-  public List<UserDefinedJsonSchemaConfiguration.Item> getData() {
-    return ContainerUtil
-      .filter(myTableView.getListTableModel().getItems(), i -> i.mappingKind == JsonMappingKind.Directory || !StringUtil.isEmpty(i.path));
-  }
-
-  public void setItems(String schemaFilePath,
-                       JsonSchemaVersion version,
-                       final List<UserDefinedJsonSchemaConfiguration.Item> data) {
-    myInitialized = true;
-    mySchemaField.setText(schemaFilePath);
-    mySchemaVersionComboBox.setSelectedItem(version);
-    myTableView.setModelAndUpdateColumns(
-      new ListTableModel<>(createColumns(), new ArrayList<>(data)));
-  }
-
-  public boolean isInitialized() {
-    return myInitialized;
-  }
-
-  public JsonSchemaVersion getSchemaVersion() {
-    return (JsonSchemaVersion)mySchemaVersionComboBox.getSelectedItem();
-  }
-
-  public String getSchemaSubPath() {
-    String schemaFieldText = mySchemaField.getText();
-    if (isAbsoluteUrl(schemaFieldText)) return schemaFieldText;
-    return FileUtil.toSystemDependentName(JsonSchemaInfo.getRelativePath(myProject, schemaFieldText));
-  }
-
-  private ColumnInfo[] createColumns() {
-    return new ColumnInfo[] { new MappingItemColumnInfo() };
-  }
-
-  public JComponent getComponent() {
-    return myComponent;
-  }
-
-  private final class MappingItemColumnInfo extends ColumnInfo<UserDefinedJsonSchemaConfiguration.Item, String> {
-    MappingItemColumnInfo() {super("");}
-
-    @Override
-    public @Nullable String valueOf(UserDefinedJsonSchemaConfiguration.Item item) {
-      return item.getPresentation();
+                myTreeUpdater.updateTree(true);
+            });
+        }
     }
 
-    @Override
-    public @Nonnull TableCellRenderer getRenderer(UserDefinedJsonSchemaConfiguration.Item item) {
-      return new DefaultTableCellRenderer() {
+    private final class MyEditActionButtonRunnableImpl extends EditAction<UserDefinedJsonSchemaConfiguration.Item> {
+        MyEditActionButtonRunnableImpl() {
+            getTemplatePresentation().setText(JsonLocalize.settingsJsonSchemaEditMapping());
+        }
+
+        @RequiredUIAccess
         @Override
-        public Component getTableCellRendererComponent(JTable table,
-                                                       Object value,
-                                                       boolean isSelected,
-                                                       boolean hasFocus,
-                                                       int row,
-                                                       int column) {
-          JLabel label = (JLabel)super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-          label.setIcon(item.mappingKind.getIcon());
-
-          String error = item.getError();
-          if (error == null) {
-            return label;
-          }
-
-          JPanel panel = new JPanel();
-          panel.setLayout(new BorderLayout());
-          panel.add(label, BorderLayout.CENTER);
-          JLabel warning = new JLabel(AllIcons.General.Warning);
-          panel.setBackground(label.getBackground());
-          panel.setToolTipText(error);
-          panel.add(warning, BorderLayout.LINE_END);
-          return panel;
+        protected void doEdit(UserDefinedJsonSchemaConfiguration.Item value, AnActionEvent e) {
+            editItem(value);
         }
-      };
     }
 
-    @Override
-    public @Nullable TableCellEditor getEditor(UserDefinedJsonSchemaConfiguration.Item item) {
-      return new JsonMappingsTableCellEditor(item, myProject, myTreeUpdater);
-    }
+    private final class MyRemoveActionButtonRunnable extends RemoveAction<UserDefinedJsonSchemaConfiguration.Item> {
+        MyRemoveActionButtonRunnable() {
+            getTemplatePresentation().setText(JsonLocalize.settingsJsonSchemaRemoveMapping());
+        }
 
-    @Override
-    public boolean isCellEditable(UserDefinedJsonSchemaConfiguration.Item item) {
-      return true;
-    }
-  }
-
-  final class MyAddActionButtonRunnable implements AnActionButtonRunnable {
-    MyAddActionButtonRunnable() {
-      super();
-    }
-
-    @Override
-    public void run(AnActionButton button) {
-      RelativePoint point = button.getPreferredPopupPoint();
-      JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<>(null,
-                                                                           JsonMappingKind.values()) {
+        @RequiredUIAccess
         @Override
-        public @Nonnull String getTextFor(JsonMappingKind value) {
-          return JsonLocalize.schemaAddMappingKindText(StringUtil.capitalizeWords(value.getDescription().get(), true));
+        public void actionPerformed(AnActionEvent e) {
+            List<UserDefinedJsonSchemaConfiguration.Item> rows = getSelectedValues(e);
+            if (!rows.isEmpty()) {
+                for (UserDefinedJsonSchemaConfiguration.Item row : rows) {
+                    myModel.remove(row);
+                }
+                myTreeUpdater.updateTree(true);
+            }
         }
-
-        @Override
-        public Icon getIconFor(JsonMappingKind value) {
-          return value.getIcon();
-        }
-
-        @Override
-        public PopupStep<?> onChosen(JsonMappingKind selectedValue, boolean finalChoice) {
-          if (finalChoice) {
-            return doFinalStep(() -> doRun(selectedValue));
-          }
-          return FINAL_CHOICE;
-        }
-      }).show(point);
     }
-
-    void doRun(JsonMappingKind mappingKind) {
-      UserDefinedJsonSchemaConfiguration.Item currentItem = new UserDefinedJsonSchemaConfiguration.Item("", mappingKind);
-      myTableView.getListTableModel().addRow(currentItem);
-      myTableView.editCellAt(myTableView.getListTableModel().getRowCount() - 1, 0);
-
-      myTreeUpdater.updateTree(false);
-    }
-  }
-
-  private final class MyEditActionButtonRunnableImpl implements AnActionButtonRunnable {
-    MyEditActionButtonRunnableImpl() {
-      super();
-    }
-
-    @Override
-    public void run(AnActionButton button) {
-      execute();
-    }
-
-    public void execute() {
-      int selectedRow = myTableView.getSelectedRow();
-      if (selectedRow == -1) return;
-      myTableView.editCellAt(selectedRow, 0);
-    }
-  }
-
-  private final class MyRemoveActionButtonRunnable implements AnActionButtonRunnable {
-    @Override
-    public void run(AnActionButton button) {
-      final int[] rows = myTableView.getSelectedRows();
-      if (rows != null && rows.length > 0) {
-        int cnt = 0;
-        for (int row : rows) {
-          myTableView.getListTableModel().removeRow(row - cnt);
-          ++cnt;
-        }
-        myTableView.getListTableModel().fireTableDataChanged();
-        myTreeUpdater.updateTree(true);
-      }
-    }
-  }
-
-  private static @NlsSafe String getPresentableSchemaName(@Nullable JsonSchemaVersion version) {
-    if (version == null) return "unknown";
-    var versionSuffix = switch (version) {
-      case SCHEMA_4 -> "v4";
-      case SCHEMA_6 -> "v6";
-      case SCHEMA_7 -> "v7";
-      case SCHEMA_2019_09 -> "2019.09";
-      case SCHEMA_2020_12 -> "2020.12";
-    };
-
-    return JsonLocalize.schemaOfVersion(versionSuffix).get();
-  }
 }

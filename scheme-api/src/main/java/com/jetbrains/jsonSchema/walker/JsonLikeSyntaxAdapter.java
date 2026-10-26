@@ -1,22 +1,39 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
+/*
+ * Copyright 2013-2026 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.jetbrains.jsonSchema.walker;
 
 import com.jetbrains.jsonSchema.JsonSchemaType;
 import com.jetbrains.jsonSchema.extension.adapter.JsonObjectValueAdapter;
+import com.jetbrains.jsonSchema.extension.adapter.JsonPropertyAdapter;
 import com.jetbrains.jsonSchema.extension.adapter.JsonValueAdapter;
 import consulo.language.psi.LeafPsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
+
+import java.util.List;
 
 public interface JsonLikeSyntaxAdapter {
     /**
      * Tries to get a property value element for a context element supplied.
      * May modify PSI and create a new property value element if it wasn't there before.
      */
-    default PsiElement adjustValue(@Nonnull PsiElement value) {
+    default PsiElement adjustValue(PsiElement value) {
         return value;
     }
 
@@ -26,8 +43,7 @@ public interface JsonLikeSyntaxAdapter {
      * The created element is in an independent PSI tree, and is meant to be inserted in the target tree through some mutating operation,
      * such as {@link PsiElement#replace}. The given {@code project} is used as context for PSI generation
      */
-    @Nonnull
-    PsiElement createProperty(@Nonnull String name, @Nonnull String value, @Nonnull Project project);
+    PsiElement createProperty(String name, String value, Project project);
 
     /**
      * Creates an empty array element.
@@ -37,23 +53,20 @@ public interface JsonLikeSyntaxAdapter {
      * The created element is in an independent PSI tree, and is meant to be inserted in the target tree through some mutating operation,
      * such as {@link PsiElement#replace}. The given {@code project} is used as context for PSI generation
      */
-    @Nonnull
-    default PsiElement createEmptyArray(@Nonnull Project project, boolean preferInline) {
-        return createEmptyArray(project);
-    }
+    PsiElement createEmptyArray(Project project, boolean preferInline);
 
-    @Nonnull
-    PsiElement createEmptyArray(@Nonnull Project project);
+    default PsiElement createEmptyArray(Project project) {
+        return createEmptyArray(project, true);
+    }
 
     /**
      * Adds the given {@code itemValue} to the given {@code array} element.
      *
      * @return the {@link PsiElement} representing the item that was added.
      */
-    @Nonnull
-    PsiElement addArrayItem(@Nonnull PsiElement array, @Nonnull String itemValue);
+    PsiElement addArrayItem(PsiElement array, String itemValue);
 
-    void removeArrayItem(@Nonnull PsiElement item);
+    void removeArrayItem(PsiElement item);
 
     void ensureComma(@Nullable PsiElement self, @Nullable PsiElement newElement);
 
@@ -61,16 +74,13 @@ public interface JsonLikeSyntaxAdapter {
 
     boolean fixWhitespaceBefore(@Nullable PsiElement initialElement, @Nullable PsiElement element);
 
-    @Nonnull
     default String getDefaultValueFromType(@Nullable JsonSchemaType type) {
         return type == null ? "" : type.getDefaultValue();
     }
 
-    @Nonnull
-    PsiElement adjustNewProperty(@Nonnull PsiElement element);
+    PsiElement adjustNewProperty(PsiElement element);
 
-    @Nonnull
-    PsiElement adjustPropertyAnchor(@Nonnull LeafPsiElement element);
+    PsiElement adjustPropertyAnchor(LeafPsiElement element);
 
     /**
      * Inserts a property into a JSON-like object. If the given {@code contextForInsertion} is an empty value that can act as an object (such as an
@@ -81,10 +91,9 @@ public interface JsonLikeSyntaxAdapter {
      * @param newProperty         the property element to insert
      * @return the property element that was actually added (either {@code newProperty} or its copy).
      */
-    @Nonnull
-    default PsiElement addProperty(@Nonnull PsiElement contextForInsertion, @Nonnull PsiElement newProperty) {
+    default PsiElement addProperty(PsiElement contextForInsertion, PsiElement newProperty) {
         JsonLikePsiWalker walker = JsonLikePsiWalker.getWalker(contextForInsertion);
-        var parentPropertyAdapter = walker != null ? walker.getParentPropertyAdapter(contextForInsertion) : null;
+        JsonPropertyAdapter parentPropertyAdapter = walker != null ? walker.getParentPropertyAdapter(contextForInsertion) : null;
         boolean isProcessingProperty = parentPropertyAdapter != null && parentPropertyAdapter.getDelegate() == contextForInsertion;
 
         PsiElement newElement;
@@ -95,13 +104,17 @@ public interface JsonLikeSyntaxAdapter {
                 : contextForInsertion;
             // This newProperty.getParent() relies on the fact that the property was created within an object in its dummy environment.
             // This might not always hold, so it would be better not to rely on it.
-            newElement = parent.addBefore(newProperty.getParent(), null);
+            PsiElement newPropertyParent = newProperty.getParent();
+            assert newPropertyParent != null;
+            newElement = parent.addBefore(newPropertyParent, null);
         }
         else if (contextForInsertion instanceof LeafPsiElement) {
             newElement = adjustPropertyAnchor((LeafPsiElement) contextForInsertion).addBefore(newProperty, null);
         }
         else if (isProcessingProperty) {
-            newElement = contextForInsertion.getParent().addBefore(newProperty, contextForInsertion);
+            PsiElement contextParent = contextForInsertion.getParent();
+            assert contextParent != null;
+            newElement = contextParent.addBefore(newProperty, contextForInsertion);
             ensureComma(PsiTreeUtil.skipWhitespacesAndCommentsBackward(newElement), newElement);
         }
         else {
@@ -112,7 +125,7 @@ public interface JsonLikeSyntaxAdapter {
             if (objectAdapter == null) {
                 throw new IllegalStateException("contextForInsertion must be an object-like element");
             }
-            var propertyList = objectAdapter.getPropertyList();
+            List<JsonPropertyAdapter> propertyList = objectAdapter.getPropertyList();
             PsiElement lastPropertyElement = propertyList.isEmpty() ? null : propertyList.get(propertyList.size() - 1).getDelegate();
             PsiElement anchor;
             if (lastPropertyElement != null) {
@@ -139,7 +152,7 @@ public interface JsonLikeSyntaxAdapter {
      *
      * @param property property to delete
      */
-    default void removeProperty(@Nonnull PsiElement property) {
+    default void removeProperty(PsiElement property) {
         PsiElement forward = PsiTreeUtil.skipWhitespacesForward(property);
         property.delete();
         removeIfComma(forward);

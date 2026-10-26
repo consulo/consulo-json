@@ -1,29 +1,43 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
+/*
+ * Copyright 2013-2026 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.jetbrains.jsonSchema;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class IfThenElse {
-  private final JsonSchemaObject condition;
-  private final JsonSchemaObject trueBranch;
-  private final JsonSchemaObject falseBranch;
+    private final JsonSchemaObject myCondition;
+    private final @Nullable JsonSchemaObject myTrueBranch;
+    private final @Nullable JsonSchemaObject myFalseBranch;
 
-  public IfThenElse(JsonSchemaObject condition, JsonSchemaObject trueBranch, JsonSchemaObject falseBranch) {
-    this.condition = condition;
-    this.trueBranch = trueBranch;
-    this.falseBranch = falseBranch;
-  }
+    public IfThenElse(JsonSchemaObject condition, @Nullable JsonSchemaObject trueBranch, @Nullable JsonSchemaObject falseBranch) {
+        myCondition = condition;
+        myTrueBranch = trueBranch;
+        myFalseBranch = falseBranch;
+    }
 
-  public @Nonnull JsonSchemaObject getIf() {
-    return condition;
-  }
+    public JsonSchemaObject getIf() {
+        return myCondition;
+    }
 
-  public @Nullable JsonSchemaObject getThen() {
-    return trueBranch;
-  }
+    public @Nullable JsonSchemaObject getThen() {
+        return myTrueBranch;
+    }
 
-  public @Nullable JsonSchemaObject getElse() {
-    return falseBranch;
-  }
+    public @Nullable JsonSchemaObject getElse() {
+        return myFalseBranch;
+    }
 }

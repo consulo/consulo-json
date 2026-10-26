@@ -1,76 +1,88 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
+/*
+ * Copyright 2013-2026 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.jetbrains.jsonSchema.impl;
 
 import com.intellij.json.psi.JsonStringLiteral;
-import com.intellij.lang.Language;
-import com.intellij.lang.injection.MultiHostInjector;
-import com.intellij.lang.injection.MultiHostRegistrar;
-import com.intellij.lang.injection.general.Injection;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import com.intellij.json.psi.JsonStringLiteralTextFragment;
+import consulo.language.Language;
+import consulo.language.inject.MultiHostInjector;
+import consulo.language.inject.MultiHostRegistrar;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiLanguageInjectionHost;
+import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
-import java.util.Collections;
 import java.util.List;
 
 public abstract class JsonSchemaInjectorBase implements MultiHostInjector {
-  public static final class InjectedLanguageData implements Injection {
-    InjectedLanguageData(@Nonnull Language language, @Nullable String prefix, @Nullable String postfix) {
-      this.language = language;
-      this.prefix = prefix;
-      this.postfix = postfix;
+    public static final class InjectedLanguageData {
+        InjectedLanguageData(Language language, @Nullable String prefix, @Nullable String postfix) {
+            this.language = language;
+            this.prefix = prefix;
+            this.postfix = postfix;
+        }
+
+        public Language language;
+        public @Nullable String prefix;
+        public @Nullable String postfix;
+
+        public String getInjectedLanguageId() {
+            return language.getID();
+        }
+
+        public Language getInjectedLanguage() {
+            return language;
+        }
+
+        public String getPrefix() {
+            return StringUtil.notNullize(prefix);
+        }
+
+        public String getSuffix() {
+            return StringUtil.notNullize(postfix);
+        }
+
+        public @Nullable String getSupportId() {
+            return null;
+        }
     }
 
-    public @Nonnull Language language;
-    public @Nullable String prefix;
-    public @Nullable String postfix;
+    protected static void injectForHost(
+        MultiHostRegistrar registrar,
+        JsonStringLiteral host,
+        @SuppressWarnings("SameParameterValue") Language language
+    ) {
+        injectForHost(registrar, host, new InjectedLanguageData(language, null, null));
+    }
+
+    protected static void injectForHost(MultiHostRegistrar registrar, JsonStringLiteral host, InjectedLanguageData language) {
+        List<JsonStringLiteralTextFragment> fragments = host.getTextFragments();
+        if (fragments.isEmpty()) {
+            return;
+        }
+        registrar.startInjecting(language.language);
+        for (JsonStringLiteralTextFragment fragment : fragments) {
+            registrar.addPlace(language.prefix, language.postfix, (PsiLanguageInjectionHost) host, fragment.textRange());
+        }
+        registrar.doneInjecting();
+    }
 
     @Override
-    public @Nonnull String getInjectedLanguageId() {
-      return language.getID();
+    public Class<? extends PsiElement> getElementClass() {
+        return JsonStringLiteral.class;
     }
-
-    @Override
-    public @Nonnull Language getInjectedLanguage() {
-      return language;
-    }
-
-    @Override
-    public @Nonnull String getPrefix() {
-      return StringUtil.notNullize(prefix) ;
-    }
-
-    @Override
-    public @Nonnull String getSuffix() {
-      return StringUtil.notNullize(postfix) ;
-    }
-
-    @Override
-    public @Nullable String getSupportId() {
-      return null;
-    }
-  }
-
-  protected static void injectForHost(@Nonnull MultiHostRegistrar registrar, @Nonnull JsonStringLiteral host, @SuppressWarnings("SameParameterValue") @Nonnull Language language) {
-    injectForHost(registrar, host, new InjectedLanguageData(language, null, null));
-  }
-
-  protected static void injectForHost(@Nonnull MultiHostRegistrar registrar, @Nonnull JsonStringLiteral host, @Nonnull InjectedLanguageData language) {
-    List<Pair<TextRange, String>> fragments = host.getTextFragments();
-    if (fragments.isEmpty()) return;
-    registrar.startInjecting(language.language);
-    for (Pair<TextRange, String> fragment : fragments) {
-      registrar.addPlace(language.prefix, language.postfix, (PsiLanguageInjectionHost)host, fragment.first);
-    }
-    registrar.doneInjecting();
-  }
-
-  @Override
-  public @Nonnull List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
-    return Collections.singletonList(JsonStringLiteral.class);
-  }
 }

@@ -1,89 +1,144 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
+/*
+ * Copyright 2013-2026 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.jetbrains.jsonSchema.impl.inspections;
 
-import com.intellij.codeInspection.LocalInspectionToolSession;
-import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.codeInspection.util.InspectionMessage;
-import consulo.json.localize.JsonLocalize;
-import com.intellij.json.psi.*;
-import com.intellij.openapi.paths.WebReference;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference;
+import com.intellij.json.psi.JsonElementVisitor;
+import com.intellij.json.psi.JsonObject;
+import com.intellij.json.psi.JsonProperty;
+import com.intellij.json.psi.JsonStringLiteral;
+import com.intellij.json.psi.JsonValue;
+import com.jetbrains.jsonSchema.JsonSchemaObject;
 import com.jetbrains.jsonSchema.JsonSchemaService;
 import com.jetbrains.jsonSchema.impl.JsonPointerReferenceProvider;
-import com.jetbrains.jsonSchema.JsonSchemaObject;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.json.localize.JsonLocalize;
+import consulo.language.editor.inspection.LocalInspectionToolSession;
+import consulo.language.editor.inspection.ProblemHighlightType;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.impl.psi.path.WebReference;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.path.FileReference;
+import consulo.localize.LocalizeValue;
+import org.jspecify.annotations.Nullable;
 
+@ExtensionImpl
 public final class JsonSchemaRefReferenceInspection extends JsonSchemaBasedInspectionBase {
+    @Override
+    public String getShortName() {
+        return "JsonSchemaRefReference";
+    }
 
-  @Override
-  protected PsiElementVisitor doBuildVisitor(@Nonnull JsonValue root,
-                                             @Nullable JsonSchemaObject schema,
-                                             @Nonnull JsonSchemaService service,
-                                             @Nonnull ProblemsHolder holder,
-                                             @Nonnull LocalInspectionToolSession session) {
-    boolean checkRefs = schema != null && service.isSchemaFile(schema);
-    return new JsonElementVisitor() {
-      @Override
-      public void visitElement(@Nonnull PsiElement element) {
-        if (element == root) {
-          if (element instanceof JsonObject) {
-            final JsonProperty schemaProp = ((JsonObject)element).findProperty("$schema");
-            if (schemaProp != null) {
-              doCheck(schemaProp.getValue());
+    @Override
+    public LocalizeValue getDisplayName() {
+        return JsonLocalize.jsonSchemaRefRefsInspectionName();
+    }
+
+    @Override
+    public HighlightDisplayLevel getDefaultLevel() {
+        return HighlightDisplayLevel.WARNING;
+    }
+
+    @Override
+    public boolean isEnabledByDefault() {
+        return true;
+    }
+
+    @Override
+    protected PsiElementVisitor doBuildVisitor(JsonValue root,
+                                               @Nullable JsonSchemaObject schema,
+                                               JsonSchemaService service,
+                                               ProblemsHolder holder,
+                                               LocalInspectionToolSession session,
+                                               Object state) {
+        boolean checkRefs = schema != null && service.isSchemaFile(schema);
+        return new JsonElementVisitor() {
+            @Override
+            @RequiredReadAction
+            public void visitElement(PsiElement element) {
+                if (element == root) {
+                    if (element instanceof JsonObject jsonObject) {
+                        JsonProperty schemaProp = jsonObject.findProperty("$schema");
+                        if (schemaProp != null) {
+                            doCheck(schemaProp.getValue());
+                        }
+                    }
+                }
+                super.visitElement(element);
             }
-          }
-        }
-        super.visitElement(element);
-      }
 
-      @Override
-      public void visitProperty(@Nonnull JsonProperty o) {
-        if (!checkRefs) return;
-        if ("$ref".equals(o.getName())) {
-          doCheck(o.getValue());
-        }
-        super.visitProperty(o);
-      }
+            @Override
+            @RequiredReadAction
+            public void visitProperty(JsonProperty o) {
+                if (!checkRefs) {
+                    return;
+                }
+                if ("$ref".equals(o.getName())) {
+                    doCheck(o.getValue());
+                }
+                super.visitProperty(o);
+            }
 
-      private void doCheck(JsonValue value) {
-        if (!(value instanceof JsonStringLiteral)) return;
-        for (PsiReference reference : value.getReferences()) {
-          if (reference instanceof WebReference) continue;
-          final PsiElement resolved = reference.resolve();
-          if (resolved == null) {
-            holder.registerProblem(reference, getReferenceErrorDesc(reference), ProblemHighlightType.GENERIC_ERROR_OR_WARNING);
-          }
-        }
-      }
+            @RequiredReadAction
+            private void doCheck(@Nullable JsonValue value) {
+                if (!(value instanceof JsonStringLiteral)) {
+                    return;
+                }
+                for (PsiReference reference : value.getReferences()) {
+                    if (reference instanceof WebReference) {
+                        continue;
+                    }
+                    PsiElement resolved = reference.resolve();
+                    if (resolved == null) {
+                        holder.newProblem(getReferenceErrorDesc(reference))
+                            .rangeByRef(reference)
+                            .highlightType(ProblemHighlightType.GENERIC_ERROR_OR_WARNING)
+                            .create();
+                    }
+                }
+            }
 
-      private static @InspectionMessage String getReferenceErrorDesc(PsiReference reference) {
-        final String text = reference.getCanonicalText();
-        if (reference instanceof FileReference) {
-          final int hash = text.indexOf('#');
-          return JsonLocalize.jsonSchemaRefFileNotFound(hash == -1 ? text : text.substring(0, hash).get());
-        }
-        if (reference instanceof JsonPointerReferenceProvider.JsonSchemaIdReference) {
-          return JsonLocalize.jsonSchemaRefCannotResolveId(text).get();
-        }
-        final int lastSlash = text.lastIndexOf('/');
-        if (lastSlash == -1) {
-          return JsonLocalize.jsonSchemaRefCannotResolvePath(text).get();
-        }
-        final String substring = text.substring(text.lastIndexOf('/') + 1);
+            @RequiredReadAction
+            private static LocalizeValue getReferenceErrorDesc(PsiReference reference) {
+                String text = reference.getCanonicalText();
+                if (reference instanceof FileReference) {
+                    int hash = text.indexOf('#');
+                    return JsonLocalize.jsonSchemaRefFileNotFound(hash == -1 ? text : text.substring(0, hash));
+                }
+                if (reference instanceof JsonPointerReferenceProvider.JsonSchemaIdReference) {
+                    return JsonLocalize.jsonSchemaRefCannotResolveId(text);
+                }
+                int lastSlash = text.lastIndexOf('/');
+                if (lastSlash == -1) {
+                    return JsonLocalize.jsonSchemaRefCannotResolvePath(text);
+                }
+                String substring = text.substring(text.lastIndexOf('/') + 1);
 
-        try {
-          Integer.parseInt(substring);
-          return JsonLocalize.jsonSchemaRefNoArrayElement(substring).get();
-        }
-        catch (Exception e) {
-          return JsonLocalize.jsonSchemaRefNoProperty(substring).get();
-        }
-      }
-    };
-  }
+                try {
+                    Integer.parseInt(substring);
+                    return JsonLocalize.jsonSchemaRefNoArrayElement(substring);
+                }
+                catch (Exception e) {
+                    return JsonLocalize.jsonSchemaRefNoProperty(substring);
+                }
+            }
+        };
+    }
 }

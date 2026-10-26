@@ -19,7 +19,7 @@ import static consulo.language.pattern.PlatformPatterns.psiElement;
 /**
  * @author Mikhail Golubev
  */
-@ExtensionImpl
+@ExtensionImpl(id = "JsonCompletionContributor")
 public class JsonCompletionContributor extends CompletionContributor {
     private static final PsiElementPattern.Capture<PsiElement> AFTER_COLON_IN_PROPERTY = psiElement()
         .afterLeaf(":").withSuperParent(2, JsonProperty.class)

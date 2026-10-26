@@ -1,133 +1,135 @@
 // Copyright 2000-2025 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
+/*
+ * Copyright 2013-2026 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.jetbrains.jsonSchema.impl.fixes;
 
-import consulo.json.localize.JsonLocalize;
 import com.intellij.json.psi.JsonObject;
+import com.jetbrains.jsonSchema.JsonValidationError.MissingMultiplePropsIssueData;
+import com.jetbrains.jsonSchema.extension.JsonSchemaQuickFixSuppressor;
+import com.jetbrains.jsonSchema.internal.JsonCachedValues;
+import com.jetbrains.jsonSchema.walker.JsonLikeSyntaxAdapter;
+import com.jetbrains.jsonSchema.walker.JsonOriginalPsiWalker;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
+import consulo.json.localize.JsonLocalize;
+import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.editor.intention.PsiElementBaseIntentionAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPointerManager;
-import consulo.language.psi.SmartPsiElementPointer;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.util.lang.ref.Ref;
-import com.jetbrains.jsonSchema.extension.JsonLikeSyntaxAdapter;
-import com.jetbrains.jsonSchema.extension.JsonSchemaQuickFixSuppressor;
-import com.jetbrains.jsonSchema.impl.JsonCachedValues;
-import com.jetbrains.jsonSchema.impl.JsonOriginalPsiWalker;
+import consulo.util.lang.ref.SimpleReference;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import java.util.Objects;
+import java.util.Set;
 
-@IntentionMetaData(
-  ignoreId = "json.AddOptionalPropertiesIntention",
-  categories = {"JSON", "JSON Schema"},
-  fileExtensions = "json"
-)
+@ExtensionImpl
+@IntentionMetaData(ignoreId = "json.AddOptionalPropertiesIntention", fileExtensions = "json", categories = "JSON")
 public class AddOptionalPropertiesIntention extends PsiElementBaseIntentionAction {
-  @Nonnull
-  @Override
-  public String getFamilyName() {
-    return JsonLocalize.intentionAddNotRequiredPropertiesFamilyName().get();
-  }
-
-  @Nonnull
-  @Override
-  public String getText() {
-    return JsonLocalize.intentionAddNotRequiredPropertiesText().get();
-  }
-
-  @Override
-  @RequiredReadAction
-  public boolean isAvailable(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) {
-    JsonObject obj = findContainingObjectNode(element, editor);
-    if (obj == null) {
-      return false;
+    public LocalizeValue getFamilyName() {
+        return JsonLocalize.intentionAddNotRequiredPropertiesFamilyName();
     }
 
-    if (JsonSchemaQuickFixSuppressor.EXTENSION_POINT_NAME.getExtensionList().stream()
-      .anyMatch(it -> it.shouldSuppressFix(element.getContainingFile(), AddOptionalPropertiesIntention.class))) {
-      return false;
+    @Override
+    public LocalizeValue getText() {
+        return JsonLocalize.intentionAddNotRequiredPropertiesText();
     }
 
-    if (!JsonCachedValues.hasComputedSchemaObjectForFile(obj.getContainingFile())) {
-      return false;
-    }
-
-    SmartPsiElementPointer<JsonObject> pointer = SmartPointerManager.getInstance(project).createSmartPsiElementPointer(obj);
-    MissingPropertiesResult missing = AddMissingPropertyFix.collectMissingPropertiesFromSchema(pointer, project);
-    return missing != null && missing.getMissingKnownProperties() != null
-      && !missing.getMissingKnownProperties().myMissingPropertyIssues.isEmpty();
-  }
-
-  @Override
-  @RequiredReadAction
-  public void invoke(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) throws IncorrectOperationException {
-    JsonObject objCopy = findContainingObjectNode(element, editor);
-    if (objCopy == null) {
-      return;
-    }
-
-    JsonObject physObj = findPhysicalObjectNode(element, editor);
-    if (physObj == null) {
-      return;
-    }
-
-    SmartPsiElementPointer<JsonObject> pointer = SmartPointerManager.getInstance(project).createSmartPsiElementPointer(physObj);
-    MissingPropertiesResult missing = AddMissingPropertyFix.collectMissingPropertiesFromSchema(pointer, project);
-    if (missing == null || missing.getMissingKnownProperties() == null) {
-      return;
-    }
-
-    new AddMissingPropertyFix(missing.getMissingKnownProperties(), getSyntaxAdapter(project))
-      .performFixInner(objCopy, Ref.create());
-
-    consulo.language.codeStyle.CodeStyleManager.getInstance(project)
-      .reformatText(objCopy.getContainingFile(), java.util.Collections.singleton(objCopy.getTextRange()));
-  }
-
-  @Nonnull
-  protected JsonLikeSyntaxAdapter getSyntaxAdapter(@Nonnull Project project) {
-    return JsonOriginalPsiWalker.INSTANCE.getSyntaxAdapter(project);
-  }
-
-  @Nullable
-  protected JsonObject findPhysicalObjectNode(@Nonnull PsiElement element, @Nullable Editor editor) {
-    if (editor == null) {
-      return null;
-    }
-    PsiFile file = element.getContainingFile();
-    if (file == null) {
-      return null;
-    }
-    PsiElement physLeaf = file.findElementAt(editor.getCaretModel().getOffset());
-    if (physLeaf == null) {
-      return null;
-    }
-    return PsiTreeUtil.getParentOfType(physLeaf, JsonObject.class);
-  }
-
-  @Nullable
-  protected JsonObject findContainingObjectNode(@Nonnull PsiElement element, @Nullable Editor editor) {
-    JsonObject fromElement = PsiTreeUtil.getParentOfType(element, JsonObject.class);
-    if (fromElement != null) {
-      return fromElement;
-    }
-
-    if (editor != null) {
-      PsiFile file = element.getContainingFile();
-      if (file != null) {
-        PsiElement leaf = file.findElementAt(editor.getCaretModel().getOffset());
-        if (leaf != null) {
-          return PsiTreeUtil.getParentOfType(leaf, JsonObject.class);
+    @Override
+    @RequiredReadAction
+    public boolean isAvailable(Project project, Editor editor, PsiElement element) {
+        PsiElement obj = findContainingObjectNode(editor, element);
+        if (obj == null) {
+            return false;
         }
-      }
+        PsiFile file = Objects.requireNonNull(element.getContainingFile());
+        if (Application.get().getExtensionPoint(JsonSchemaQuickFixSuppressor.class).anyMatchSafe(
+            it -> it.shouldSuppressFix(file, AddOptionalPropertiesIntention.class)
+        )) {
+            return false;
+        }
+        if (!JsonCachedValues.hasComputedSchemaObjectForFile(Objects.requireNonNull(obj.getContainingFile()))) {
+            return false;
+        }
+
+        JsonSchemaPropertiesInfo info = MissingOptionalPropertiesSearch.collectMissingPropertiesFromSchema(
+            SmartPointerManager.createPointer(obj),
+            project
+        );
+        MissingMultiplePropsIssueData missing = info == null ? null : info.getMissingKnownProperties();
+        return missing != null && !missing.myMissingPropertyIssues.isEmpty();
     }
 
-    return null;
-  }
+    @Override
+    @RequiredWriteAction
+    public void invoke(Project project, Editor editor, PsiElement element) {
+        PsiElement objCopy = findContainingObjectNode(editor, element);
+        if (objCopy == null) {
+            return;
+        }
+        PsiElement physObj = findPhysicalObjectNode(editor, element);
+        if (physObj == null) {
+            return;
+        }
+
+        JsonSchemaPropertiesInfo info = MissingOptionalPropertiesSearch.collectMissingPropertiesFromSchema(
+            SmartPointerManager.createPointer(physObj),
+            project
+        );
+        if (info == null) {
+            return;
+        }
+        MissingMultiplePropsIssueData missing = info.getMissingKnownProperties();
+
+        new AddMissingPropertyFix(missing, getSyntaxAdapter(project)).performFixInner(objCopy, SimpleReference.create());
+
+        CodeStyleManager.getInstance(project).reformatText(objCopy.getContainingFile(), Set.of(objCopy.getTextRange()));
+    }
+
+    protected JsonLikeSyntaxAdapter getSyntaxAdapter(Project project) {
+        return JsonOriginalPsiWalker.INSTANCE.getSyntaxAdapter(project);
+    }
+
+    @RequiredReadAction
+    protected @Nullable PsiElement findPhysicalObjectNode(Editor editor, PsiElement element) {
+        PsiElement physLeaf = findLeaf(editor, Objects.requireNonNull(element.getContainingFile()));
+        if (physLeaf == null) {
+            return null;
+        }
+        return PsiTreeUtil.getParentOfType(physLeaf, JsonObject.class);
+    }
+
+    @RequiredReadAction
+    protected @Nullable PsiElement findContainingObjectNode(Editor editor, PsiElement element) {
+        JsonObject containingObject = PsiTreeUtil.getParentOfType(element, JsonObject.class);
+        if (containingObject != null) {
+            return containingObject;
+        }
+        return PsiTreeUtil.getParentOfType(findLeaf(editor, Objects.requireNonNull(element.getContainingFile())), JsonObject.class);
+    }
+
+    @RequiredReadAction
+    private static @Nullable PsiElement findLeaf(Editor editor, PsiFile file) {
+        return file.findElementAt(editor.getCaretModel().getOffset());
+    }
 }

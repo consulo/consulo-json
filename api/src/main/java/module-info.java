@@ -17,7 +17,6 @@ module consulo.json.api {
     exports com.intellij.json.json5.codeinsight;
     exports com.intellij.json.json5.highlighting;
     exports com.intellij.json.jsonLines;
-    exports com.intellij.json.jsonScheme;
     exports com.intellij.json.pointer;
     exports com.intellij.json.psi;
     exports com.intellij.json.psi.impl;
@@ -27,6 +26,6 @@ module consulo.json.api {
     exports consulo.json.icon;
     exports consulo.json.localize;
 
-    exports com.intellij.json.internal to consulo.json;
-    exports com.intellij.json.internal.navigation to consulo.json;
+    exports com.intellij.json.internal to consulo.json, consulo.json.scheme.api, consulo.json.scheme.impl;
+    exports com.intellij.json.internal.navigation to consulo.json, consulo.json.scheme.api, consulo.json.scheme.impl;
 }
