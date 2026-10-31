@@ -1,6 +1,7 @@
 package consulo.json.jom.proxy.impl;
 
 import com.intellij.json.psi.JsonArray;
+import com.intellij.json.psi.JsonElement;
 import com.intellij.json.psi.JsonValue;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.json.jom.proxy.JomBadValueExpressionException;
@@ -50,7 +51,16 @@ public class JomCollectionValue<T extends Collection> implements JomValueConvert
             }
             return collection;
         }
-        throw new JomBadValueExpressionException();
+
+        // a single value where an array is allowed too, like "dir/" for ["dir/", "dir2/"]: a one element collection
+        if (!(value instanceof JsonElement element)) {
+            throw new JomBadValueExpressionException();
+        }
+        Pair<Class, Type> valueType = findValueTypeInsideGeneric(genericType, 0); // E
+        Object single = JomValueConverter.convertToObject(valueType.getFirst(), valueType.getSecond(), element);
+        T collection = ReflectionUtil.newInstance(myNewInstanceClass);
+        collection.add(single);
+        return collection;
     }
 
 

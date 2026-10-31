@@ -7,7 +7,6 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 module consulo.json.scheme.api {
     requires transitive consulo.json.api;
-    requires transitive consulo.ide.api;
     requires transitive consulo.virtual.file.system.http.api;
     requires consulo.index.io;
     requires consulo.language.impl;

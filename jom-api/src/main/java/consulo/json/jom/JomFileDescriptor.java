@@ -47,4 +47,12 @@ public abstract class JomFileDescriptor<T extends JomElement> {
     public abstract Image getIcon();
 
     public abstract boolean isMyFile(@Nonnull PsiFile psiFile);
+
+    /**
+     * @return {@code false} if the model only covers a part of the file, which is validated and completed by a JSON schema -
+     * then the model is not used to validate and complete the file
+     */
+    public boolean isDescribingFile() {
+        return true;
+    }
 }

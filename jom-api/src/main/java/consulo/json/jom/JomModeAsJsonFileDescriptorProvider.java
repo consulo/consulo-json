@@ -42,7 +42,8 @@ public class JomModeAsJsonFileDescriptorProvider implements JsonFileDescriptorPr
     @RequiredReadAction
     @Override
     public boolean isMyFile(@Nonnull PsiFile file) {
-        return JomManager.getInstance(file.getProject()).getFileElement(file) != null;
+        JomFileElement<JomElement> fileElement = JomManager.getInstance(file.getProject()).getFileElement(file);
+        return fileElement != null && fileElement.getFileDescriptor().isDescribingFile();
     }
 
     @RequiredReadAction

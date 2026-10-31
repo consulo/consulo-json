@@ -7,6 +7,7 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 module consulo.json.scheme.impl {
     requires consulo.json.scheme.api;
+    requires consulo.ide.api;
     requires consulo.application.api;
     requires consulo.base.icon.library;
     requires consulo.code.editor.api;
