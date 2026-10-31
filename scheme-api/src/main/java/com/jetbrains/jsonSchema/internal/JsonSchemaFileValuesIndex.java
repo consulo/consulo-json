@@ -35,6 +35,7 @@ import consulo.language.psi.stub.FileContent;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.fileType.FileType;
 import org.jspecify.annotations.Nullable;
 
@@ -94,7 +95,8 @@ public final class JsonSchemaFileValuesIndex extends FileBasedIndexExtension<Str
     }
 
     public static @Nullable String getCachedValue(Project project, VirtualFile file, String requestedKey) {
-        if (project.isDisposed() || !file.isValid() || DumbService.isDumb(project)) {
+        // an injected or other light file is not indexed
+        if (project.isDisposed() || !file.isValid() || !(file instanceof VirtualFileWithId) || DumbService.isDumb(project)) {
             return NULL;
         }
         return FileBasedIndex.getInstance().getFileData(INDEX_ID, file, project).get(requestedKey);
